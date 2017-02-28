@@ -16,12 +16,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 <!--TODO Set here your grid layout-->
-        <!--<android.support.v7.widget.RecyclerView
-            android:id="@+id/my_recycler_view"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_movie_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical" />-->
+            android:scrollbars="vertical" />
 
     </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/pg_movie_list"
+            style="?android:attr/progressBarStyle"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
     </FrameLayout>
 </RelativeLayout>

@@ -3,11 +3,14 @@ package udacity.uelordi.com.popularmovies;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
+import udacity.uelordi.com.popularmovies.utils.VideosJSONUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 /**
  * Created by uelordi on 04/03/17.
@@ -41,7 +44,12 @@ public class FetchVideoList extends AsyncTask<String,Void,String>
         super.onPostExecute(s);
         if(m_callback!=null)
         {
-            m_callback.OnListAvailable(s);
+            try {
+                m_callback.OnListAvailable(VideosJSONUtils.getMovieListFromJson(s));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //m_callback.OnListAvailable(s);
         }
         else
         {
