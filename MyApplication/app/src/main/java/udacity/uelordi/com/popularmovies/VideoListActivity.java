@@ -2,6 +2,8 @@ package udacity.uelordi.com.popularmovies;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,39 +26,48 @@ import udacity.uelordi.com.popularmovies.content.MovieContent;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
-public class VideoListActivity extends AppCompatActivity implements onFetchResults {
+public class VideoListActivity extends AppCompatActivity implements onFetchResults,VideoListAdapter.ListItemClickListener {
     private static final String TAG = VideoListActivity.class.getSimpleName();
+
     private FetchVideoList m_video_list_task;
-    private TextView m_test;
+    private TextView m_error_view;
     private ProgressBar m_video_list_progress_bar;
+
     RecyclerView mMovie_list;
+    VideoListAdapter m_movie_list_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
-        String filter="popularity.desc";//getResources().getString(R.string.filter_popular);
+        String filter="popularity.desc";
 
-       // m_test=(TextView) findViewById(R.id.test);
         m_video_list_progress_bar=(ProgressBar)findViewById(R.id.pg_movie_list);
 
         mMovie_list=(RecyclerView)findViewById(R.id.rv_movie_list);
-        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,100);
 
+        hideErrorMessage();
 
+        if(NetworkUtils.isOnline(getApplicationContext()))
+        {
+            m_video_list_task=new FetchVideoList();
+            m_video_list_task.setListener(this);
+            showLoadingBar();
+            m_video_list_task.execute(filter);
+        }
+        showErrorMessage();
 
-
-
-
-        m_video_list_task=new FetchVideoList();
-        m_video_list_task.setListener(this);
-        showLoadingBar();
-        m_video_list_task.execute(filter);
     }
 
     @Override
     public void OnListAvailable(List<MovieContent> result) {
         hideLoadingBar();
+        //Populate the recycler view
+        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,100);
+        mMovie_list.setLayoutManager(gridManager);
+        mMovie_list.setHasFixedSize(true);
+        m_movie_list_adapter=new VideoListAdapter(100,VideoListActivity.this,result);
+        mMovie_list.setAdapter(m_movie_list_adapter);
         //m_test.setText(result);
     }
 
@@ -64,6 +75,28 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.filter_menu, menu);
         return true;
+    }
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+    public void showErrorMessage()
+    {
+        if(m_error_view==null)
+        {
+            m_error_view=(TextView) findViewById(R.id.connectivity_error);
+        }
+        m_error_view.setVisibility(View.VISIBLE);
+    }
+    public void hideErrorMessage()
+    {
+        if(m_error_view==null)
+        {
+            m_error_view=(TextView) findViewById(R.id.connectivity_error);
+        }
+        m_error_view.setVisibility(View.INVISIBLE);
     }
     public void showLoadingBar()
     {
@@ -90,19 +123,23 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
             case R.id.action_filter_popular:
             {
                 Log.v(TAG,"filter_popular");
-                m_video_list_task=new FetchVideoList();
-                m_video_list_task.setListener(this);
-                showLoadingBar();
-                m_video_list_task.execute("popularity.desc");
+                if(NetworkUtils.isOnline(getApplicationContext())) {
+                    m_video_list_task = new FetchVideoList();
+                    m_video_list_task.setListener(this);
+                    showLoadingBar();
+                    m_video_list_task.execute("popularity.desc");
+                }
                 break;
             }
             case R.id.action_filter_rated:
             {
                 Log.v(TAG,"filter_rated");
-                m_video_list_task=new FetchVideoList();
-                m_video_list_task.setListener(this);
-                showLoadingBar();
-                m_video_list_task.execute("vote_average.desc");
+                if(NetworkUtils.isOnline(getApplicationContext())) {
+                    m_video_list_task = new FetchVideoList();
+                    m_video_list_task.setListener(this);
+                    showLoadingBar();
+                    m_video_list_task.execute("vote_average.desc");
+                }
                 break;
             }
         }
@@ -110,4 +147,8 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     }
 
 
+    @Override
+    public void onListItemClick(int clickItemIndex) {
+        //TODO make your intent for display the detail of the activity.
+    }
 }

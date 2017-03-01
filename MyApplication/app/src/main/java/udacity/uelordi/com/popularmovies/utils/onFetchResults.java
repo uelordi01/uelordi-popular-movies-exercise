@@ -10,4 +10,5 @@ import udacity.uelordi.com.popularmovies.content.MovieContent;
 
 public interface onFetchResults {
     public void OnListAvailable(List<MovieContent> result);
+   // public void OnError(String msg);
 }

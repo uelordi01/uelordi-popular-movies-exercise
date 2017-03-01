@@ -3,9 +3,9 @@
     <item
         android:id="@+id/action_filter_popular"
         android:orderInCategory="1"
-        android:title="@string/filter_popular"/>
+        android:title="@string/filter_popular_menu"/>
     <item
         android:id="@+id/action_filter_rated"
         android:orderInCategory="1"
-        android:title="@string/filter_rated"/>
+        android:title="@string/filter_rated_menu"/>
 </menu>

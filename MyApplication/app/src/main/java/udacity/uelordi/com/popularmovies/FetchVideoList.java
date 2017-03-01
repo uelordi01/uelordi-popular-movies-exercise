@@ -1,5 +1,7 @@
 package udacity.uelordi.com.popularmovies;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
