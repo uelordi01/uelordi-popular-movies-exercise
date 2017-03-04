@@ -33,7 +33,7 @@ public final class NetworkUtils {
 
 
     private static final String STATIC_MOVIE_DB_URL =
-            "http://api.themoviedb.org/3/movie/popular";
+            "http://api.themoviedb.org/3/discover/movie";
 
     //private static final String FORECAST_BASE_URL = STATIC_WEATHER_URL;
 
@@ -50,28 +50,28 @@ public final class NetworkUtils {
     private static final String units = "metric";
     /* The number of days we want our API to return */
     private static final int numDays = 14;
-
+    final static String api_key="";
     final static String QUERY_PARAM = "sort_by";
-    final static String LAT_PARAM = "lat";
-    final static String LON_PARAM = "lon";
+    final static String API_KEY = "api_key";
+    /*final static String LON_PARAM = "lon";
     final static String FORMAT_PARAM = "mode";
     final static String UNITS_PARAM = "units";
-    final static String DAYS_PARAM = "cnt";
+    final static String DAYS_PARAM = "cnt";*/
 
     /**
      * Builds the URL used to talk to the weather server using a location. This location is based
      * on the query capabilities of the weather provider that we are using.
      *
-     * @param locationQuery The location that will be queried for.
      * @return The URL to use to query the weather server.
      */
     public static URL buildUrl(String sortBy) throws MalformedURLException {
         Uri builtUri = Uri.parse(STATIC_MOVIE_DB_URL)
                 .buildUpon()
                 .appendQueryParameter(QUERY_PARAM, sortBy)
-                .appendQueryParameter(FORMAT_PARAM, "json")
-                .appendQueryParameter(UNITS_PARAM, "metric")
-                .appendQueryParameter(DAYS_PARAM, Integer.toString(7))
+                .appendQueryParameter(API_KEY, api_key)
+                //.appendQueryParameter(FORMAT_PARAM, "json")
+                //.appendQueryParameter(UNITS_PARAM, "metric")
+                //.appendQueryParameter(DAYS_PARAM, Integer.toString(7))
                 .build();
         URL url = new URL(builtUri.toString());
         return url;

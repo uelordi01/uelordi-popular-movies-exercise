@@ -5,17 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="udacity.uelordi.com.popularmovies.VideoListActivity">
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/test"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 <!--TODO Set here your grid layout-->
-        <android.support.v7.widget.RecyclerView
+        <!--<android.support.v7.widget.RecyclerView
             android:id="@+id/my_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical" />-->
 
     </ScrollView>
-
+    </FrameLayout>
 </RelativeLayout>
