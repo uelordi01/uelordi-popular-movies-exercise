@@ -16,12 +16,12 @@ import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 public class FetchVideoList extends AsyncTask<String,Void,String>
 {
     private onFetchResults m_callback=null;
-    private static final String TAG = FetchVideoList.class.getSimpleName();
+    private final String TAG = FetchVideoList.class.getSimpleName();
     @Override
     protected String doInBackground(String... sortedBy) {
         String result=null;
         try {
-            URL url=NetworkUtils.buildUrl(sortedBy[0]);
+            URL url= NetworkUtils.buildUrl(sortedBy[0]);
             result=NetworkUtils.getResponseFromHttpUrl(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -38,15 +38,15 @@ public class FetchVideoList extends AsyncTask<String,Void,String>
 
     @Override
     protected void onPostExecute(String s) {
-
-       if(m_callback!=null)
-       {
-           m_callback.OnListAvailable(s);
-       }
-       else
-       {
-           Log.e(TAG,"you must define the callback interface with setListener function");
-       }
+        super.onPostExecute(s);
+        if(m_callback!=null)
+        {
+            m_callback.OnListAvailable(s);
+        }
+        else
+        {
+            Log.e(TAG,"you must define the callback interface with setListener function");
+        }
 
     }
     public void setListener(onFetchResults listener)
