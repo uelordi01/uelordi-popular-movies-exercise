@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context="udacity.uelordi.com.popularmovies.MovieDetails">
 
+    <TextView
+        android:id="@+id/tv_detail_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="4dp"
+        tools:layout_editor_absoluteY="3dp" />
 </android.support.constraint.ConstraintLayout>

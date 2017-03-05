@@ -28,7 +28,8 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
     private static int viewHolderCount;
     public interface ListItemClickListener
     {
-        void onListItemClick(int clickItemIndex);
+        //void onListItemClick(int clickItemIndex);
+        void onListItemClick(MovieContent movie);
     }
 
     public VideoListAdapter(int numberOfItems, ListItemClickListener listener) {
@@ -101,7 +102,8 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
         @Override
         public void onClick(View v) {
             int clickedPosition=getAdapterPosition();
-            m_listener.onListItemClick(clickedPosition);
+            m_listener.onListItemClick(m_movies_populate_array.get(clickedPosition));
+            // m_listener.onListItemClick(clickedPosition);
         }
     }
 }

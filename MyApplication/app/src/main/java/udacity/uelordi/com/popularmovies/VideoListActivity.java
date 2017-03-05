@@ -155,10 +155,14 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
 
 
     @Override
-    public void onListItemClick(int clickItemIndex) {
+    public void onListItemClick(MovieContent movie) {
         //TODO make your intent for display the detail of the activity.
-        Log.v(TAG,"YOUR INDEX CLICKED"+clickItemIndex);
-        Intent myactivity = new Intent(this,MovieDetails.class);
-        startActivity(myactivity);
+        Intent my_intent = new Intent(this,MovieDetails.class);
+        my_intent.putExtra("poster_path",movie.getPoster_path());
+        my_intent.putExtra("title",movie.getTitle());
+        my_intent.putExtra("synopsys",movie.getSynopsis());
+        my_intent.putExtra("user_rating",movie.getUser_rating());
+        my_intent.putExtra("release_date",movie.getRelease_date());
+        startActivity(my_intent);
     }
 }
