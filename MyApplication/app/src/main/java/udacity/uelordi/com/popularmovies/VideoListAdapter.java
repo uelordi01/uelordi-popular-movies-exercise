@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +52,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
 
         View view= li.inflate(LayoutIndexForListItem,parent,shouldAtattachtToTheParentNow);
         MovieViewHolder result_view=new MovieViewHolder(view);
+        result_view.m_movie_title.setText("ViewHolder index: " + viewHolderCount);
         viewHolderCount++;
         return result_view;
     }
@@ -62,7 +65,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
 
     @Override
     public int getItemCount() {
-        return 0;
+        return m_movies_populate_array.size();
     }
     public void setMovieList(List<MovieContent> movies_populate_array)
     {
@@ -87,6 +90,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
                 {
                     m_movie_title.setText(m_movies_populate_array.get(listIndex).getTitle());
                     Log.v(TAG,"image_path: "+m_movies_populate_array.get(listIndex).getPoster_path());
+                    Picasso.with(itemView.getContext()).load(m_movies_populate_array.get(listIndex).getPoster_path()).into(m_movie_poster);
                     //TODO set the image path here through picasso cache library;
                     //m_movies_populate_array.get(listIndex).getPoster_path();
                 }

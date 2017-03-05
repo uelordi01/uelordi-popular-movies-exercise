@@ -26,12 +26,13 @@ public class VideosJSONUtils {
         final String IMAGE_PATH="poster_path";
 
         JSONObject movie_Json=new JSONObject(json_string);
-        MovieContent mc=new MovieContent();
+
         List<MovieContent> result_array=new ArrayList<MovieContent>();
         //if(movie_Json.has())
         JSONArray jresult_list= movie_Json.getJSONArray(RESULTS_LIST);
         for(int i=0;i<jresult_list.length();i++){
             JSONObject jobject = jresult_list.getJSONObject(i);
+            MovieContent mc=new MovieContent();
             mc.setId(jobject.getInt(ID));
             mc.setTitle(jobject.getString(TITLE));
             mc.setPoster_path(jobject.getString(IMAGE_PATH));

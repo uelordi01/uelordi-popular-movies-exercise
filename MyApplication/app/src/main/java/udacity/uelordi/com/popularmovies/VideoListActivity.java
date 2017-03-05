@@ -2,6 +2,7 @@ package udacity.uelordi.com.popularmovies;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -55,7 +56,11 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
             showLoadingBar();
             m_video_list_task.execute(filter);
         }
-        showErrorMessage();
+        else
+        {
+            showErrorMessage();
+        }
+
 
     }
 
@@ -63,11 +68,13 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     public void OnListAvailable(List<MovieContent> result) {
         hideLoadingBar();
         //Populate the recycler view
-        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,100);
+        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,3);
         mMovie_list.setLayoutManager(gridManager);
-        mMovie_list.setHasFixedSize(true);
-        m_movie_list_adapter=new VideoListAdapter(100,VideoListActivity.this,result);
+       // mMovie_list.setHasFixedSize(true);
+        m_movie_list_adapter=new VideoListAdapter(5,VideoListActivity.this,result);
         mMovie_list.setAdapter(m_movie_list_adapter);
+
+
         //m_test.setText(result);
     }
 
@@ -150,5 +157,8 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     @Override
     public void onListItemClick(int clickItemIndex) {
         //TODO make your intent for display the detail of the activity.
+        Log.v(TAG,"YOUR INDEX CLICKED"+clickItemIndex);
+        Intent myactivity = new Intent(this,MovieDetails.class);
+        startActivity(myactivity);
     }
 }
