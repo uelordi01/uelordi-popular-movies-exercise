@@ -27,19 +27,21 @@ public class VideosJSONUtils {
         JSONObject movie_Json=new JSONObject(json_string);
 
         List<MovieContent> result_array= new ArrayList<>();
-        //if(movie_Json.has())
-        //TODO LOOK IF THE RESULTING IMAGE IS NULL
+
         JSONArray jresult_list= movie_Json.getJSONArray(RESULTS_LIST);
         for(int i=0;i<jresult_list.length();i++){
             JSONObject jobject = jresult_list.getJSONObject(i);
             MovieContent mc=new MovieContent();
             mc.setTitle(jobject.getString(TITLE));
-            mc.setPoster_path(jobject.getString(IMAGE_PATH));
+            String image_path=jobject.getString(IMAGE_PATH);
+            mc.setPoster_path(image_path);
             mc.setRelease_date(jobject.getString(RELEASE_DATE));
             mc.setUser_rating(jobject.getString(VOTE_AVERAGE));
             mc.setSynopsis(jobject.getString(SYNOPSYS));
-            result_array.add(mc);
-
+            if(image_path!="null")
+            {
+                result_array.add(mc);
+            }
         }
         return result_array;
     }

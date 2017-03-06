@@ -9,4 +9,8 @@
     <string name="default_poster">default.jpg</string>
     <string name="default_rating">5</string>
     <string name="default_release_date">Today</string>
+
+    <!-- OPTION ACTIONS -->
+    <string name="action_popular">popularity.desc</string>
+    <string name="action_rating">vote_average.desc</string>
 </resources>

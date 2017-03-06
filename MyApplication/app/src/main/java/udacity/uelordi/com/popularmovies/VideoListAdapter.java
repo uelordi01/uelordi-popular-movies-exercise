@@ -28,7 +28,6 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
     private static int viewHolderCount;
     public interface ListItemClickListener
     {
-        //void onListItemClick(int clickItemIndex);
         void onListItemClick(MovieContent movie);
     }
 
@@ -82,21 +81,17 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
             {
                 if(listIndex<m_movies_populate_array.size())
                 {
-                    m_movie_title.setText(m_movies_populate_array.get(listIndex).getTitle());
-                    Log.v(TAG,"image_path: "+m_movies_populate_array.get(listIndex).getPoster_path());
+                    //m_movie_title.setText(m_movies_populate_array.get(listIndex).getTitle());
+                    //Log.v(TAG,"image_path: "+m_movies_populate_array.get(listIndex).getPoster_path());
                     Picasso.with(itemView.getContext()).load(m_movies_populate_array.get(listIndex).getPoster_path()).into(m_movie_poster);
-                    //TODO set the image path here through picasso cache library;
-                    //m_movies_populate_array.get(listIndex).getPoster_path();
                 }
             }
 
-            //TODO set the image view through Picasso
         }
         @Override
         public void onClick(View v) {
             int clickedPosition=getAdapterPosition();
             m_listener.onListItemClick(m_movies_populate_array.get(clickedPosition));
-            // m_listener.onListItemClick(clickedPosition);
         }
     }
 }

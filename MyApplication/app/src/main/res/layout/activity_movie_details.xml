@@ -4,35 +4,81 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="10dp"
+    android:weightSum="100"
     tools:context="udacity.uelordi.com.popularmovies.MovieDetails">
-<!-- TODO improove your text layout with layout parameters -->
-    <TextView
-        android:id="@+id/tv_detail_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/default_title" />
-    <TextView
-        android:id="@+id/tv_detail_user_rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/default_rating" />
+
+    <android.support.v7.widget.CardView
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="5dp"
+        android:layout_margin="10dp"
+        android:layout_weight="30">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="100">
+
+            <ImageView
+                android:id="@+id/iv_poster_detail_path"
+                android:layout_width="0dp"
+                android:layout_weight="30"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/image_content_description"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_weight="70"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_detail_title"
+                android:layout_margin="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:text="@string/default_title" />
+            <TextView
+                android:id="@+id/tv_detail_user_rating"
+                android:layout_margin="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#008500"
+                android:textSize="25sp"
+                android:text="@string/default_rating" />
+            <TextView
+                android:id="@+id/tv_detail_release_date"
+                android:layout_margin="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:textSize="15sp"
+                android:text="@string/default_release_date" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="70"
+        android:layout_margin="10dp"
+        >
+
     <TextView
         android:id="@+id/tv_detail_synopsys"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/default_synopsys" />
-    <TextView
-        android:id="@+id/tv_detail_release_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/default_release_date" />
-
-    <ImageView
-        android:id="@+id/iv_poster_detail_path"
         android:layout_width="match_parent"
-        android:contentDescription="@string/image_content_description"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
 
+        />
+
+</android.support.v7.widget.CardView>
 
 
 </LinearLayout>

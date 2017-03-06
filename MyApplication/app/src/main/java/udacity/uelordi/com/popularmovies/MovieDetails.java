@@ -18,6 +18,7 @@ public class MovieDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_movie_details);
         Intent parent_activity=getIntent();
         if( parent_activity.hasExtra("title") )
@@ -43,7 +44,7 @@ public class MovieDetails extends AppCompatActivity {
         if( parent_activity.hasExtra("release_date") )
         {
             m_tv_release_date= (TextView) findViewById(R.id.tv_detail_release_date);
-            m_tv_release_date.setText(parent_activity.getStringExtra("release_date"));
+            m_tv_release_date.setText("release date: "+parent_activity.getStringExtra("release_date"));
         }
 
        // my_intent.putExtra("poster_path",movie.getPoster_path());

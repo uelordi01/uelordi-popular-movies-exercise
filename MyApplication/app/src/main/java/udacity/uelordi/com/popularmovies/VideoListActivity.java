@@ -38,7 +38,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
-        String filter="popularity.desc";
+        String filter=getResources().getString(R.string.action_popular);
 
         m_video_list_progress_bar=(ProgressBar)findViewById(R.id.pg_movie_list);
 
@@ -125,7 +125,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
                     m_video_list_task = new FetchVideoList();
                     m_video_list_task.setListener(this);
                     showLoadingBar();
-                    m_video_list_task.execute("popularity.desc");
+                    m_video_list_task.execute(getResources().getString(R.string.action_popular));
                 }
                 break;
             }
@@ -136,7 +136,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
                     m_video_list_task = new FetchVideoList();
                     m_video_list_task.setListener(this);
                     showLoadingBar();
-                    m_video_list_task.execute("vote_average.desc");
+                    m_video_list_task.execute(getResources().getString(R.string.action_rating));
                 }
                 break;
             }
@@ -147,7 +147,6 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
 
     @Override
     public void onListItemClick(MovieContent movie) {
-        //TODO make your intent for display the detail of the activity.
         Intent my_intent = new Intent(this,MovieDetails.class);
         my_intent.putExtra("poster_path",movie.getPoster_path());
         my_intent.putExtra("title",movie.getTitle());
