@@ -1,11 +1,11 @@
 package udacity.uelordi.com.popularmovies;
 
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,9 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import udacity.uelordi.com.popularmovies.content.MovieContent;
@@ -34,8 +31,8 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     private TextView m_error_view;
     private ProgressBar m_video_list_progress_bar;
 
-    RecyclerView mMovie_list;
-    VideoListAdapter m_movie_list_adapter;
+    private RecyclerView mMovie_list;
+    private VideoListAdapter m_movie_list_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +68,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,3);
         mMovie_list.setLayoutManager(gridManager);
        // mMovie_list.setHasFixedSize(true);
-        m_movie_list_adapter=new VideoListAdapter(5,VideoListActivity.this,result);
+        m_movie_list_adapter=new VideoListAdapter(VideoListActivity.this,result);
         mMovie_list.setAdapter(m_movie_list_adapter);
 
 
@@ -83,13 +80,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         getMenuInflater().inflate(R.menu.filter_menu, menu);
         return true;
     }
-    private boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-    public void showErrorMessage()
+    private void showErrorMessage()
     {
         if(m_error_view==null)
         {
@@ -97,7 +88,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         }
         m_error_view.setVisibility(View.VISIBLE);
     }
-    public void hideErrorMessage()
+    private void hideErrorMessage()
     {
         if(m_error_view==null)
         {
@@ -105,7 +96,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         }
         m_error_view.setVisibility(View.INVISIBLE);
     }
-    public void showLoadingBar()
+    private void showLoadingBar()
     {
         if(m_video_list_progress_bar==null)
         {
@@ -114,7 +105,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         m_video_list_progress_bar.setVisibility(View.VISIBLE);
 
     }
-    public void hideLoadingBar()
+    private void hideLoadingBar()
     {
         if(m_video_list_progress_bar==null)
         {

@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
     tools:context="udacity.uelordi.com.popularmovies.VideoListActivity">
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-<!--TODO Set here your grid layout-->
+<!--TODO Define your good layout in the image-->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_movie_list"
             android:layout_width="match_parent"
@@ -38,7 +35,6 @@
             android:layout_height="wrap_content"
             android:visibility="invisible"
             android:textSize="12sp"
-            android:text="@string/conectivity_error" />
+            android:text="@string/connectivity_error" />
 
-    </FrameLayout>
-</RelativeLayout>
+</FrameLayout>

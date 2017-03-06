@@ -1,16 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="udacity.uelordi.com.popularmovies.MovieDetails">
-
+<!-- TODO improove your text layout with layout parameters -->
     <TextView
         android:id="@+id/tv_detail_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="4dp"
-        tools:layout_editor_absoluteY="3dp" />
-</android.support.constraint.ConstraintLayout>
+        android:text="@string/default_title" />
+    <TextView
+        android:id="@+id/tv_detail_user_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/default_rating" />
+    <TextView
+        android:id="@+id/tv_detail_synopsys"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/default_synopsys" />
+    <TextView
+        android:id="@+id/tv_detail_release_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/default_release_date" />
+
+    <ImageView
+        android:id="@+id/iv_poster_detail_path"
+        android:layout_width="match_parent"
+        android:contentDescription="@string/image_content_description"
+        android:layout_height="wrap_content" />
+
+
+
+</LinearLayout>

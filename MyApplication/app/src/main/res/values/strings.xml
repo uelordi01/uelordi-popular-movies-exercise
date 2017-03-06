@@ -2,5 +2,11 @@
     <string name="app_name">PopularMovies</string>
     <string name="filter_popular_menu">Popular</string>
     <string name="filter_rated_menu">Rated</string>
-    <string name="conectivity_error">Conection error: please check if your device is connected to the internet</string>
+    <string name="connectivity_error">Connection error: please check if your device is connected to the internet</string>
+    <string name="image_content_description">The selected movie poster</string>
+    <string name="default_title">Movie Title</string>
+    <string name="default_synopsys">overview</string>
+    <string name="default_poster">default.jpg</string>
+    <string name="default_rating">5</string>
+    <string name="default_release_date">Today</string>
 </resources>

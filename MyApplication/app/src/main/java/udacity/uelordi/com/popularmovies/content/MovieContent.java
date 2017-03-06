@@ -6,21 +6,14 @@ package udacity.uelordi.com.popularmovies.content;
 
 public class MovieContent
 {
-    int id;
-    String poster_path;
-    final String IMAGE_URL_PATH="http://image.tmdb.org/t/p/w185/";
-    String title;
-    String synopsis;
-    int user_rating;
-    String release_date;
 
-    public int getId() {
-        return id;
-    }
+    private String poster_path;
+    private final String IMAGE_URL_PATH="http://image.tmdb.org/t/p/w185/";
+    private String title;
+    private String synopsis;
+    private String user_rating;
+    private String release_date;
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getPoster_path() {
         return poster_path;
@@ -46,11 +39,11 @@ public class MovieContent
         this.synopsis = synopsis;
     }
 
-    public int getUser_rating() {
+    public String getUser_rating() {
         return user_rating;
     }
 
-    public void setUser_rating(int user_rating) {
+    public void setUser_rating(String user_rating) {
         this.user_rating = user_rating;
     }
 

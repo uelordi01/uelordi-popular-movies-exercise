@@ -23,8 +23,8 @@ import udacity.uelordi.com.popularmovies.content.MovieContent;
 public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.MovieViewHolder>  {
     private final String TAG = VideoListAdapter.class.getSimpleName();
     final private ListItemClickListener m_listener;
-    List<MovieContent> m_movies_populate_array=new ArrayList<MovieContent>();
-    int mNumberOfItems;
+    List<MovieContent> m_movies_populate_array= new ArrayList<>();
+
     private static int viewHolderCount;
     public interface ListItemClickListener
     {
@@ -32,13 +32,9 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
         void onListItemClick(MovieContent movie);
     }
 
-    public VideoListAdapter(int numberOfItems, ListItemClickListener listener) {
-        mNumberOfItems=numberOfItems;
-        m_listener=listener;
-        viewHolderCount=0;
-    }
-    public VideoListAdapter(int numberOfItems, ListItemClickListener listener,List<MovieContent> data) {
-        mNumberOfItems=numberOfItems;
+
+    public VideoListAdapter(ListItemClickListener listener,List<MovieContent> data) {
+
         m_listener=listener;
         viewHolderCount=0;
         m_movies_populate_array=data;
@@ -68,14 +64,11 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
     public int getItemCount() {
         return m_movies_populate_array.size();
     }
-    public void setMovieList(List<MovieContent> movies_populate_array)
-    {
-        m_movies_populate_array=movies_populate_array;
-    }
+
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        TextView m_movie_title;
-        ImageView m_movie_poster;
+        final TextView m_movie_title;
+        final ImageView m_movie_poster;
         public MovieViewHolder(View itemView) {
             super(itemView);
             m_movie_title=(TextView) itemView.findViewById(R.id.tv_item_movie_title);
@@ -97,7 +90,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
                 }
             }
 
-            //TODO set the image view through Picassa
+            //TODO set the image view through Picasso
         }
         @Override
         public void onClick(View v) {

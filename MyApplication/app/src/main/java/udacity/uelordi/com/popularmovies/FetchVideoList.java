@@ -1,7 +1,6 @@
 package udacity.uelordi.com.popularmovies;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
+
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -16,6 +15,7 @@ import udacity.uelordi.com.popularmovies.utils.VideosJSONUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 /**
  * Created by uelordi on 04/03/17.
+ * The asynctask which holds the internet connection in background
  */
 
 public class FetchVideoList extends AsyncTask<String,Void,String>
@@ -28,17 +28,10 @@ public class FetchVideoList extends AsyncTask<String,Void,String>
         try {
             URL url= NetworkUtils.buildUrl(sortedBy[0]);
             result=NetworkUtils.getResponseFromHttpUrl(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return result;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
     }
 
     @Override
