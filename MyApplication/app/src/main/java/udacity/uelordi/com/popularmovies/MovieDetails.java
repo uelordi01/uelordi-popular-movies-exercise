@@ -10,14 +10,15 @@ import com.squareup.picasso.Picasso;
 
 
 public class MovieDetails extends AppCompatActivity {
-    private TextView m_tv_title;
-    private ImageView m_iv_poster;
-    private TextView m_tv_user_rating;
-    private TextView m_tv_synopsys;
-    private TextView m_tv_release_date;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TextView m_tv_title;
+        ImageView m_iv_poster;
+        TextView m_tv_user_rating;
+        TextView m_tv_synopsys;
+        TextView m_tv_release_date;
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_movie_details);
         Intent parent_activity=getIntent();
@@ -44,7 +45,7 @@ public class MovieDetails extends AppCompatActivity {
         if( parent_activity.hasExtra("release_date") )
         {
             m_tv_release_date= (TextView) findViewById(R.id.tv_detail_release_date);
-            m_tv_release_date.setText("release date: "+parent_activity.getStringExtra("release_date"));
+            m_tv_release_date.setText(getResources().getString(R.string.release_date)+parent_activity.getStringExtra("release_date"));
         }
 
        // my_intent.putExtra("poster_path",movie.getPoster_path());

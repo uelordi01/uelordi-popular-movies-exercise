@@ -13,4 +13,6 @@
     <!-- OPTION ACTIONS -->
     <string name="action_popular">popularity.desc</string>
     <string name="action_rating">vote_average.desc</string>
+    <!-- UI defaultdata-->
+    <string name="release_date">Release date:</string>
 </resources>

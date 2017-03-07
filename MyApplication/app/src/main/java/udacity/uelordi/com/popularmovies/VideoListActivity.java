@@ -121,6 +121,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
             case R.id.action_filter_popular:
             {
                 Log.v(TAG,"filter_popular");
+                hideErrorMessage();
                 if(NetworkUtils.isOnline(getApplicationContext())) {
                     m_video_list_task = new FetchVideoList();
                     m_video_list_task.setListener(this);
@@ -132,6 +133,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
             case R.id.action_filter_rated:
             {
                 Log.v(TAG,"filter_rated");
+                hideErrorMessage();
                 if(NetworkUtils.isOnline(getApplicationContext())) {
                     m_video_list_task = new FetchVideoList();
                     m_video_list_task.setListener(this);
