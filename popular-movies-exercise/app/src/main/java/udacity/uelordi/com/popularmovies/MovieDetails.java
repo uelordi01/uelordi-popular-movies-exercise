@@ -20,6 +20,7 @@ public class MovieDetails extends AppCompatActivity {
         TextView m_tv_synopsys;
         TextView m_tv_release_date;
 
+        setContentView(R.layout.activity_movie_details);
         Intent parent_activity=getIntent();
         if( parent_activity.hasExtra("title") )
         {
