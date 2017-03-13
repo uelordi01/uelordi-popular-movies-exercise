@@ -19,8 +19,7 @@ public class MovieDetails extends AppCompatActivity {
         TextView m_tv_user_rating;
         TextView m_tv_synopsys;
         TextView m_tv_release_date;
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setContentView(R.layout.activity_movie_details);
+
         Intent parent_activity=getIntent();
         if( parent_activity.hasExtra("title") )
         {
@@ -47,12 +46,5 @@ public class MovieDetails extends AppCompatActivity {
             m_tv_release_date= (TextView) findViewById(R.id.tv_detail_release_date);
             m_tv_release_date.setText(getResources().getString(R.string.release_date)+parent_activity.getStringExtra("release_date"));
         }
-
-       // my_intent.putExtra("poster_path",movie.getPoster_path());
-        //my_intent.putExtra("title",movie.getTitle());
-        //my_intent.putExtra("synopsys",movie.getSynopsis());
-        //my_intent.putExtra("user_rating",movie.getUser_rating());
-        //my_intent.putExtra("release_date",movie.getRelease_date());
-
     }
 }
