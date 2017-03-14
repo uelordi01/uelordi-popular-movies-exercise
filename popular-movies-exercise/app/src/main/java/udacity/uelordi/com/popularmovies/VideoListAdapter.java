@@ -48,7 +48,6 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
 
         View view= li.inflate(LayoutIndexForListItem,parent,shouldAtattachtToTheParentNow);
         MovieViewHolder result_view=new MovieViewHolder(view);
-        result_view.m_movie_title.setText("ViewHolder index: " + viewHolderCount);
         viewHolderCount++;
         return result_view;
     }
@@ -66,11 +65,9 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        final TextView m_movie_title;
         final ImageView m_movie_poster;
         public MovieViewHolder(View itemView) {
             super(itemView);
-            m_movie_title=(TextView) itemView.findViewById(R.id.tv_item_movie_title);
             m_movie_poster=(ImageView)itemView.findViewById(R.id.iv_item_movie_poster);
             itemView.setOnClickListener(this);
         }

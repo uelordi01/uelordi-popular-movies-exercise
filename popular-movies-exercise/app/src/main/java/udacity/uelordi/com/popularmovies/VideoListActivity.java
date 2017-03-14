@@ -20,6 +20,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import udacity.uelordi.com.popularmovies.content.MovieContent;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
@@ -28,22 +30,19 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     private static final String TAG = VideoListActivity.class.getSimpleName();
 
     private FetchVideoList mVideoListTask;
-    private TextView mErrorView;
-    private ProgressBar mVideoListProgressBar;
+    @BindView (R.id.connectivity_error) TextView mErrorView;
+    @BindView (R.id.pg_movie_list)  ProgressBar mVideoListProgressBar;
+    @BindView (R.id.rv_movie_list) RecyclerView mMovieList;
 
-    private RecyclerView mMovieList;
     private VideoListAdapter mMovieListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
+
+        ButterKnife.bind(this);
         String filter=getResources().getString(R.string.action_popular);
-
-        mVideoListProgressBar=(ProgressBar)findViewById(R.id.pg_movie_list);
-
-        mMovieList=(RecyclerView)findViewById(R.id.rv_movie_list);
-
         hideErrorMessage();
 
         if(NetworkUtils.isOnline(getApplicationContext()))
@@ -64,7 +63,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     @Override
     public void OnListAvailable(List<MovieContent> result) {
         hideLoadingBar();
-        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,3);
+        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
         mMovieList.setLayoutManager(gridManager);
         mMovieListAdapter=new VideoListAdapter(VideoListActivity.this,result);
         mMovieList.setAdapter(mMovieListAdapter);
@@ -77,35 +76,18 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     }
     private void showErrorMessage()
     {
-        if(mErrorView==null)
-        {
-            mErrorView=(TextView) findViewById(R.id.connectivity_error);
-        }
         mErrorView.setVisibility(View.VISIBLE);
     }
     private void hideErrorMessage()
     {
-        if(mErrorView==null)
-        {
-            mErrorView=(TextView) findViewById(R.id.connectivity_error);
-        }
         mErrorView.setVisibility(View.INVISIBLE);
     }
     private void showLoadingBar()
     {
-        if(mVideoListProgressBar==null)
-        {
-            mVideoListProgressBar=(ProgressBar)findViewById(R.id.pg_movie_list);
-        }
         mVideoListProgressBar.setVisibility(View.VISIBLE);
-
     }
     private void hideLoadingBar()
     {
-        if(mVideoListProgressBar==null)
-        {
-            mVideoListProgressBar=(ProgressBar)findViewById(R.id.pg_movie_list);
-        }
         mVideoListProgressBar.setVisibility(View.INVISIBLE);
     }
     @Override
