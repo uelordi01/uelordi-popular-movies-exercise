@@ -22,7 +22,15 @@ public class MovieDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        //TODO CREATE THE DBHELPER
+        //TODO CREATE THE ONCREATE AND ONUPGRADE
+        //TODO CREATE THE DATABASE NAME AND DATABASE VERSION ATTRIBUTES
+        //TODO CREATE THE SQL STATEMENT TO CREATE AND DROP THE TABLE (WITH THE REQUIRED PARAMETERS).
+        //TODO DEFINE THE INSERTIONS OF THE TABLE OF FAVORITES ).
+        //TODO CREATE THE CONTRACT CLASS
+        //TODO CREATE THE BASE COLUMNS EXTENDED CLASS.
+        //TODO CREATE THE INTENTS OF THE TABLE
+        //
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
         Intent parent_activity=getIntent();

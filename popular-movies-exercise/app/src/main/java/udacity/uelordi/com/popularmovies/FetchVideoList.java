@@ -17,7 +17,7 @@ import udacity.uelordi.com.popularmovies.utils.onFetchResults;
  * Created by uelordi on 04/03/17.
  * The asynctask which holds the internet connection in background
  */
-
+//TODO MAKE THIS ASYNC TASK AS A LOADERTaskmanager
 public class FetchVideoList extends AsyncTask<String,Void,String>
 {
     private onFetchResults m_callback=null;

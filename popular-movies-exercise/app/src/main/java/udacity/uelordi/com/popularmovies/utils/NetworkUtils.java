@@ -41,6 +41,8 @@ public final class NetworkUtils {
     private static String QUERY_PARAM = "sort_by";
     private final static String API_KEY = "api_key";
 
+    //TODO IMPLEMENT THE HTTP AND HTTPS LIBRARY http://loopj.com/android-async-http/
+    //TODO CREATE THE FUNCTION TO OBTAIN THE COMMENTS AND THE TRAILER LINKS.
 
     /**
      * Builds the URL used to talk to the weather server using a location. This location is based
