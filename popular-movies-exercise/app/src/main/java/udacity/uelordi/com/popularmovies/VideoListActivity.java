@@ -32,8 +32,8 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     private FetchVideoList mVideoListTask;
     @BindView (R.id.connectivity_error) TextView mErrorView;
     @BindView (R.id.pg_movie_list)  ProgressBar mVideoListProgressBar;
-    @BindView (R.id.rv_movie_list) RecyclerView mMovieList;
-
+   @BindView (R.id.rv_movie_list) RecyclerView mMovieList;
+    //private RecyclerView mMovieList;
     private VideoListAdapter mMovieListAdapter;
 
     @Override
@@ -63,6 +63,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     @Override
     public void OnListAvailable(List<MovieContent> result) {
         hideLoadingBar();
+       // mMovieList=(RecyclerView) findViewById(R.id.rv_movie_list);
         GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
         mMovieList.setLayoutManager(gridManager);
         mMovieListAdapter=new VideoListAdapter(VideoListActivity.this,result);

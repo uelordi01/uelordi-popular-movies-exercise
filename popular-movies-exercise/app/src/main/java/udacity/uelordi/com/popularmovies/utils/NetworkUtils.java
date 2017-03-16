@@ -27,6 +27,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+import com.loopj.android.http.*;
+
+import cz.msebera.android.httpclient.Header;
+
 /**
  * These utilities will be used to communicate with the weather servers.
  */
@@ -41,8 +45,8 @@ public final class NetworkUtils {
     private static String QUERY_PARAM = "sort_by";
     private final static String API_KEY = "api_key";
 
-    //TODO IMPLEMENT THE HTTP AND HTTPS LIBRARY http://loopj.com/android-async-http/
-    //TODO CREATE THE FUNCTION TO OBTAIN THE COMMENTS AND THE TRAILER LINKS.
+    //TODO 2 IMPLEMENT THE HTTP AND HTTPS LIBRARY http://loopj.com/android-async-http/
+    //TODO 1 CREATE THE FUNCTION TO OBTAIN THE COMMENTS AND THE TRAILER LINKS.
 
     /**
      * Builds the URL used to talk to the weather server using a location. This location is based
@@ -59,7 +63,36 @@ public final class NetworkUtils {
         return new URL(builtUri.toString());
     }
 
+    public static String callToHttp(URL url) {
+        String result;
+        boolean success;
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(url.toString(), new AsyncHttpResponseHandler() {
 
+            @Override
+            public void onStart() {
+                // called before request is started
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String result=new String(responseBody);
+            }
+
+
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+            }
+        });
+        return null;
+    }
     /**
      * This method returns the entire result from the HTTP response.
      *

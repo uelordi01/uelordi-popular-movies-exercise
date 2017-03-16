@@ -26,6 +26,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
     List<MovieContent> m_movies_populate_array= new ArrayList<>();
 
     private static int viewHolderCount;
+
     public interface ListItemClickListener
     {
         void onListItemClick(MovieContent movie);

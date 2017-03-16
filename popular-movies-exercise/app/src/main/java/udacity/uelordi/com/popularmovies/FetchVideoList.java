@@ -18,6 +18,7 @@ import udacity.uelordi.com.popularmovies.utils.onFetchResults;
  * The asynctask which holds the internet connection in background
  */
 //TODO MAKE THIS ASYNC TASK AS A LOADERTaskmanager
+//TODO Call to callToHttp(url) functions to get async responses:
 public class FetchVideoList extends AsyncTask<String,Void,String>
 {
     private onFetchResults m_callback=null;
@@ -27,7 +28,7 @@ public class FetchVideoList extends AsyncTask<String,Void,String>
         String result=null;
         try {
             URL url= NetworkUtils.buildUrl(sortedBy[0]);
-            result=NetworkUtils.getResponseFromHttpUrl(url);
+            result=NetworkUtils.getResponseFromHttpUrl(url);//NetworkUtils.callToHttp(url);//
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,7 +45,6 @@ public class FetchVideoList extends AsyncTask<String,Void,String>
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            //m_callback.OnListAvailable(s);
         }
         else
         {

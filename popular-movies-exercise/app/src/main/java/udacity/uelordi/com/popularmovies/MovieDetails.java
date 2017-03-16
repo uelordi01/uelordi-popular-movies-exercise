@@ -30,7 +30,7 @@ public class MovieDetails extends AppCompatActivity {
         //TODO CREATE THE CONTRACT CLASS
         //TODO CREATE THE BASE COLUMNS EXTENDED CLASS.
         //TODO CREATE THE INTENTS OF THE TABLE
-        //
+
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
         Intent parent_activity=getIntent();
