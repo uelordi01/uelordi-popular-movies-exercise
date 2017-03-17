@@ -27,71 +27,94 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-import com.loopj.android.http.*;
-
-import cz.msebera.android.httpclient.Header;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * These utilities will be used to communicate with the weather servers.
  */
 public final class NetworkUtils {
 
+    private static NetworkUtils m_instance;
+
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
     private static final String STATIC_MOVIE_DB_URL =
-            "http://api.themoviedb.org/3/discover/movie";
+            "http://api.themoviedb.org/3";
 
     private final static String api_key="";
-    private static String QUERY_PARAM = "sort_by";
+    private static String SORT_PARAM = "sort_by";
     private final static String API_KEY = "api_key";
+
+    private final static String REVIEW_KEY="review";
+    private final static String MOVIE_ID_KEY="movie";
+
+    //private final static String MOVIE_
+
+    public enum ACTION_TYPE{GET_MOVIE_LIST,GET_REVIEWS,GET_TRAILERS}
+    private static ACTION_TYPE mCurrentActionType;
 
     //TODO 2 IMPLEMENT THE HTTP AND HTTPS LIBRARY http://loopj.com/android-async-http/
     //TODO 1 CREATE THE FUNCTION TO OBTAIN THE COMMENTS AND THE TRAILER LINKS.
 
-    /**
-     * Builds the URL used to talk to the weather server using a location. This location is based
-     * on the query capabilities of the weather provider that we are using.
-     *
-     * @return The URL to use to query the weather server.
-     */
-    public static URL buildUrl(String sortBy) throws MalformedURLException {
+    private NetworkUtils() {};
+    public static synchronized NetworkUtils getInstance()
+    {
+        if(m_instance == null)
+        {
+            m_instance = new NetworkUtils();
+        }
+        return m_instance;
+    }
+    public String getMovieList(String sort) throws IOException {
+        String url=STATIC_MOVIE_DB_URL+"/discover/movie";
+
+        Uri builtUri = Uri.parse(url)
+                .buildUpon()
+                .appendQueryParameter(SORT_PARAM, sort)
+                .appendQueryParameter(API_KEY, api_key)
+                .build();
+        String urld=builtUri.toString();
+        String result= callToHttp(new URL(urld));
+        return result;
+    }
+    public String getReviews(int movieID) throws IOException {
+        String url=STATIC_MOVIE_DB_URL+"/discover/movie";
+
+        Uri builtUri = Uri.parse(url)
+                .buildUpon()
+                .appendQueryParameter(API_KEY, api_key)
+                .build();
+        String urld=builtUri.toString();
+        String result= callToHttp(new URL(urld));
+        return result;
+    }
+    public String getTrailers(int movieID)
+    {
+        return "";
+    }
+    /*private URL setPrivateKey(String key)
+    {
+
+    }*/
+    /*public URL buildUrl(String sortBy) throws MalformedURLException {
         Uri builtUri = Uri.parse(STATIC_MOVIE_DB_URL)
                 .buildUpon()
-                .appendQueryParameter(QUERY_PARAM, sortBy)
+                .appendQueryParameter(SORT_PARAM, sortBy)
                 .appendQueryParameter(API_KEY, api_key)
                 .build();
         return new URL(builtUri.toString());
-    }
+    }*/
 
-    public static String callToHttp(URL url) {
-        String result;
+    public String callToHttp(URL url) throws IOException {
         boolean success;
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(url.toString(), new AsyncHttpResponseHandler() {
-
-            @Override
-            public void onStart() {
-                // called before request is started
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String result=new String(responseBody);
-            }
-
-
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-            }
-
-            @Override
-            public void onRetry(int retryNo) {
-                // called when request is retried
-            }
-        });
-        return null;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        Response response = client.newCall(request).execute();
+        return response.body().string();
     }
     /**
      * This method returns the entire result from the HTTP response.
@@ -100,7 +123,7 @@ public final class NetworkUtils {
      * @return The contents of the HTTP response.
      * @throws IOException Related to network and stream reading
      */
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
+    public  String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             InputStream in = urlConnection.getInputStream();

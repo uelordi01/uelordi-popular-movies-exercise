@@ -27,8 +27,9 @@ public class FetchVideoList extends AsyncTask<String,Void,String>
     protected String doInBackground(String... sortedBy) {
         String result=null;
         try {
-            URL url= NetworkUtils.buildUrl(sortedBy[0]);
-            result=NetworkUtils.getResponseFromHttpUrl(url);//NetworkUtils.callToHttp(url);//
+            //URL url= NetworkUtils.getInstance().buildUrl(sortedBy[0]);
+            //result=NetworkUtils.getResponseFromHttpUrl(url);//NetworkUtils.callToHttp(url);//
+            result=NetworkUtils.getInstance().getMovieList(sortedBy[0]);//
         } catch (IOException e) {
             e.printStackTrace();
         }
