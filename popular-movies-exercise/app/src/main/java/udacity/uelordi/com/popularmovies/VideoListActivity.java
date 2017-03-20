@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,19 +24,27 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import udacity.uelordi.com.popularmovies.background.MovielistTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContent;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
-public class VideoListActivity extends AppCompatActivity implements onFetchResults,VideoListAdapter.ListItemClickListener {
+public class VideoListActivity extends AppCompatActivity implements onFetchResults,VideoListAdapter.ListItemClickListener,
+LoaderManager.LoaderCallbacks<List> {
+
     private static final String TAG = VideoListActivity.class.getSimpleName();
 
     private FetchVideoList mVideoListTask;
     @BindView (R.id.connectivity_error) TextView mErrorView;
     @BindView (R.id.pg_movie_list)  ProgressBar mVideoListProgressBar;
-   @BindView (R.id.rv_movie_list) RecyclerView mMovieList;
-    //private RecyclerView mMovieList;
+    @BindView (R.id.rv_movie_list) RecyclerView mMovieList;
+
     private VideoListAdapter mMovieListAdapter;
+
+    private static final String SELECTED_SEARCH_OPTION = "search_option";
+
+    private static final int LOADER_TASK_ID=5;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +57,11 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
 
         if(NetworkUtils.isOnline(getApplicationContext()))
         {
-            mVideoListTask=new FetchVideoList();
-            mVideoListTask.setListener(this);
-            showLoadingBar();
-            mVideoListTask.execute(filter);
+            //mVideoListTask=new FetchVideoList();
+            //mVideoListTask.setListener(this);
+            //showLoadingBar();
+            //mVideoListTask.execute(filter);
+            getSupportLoaderManager().initLoader(LOADER_TASK_ID, null, this);
         }
         else
         {
@@ -134,5 +145,21 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         my_intent.putExtra("user_rating",movie.getUser_rating());
         my_intent.putExtra("release_date",movie.getRelease_date());
         startActivity(my_intent);
+    }
+
+    @Override
+    public Loader<List> onCreateLoader(int id, Bundle args) {
+        String selected_option=args.getString(SELECTED_SEARCH_OPTION);
+        return new MovielistTaskLoader(this,selected_option);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List> loader, List data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List> loader) {
+
     }
 }
