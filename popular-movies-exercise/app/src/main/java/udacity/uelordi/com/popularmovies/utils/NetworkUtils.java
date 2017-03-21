@@ -46,9 +46,10 @@ public final class NetworkUtils {
     private final static String api_key="";
     private static String SORT_PARAM = "sort_by";
     private final static String API_KEY = "api_key";
-
-    private final static String REVIEW_KEY="review";
-    private final static String MOVIE_ID_KEY="movie";
+    private final static String APPEND_TO_KEY = "append_to_response" ;
+    private final static String REVIEW_PARAM="review";
+    private final static String TRAILER_PARAM="videos";
+    private final static String MOVIE_ID_PARAM="movie";
 
     //private final static String MOVIE_
 
@@ -81,32 +82,29 @@ public final class NetworkUtils {
         return result;
     }
     public String getReviews(int movieID) throws IOException {
-        String url=STATIC_MOVIE_DB_URL+"/discover/movie";
+        String url=STATIC_MOVIE_DB_URL+"/"+MOVIE_ID_PARAM+"/"+movieID;
 
         Uri builtUri = Uri.parse(url)
                 .buildUpon()
                 .appendQueryParameter(API_KEY, api_key)
+                .appendQueryParameter(APPEND_TO_KEY,REVIEW_PARAM)
                 .build();
         String urld=builtUri.toString();
         String result= callToHttp(new URL(urld));
         return result;
     }
-    public String getTrailers(int movieID)
-    {
-        return "";
-    }
-    /*private URL setPrivateKey(String key)
-    {
+    public String getTrailers(int movieID) throws IOException {
+        String url=STATIC_MOVIE_DB_URL+"/"+MOVIE_ID_PARAM+"/"+movieID;
 
-    }*/
-    /*public URL buildUrl(String sortBy) throws MalformedURLException {
-        Uri builtUri = Uri.parse(STATIC_MOVIE_DB_URL)
+        Uri builtUri = Uri.parse(url)
                 .buildUpon()
-                .appendQueryParameter(SORT_PARAM, sortBy)
                 .appendQueryParameter(API_KEY, api_key)
+                .appendQueryParameter(APPEND_TO_KEY,TRAILER_PARAM)
                 .build();
-        return new URL(builtUri.toString());
-    }*/
+        String urld=builtUri.toString();
+        String result= callToHttp(new URL(urld));
+        return result;
+    }
 
     public String callToHttp(URL url) throws IOException {
         boolean success;

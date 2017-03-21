@@ -110,32 +110,6 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         int itemWasClicked=item.getItemId();
         switch (itemWasClicked)
         {
-            case R.id.action_filter_popular:
-            {
-                Log.v(TAG,"filter_popular");
-                hideErrorMessage();
-                if(NetworkUtils.isOnline(getApplicationContext())) {
-                    /*mVideoListTask = new FetchVideoList();
-                    mVideoListTask.setListener(this);*/
-                    showLoadingBar();
-                    restartLoader(getResources().getString(R.string.action_popular));
-                    //mVideoListTask.execute(getResources().getString(R.string.action_popular));
-                }
-                break;
-            }
-            case R.id.action_filter_rated:
-            {
-                Log.v(TAG,"filter_rated");
-                hideErrorMessage();
-                if(NetworkUtils.isOnline(getApplicationContext())) {
-                    /*mVideoListTask = new FetchVideoList();
-                    mVideoListTask.setListener(this);*/
-                    showLoadingBar();
-                    restartLoader(getResources().getString(R.string.action_rating));
-                    //mVideoListTask.execute(getResources().getString(R.string.action_rating));
-                }
-                break;
-            }
             case R.id.action_settings:
             {
                 Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
