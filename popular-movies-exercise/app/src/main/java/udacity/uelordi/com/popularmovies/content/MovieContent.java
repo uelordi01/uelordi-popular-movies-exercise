@@ -13,7 +13,15 @@ public class MovieContent
     private String synopsis;
     private String user_rating;
     private String release_date;
+    private int movieID;
 
+    public int getMovieID() {
+        return movieID;
+    }
+
+    public void setMovieID(int movieID) {
+        this.movieID = movieID;
+    }
 
     public String getPoster_path() {
         return poster_path;

@@ -57,6 +57,7 @@ public final class NetworkUtils {
 
     //TODO 2 IMPLEMENT THE HTTP AND HTTPS LIBRARY http://loopj.com/android-async-http/
     //TODO 1 CREATE THE FUNCTION TO OBTAIN THE COMMENTS AND THE TRAILER LINKS.
+    //TODO 3 CHANGE THE URLS OF THE REVIEWS AND THE MOVIES:  (FIND THE PATHS PLEASE)
 
     private NetworkUtils() {};
     public static synchronized NetworkUtils getInstance()

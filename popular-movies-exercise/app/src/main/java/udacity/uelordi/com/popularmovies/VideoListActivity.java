@@ -46,6 +46,8 @@ LoaderManager.LoaderCallbacks<List> {
     private static final int LOADER_TASK_ID=5;
 
 
+
+    //TODO make the preferences without preference_activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,11 +59,10 @@ LoaderManager.LoaderCallbacks<List> {
 
         if(NetworkUtils.isOnline(getApplicationContext()))
         {
-            //mVideoListTask=new FetchVideoList();
-            //mVideoListTask.setListener(this);
-            //showLoadingBar();
-            //mVideoListTask.execute(filter);
-            getSupportLoaderManager().initLoader(LOADER_TASK_ID, null, this);
+            showLoadingBar();
+            Bundle queryBundle = new Bundle();
+            queryBundle.putString(SELECTED_SEARCH_OPTION,filter);
+            getSupportLoaderManager().initLoader(LOADER_TASK_ID, queryBundle, this);
         }
         else
         {
@@ -74,7 +75,6 @@ LoaderManager.LoaderCallbacks<List> {
     @Override
     public void OnListAvailable(List<MovieContent> result) {
         hideLoadingBar();
-       // mMovieList=(RecyclerView) findViewById(R.id.rv_movie_list);
         GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
         mMovieList.setLayoutManager(gridManager);
         mMovieListAdapter=new VideoListAdapter(VideoListActivity.this,result);
@@ -112,10 +112,11 @@ LoaderManager.LoaderCallbacks<List> {
                 Log.v(TAG,"filter_popular");
                 hideErrorMessage();
                 if(NetworkUtils.isOnline(getApplicationContext())) {
-                    mVideoListTask = new FetchVideoList();
-                    mVideoListTask.setListener(this);
+                    /*mVideoListTask = new FetchVideoList();
+                    mVideoListTask.setListener(this);*/
                     showLoadingBar();
-                    mVideoListTask.execute(getResources().getString(R.string.action_popular));
+                    restartLoader(getResources().getString(R.string.action_popular));
+                    //mVideoListTask.execute(getResources().getString(R.string.action_popular));
                 }
                 break;
             }
@@ -124,10 +125,11 @@ LoaderManager.LoaderCallbacks<List> {
                 Log.v(TAG,"filter_rated");
                 hideErrorMessage();
                 if(NetworkUtils.isOnline(getApplicationContext())) {
-                    mVideoListTask = new FetchVideoList();
-                    mVideoListTask.setListener(this);
+                    /*mVideoListTask = new FetchVideoList();
+                    mVideoListTask.setListener(this);*/
                     showLoadingBar();
-                    mVideoListTask.execute(getResources().getString(R.string.action_rating));
+                    restartLoader(getResources().getString(R.string.action_rating));
+                    //mVideoListTask.execute(getResources().getString(R.string.action_rating));
                 }
                 break;
             }
@@ -139,6 +141,8 @@ LoaderManager.LoaderCallbacks<List> {
     @Override
     public void onListItemClick(MovieContent movie) {
         Intent my_intent = new Intent(this,MovieDetails.class);
+        int id=movie.getMovieID();
+        my_intent.putExtra("movieid",id);
         my_intent.putExtra("poster_path",movie.getPoster_path());
         my_intent.putExtra("title",movie.getTitle());
         my_intent.putExtra("synopsys",movie.getSynopsis());
@@ -155,11 +159,31 @@ LoaderManager.LoaderCallbacks<List> {
 
     @Override
     public void onLoadFinished(Loader<List> loader, List data) {
-
+        hideLoadingBar();
+        // mMovieList=(RecyclerView) findViewById(R.id.rv_movie_list);
+        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
+        mMovieList.setLayoutManager(gridManager);
+        mMovieListAdapter=new VideoListAdapter(VideoListActivity.this,data);
+        mMovieList.setAdapter(mMovieListAdapter);
     }
 
     @Override
     public void onLoaderReset(Loader<List> loader) {
 
+    }
+    public void restartLoader(String action_type)
+    {
+        Bundle queryBundle = new Bundle();
+        // COMPLETED (20) Use putString with SEARCH_QUERY_URL_EXTRA as the key and the String value of the URL as the value
+        queryBundle.putString(SELECTED_SEARCH_OPTION,action_type);
+        LoaderManager loaderManager = getSupportLoaderManager();
+        // COMPLETED (22) Get our Loader by calling getLoader and passing the ID we specified
+        Loader<String> githubSearchLoader = loaderManager.getLoader(LOADER_TASK_ID);
+        // COMPLETED (23) If the Loader was null, initialize it. Else, restart it.
+        if (githubSearchLoader == null) {
+            loaderManager.initLoader(LOADER_TASK_ID, queryBundle, this);
+        } else {
+            loaderManager.restartLoader(LOADER_TASK_ID, queryBundle, this);
+        }
     }
 }
