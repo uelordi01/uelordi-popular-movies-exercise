@@ -1,14 +1,13 @@
 package udacity.uelordi.com.popularmovies;
 
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
+import android.content.SharedPreferences;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
@@ -26,11 +25,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import udacity.uelordi.com.popularmovies.background.MovielistTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContent;
+import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
-public class VideoListActivity extends AppCompatActivity implements onFetchResults,VideoListAdapter.ListItemClickListener,
-LoaderManager.LoaderCallbacks<List> {
+public class VideoListActivity extends AppCompatActivity implements onFetchResults,
+                                                            VideoListAdapter.ListItemClickListener,
+                                                            LoaderManager.LoaderCallbacks<List>,
+                                                SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = VideoListActivity.class.getSimpleName();
 
@@ -61,7 +63,8 @@ LoaderManager.LoaderCallbacks<List> {
         {
             showLoadingBar();
             Bundle queryBundle = new Bundle();
-            queryBundle.putString(SELECTED_SEARCH_OPTION,filter);
+            queryBundle.putString(SELECTED_SEARCH_OPTION,setupPreferences());
+            //queryBundle.putString(SELECTED_SEARCH_OPTION,filter);
             getSupportLoaderManager().initLoader(LOADER_TASK_ID, queryBundle, this);
         }
         else
@@ -133,6 +136,12 @@ LoaderManager.LoaderCallbacks<List> {
                 }
                 break;
             }
+            case R.id.action_settings:
+            {
+                Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+                startActivity(startSettingsActivity);
+                break;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -174,16 +183,39 @@ LoaderManager.LoaderCallbacks<List> {
     public void restartLoader(String action_type)
     {
         Bundle queryBundle = new Bundle();
-        // COMPLETED (20) Use putString with SEARCH_QUERY_URL_EXTRA as the key and the String value of the URL as the value
         queryBundle.putString(SELECTED_SEARCH_OPTION,action_type);
         LoaderManager loaderManager = getSupportLoaderManager();
-        // COMPLETED (22) Get our Loader by calling getLoader and passing the ID we specified
-        Loader<String> githubSearchLoader = loaderManager.getLoader(LOADER_TASK_ID);
-        // COMPLETED (23) If the Loader was null, initialize it. Else, restart it.
-        if (githubSearchLoader == null) {
+        Loader<String> videoListLoader = loaderManager.getLoader(LOADER_TASK_ID);
+        if ( videoListLoader == null ) {
             loaderManager.initLoader(LOADER_TASK_ID, queryBundle, this);
         } else {
             loaderManager.restartLoader(LOADER_TASK_ID, queryBundle, this);
         }
+    }
+    /*
+     setup the preferences and return the default value for the preferences
+     */
+    public String setupPreferences()
+    {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String defaultValue=sharedPreferences.getString(getString(R.string.pref_sort_key),
+                                                    getString(R.string.pref_sort_popular_value));
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        return defaultValue;
+    }
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        restartLoader(key);
+        /*Bundle query =
+        if( key.equals(getString(R.string.pref_sort_popular_value)) )
+        {
+
+        }
+        if( key.equals(getString(R.string.pref_sort_rated_value)) ) {
+
+        }
+        if( key.equals(getString(R.string.pref_sort_favorites_value)) ) {
+
+        }*/
     }
 }

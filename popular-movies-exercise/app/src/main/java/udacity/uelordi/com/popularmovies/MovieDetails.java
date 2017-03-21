@@ -14,7 +14,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import udacity.uelordi.com.popularmovies.background.ReviewListTaskLoader;
+//import udacity.uelordi.com.popularmovies.background.ReviewListTaskLoader;
 
 
 public class MovieDetails extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List> {
@@ -67,13 +67,14 @@ public class MovieDetails extends AppCompatActivity implements LoaderManager.Loa
         }
         Bundle queryBundle = new Bundle();
         queryBundle.putInt(MOVIE_ID_KEY,parent_activity.getIntExtra("movieid",0));
-        getSupportLoaderManager().initLoader(REVIEW_TASK_ID, queryBundle, this);
+       // getSupportLoaderManager().initLoader(REVIEW_TASK_ID, queryBundle, this);
     }
 
     @Override
     public Loader<List> onCreateLoader(int id, Bundle args) {
         int movieid=args.getInt(MOVIE_ID_KEY);
-        return new ReviewListTaskLoader(this,movieid);
+        //return new ReviewListTaskLoader(this,movieid);
+        return null;
     }
 
     @Override
