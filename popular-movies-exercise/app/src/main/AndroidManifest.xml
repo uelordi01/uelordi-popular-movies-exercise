@@ -19,11 +19,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MovieDetails" >
+        <activity android:name=".MovieDetailsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".VideoListActivity" />
-            </activity>
+        </activity>
+        <activity
+            android:name=".preferences.SettingsActivity"
+            android:label="@string/action_settings"
+            android:parentActivityName=".VideoListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".VideoListActivity" />
+        </activity>
     </application>
 
 </manifest>

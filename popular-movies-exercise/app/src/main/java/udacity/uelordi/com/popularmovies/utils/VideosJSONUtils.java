@@ -7,14 +7,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import udacity.uelordi.com.popularmovies.content.MovieContent;
+import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 
 /**
  * Created by uelordi on 28/02/2017.
  */
 
 public class VideosJSONUtils {
-    public static List<MovieContent> getMovieListFromJson(String json_string) throws JSONException
+    public static List<MovieContentDetails> getMovieListFromJson(String json_string) throws JSONException
     {
         final String RESULTS_LIST="results";
         final String ID="id";
@@ -26,12 +26,13 @@ public class VideosJSONUtils {
 
         JSONObject movie_Json=new JSONObject(json_string);
 
-        List<MovieContent> result_array= new ArrayList<>();
+        List<MovieContentDetails> result_array= new ArrayList<>();
 
         JSONArray jresult_list= movie_Json.getJSONArray(RESULTS_LIST);
         for(int i=0;i<jresult_list.length();i++){
             JSONObject jobject = jresult_list.getJSONObject(i);
-            MovieContent mc=new MovieContent();
+            MovieContentDetails mc=new MovieContentDetails();
+            mc.setMovieID(jobject.getInt(ID));
             mc.setTitle(jobject.getString(TITLE));
             String image_path=jobject.getString(IMAGE_PATH);
             mc.setPoster_path(image_path);

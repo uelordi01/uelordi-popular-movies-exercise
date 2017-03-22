@@ -1,4 +1,4 @@
-package udacity.uelordi.com.popularmovies;
+package udacity.uelordi.com.popularmovies.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,14 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import udacity.uelordi.com.popularmovies.content.MovieContent;
+import udacity.uelordi.com.popularmovies.R;
+import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 
 /**
  * Created by uelordi on 28/02/2017.
@@ -23,16 +23,17 @@ import udacity.uelordi.com.popularmovies.content.MovieContent;
 public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.MovieViewHolder>  {
     private final String TAG = VideoListAdapter.class.getSimpleName();
     final private ListItemClickListener m_listener;
-    List<MovieContent> m_movies_populate_array= new ArrayList<>();
+    List<MovieContentDetails> m_movies_populate_array= new ArrayList<>();
 
     private static int viewHolderCount;
+
     public interface ListItemClickListener
     {
-        void onListItemClick(MovieContent movie);
+        void onListItemClick(MovieContentDetails movie);
     }
 
 
-    public VideoListAdapter(ListItemClickListener listener,List<MovieContent> data) {
+    public VideoListAdapter(ListItemClickListener listener,List<MovieContentDetails> data) {
 
         m_listener=listener;
         viewHolderCount=0;
@@ -42,7 +43,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context=parent.getContext();
-        int LayoutIndexForListItem=R.layout.movie_list_item;
+        int LayoutIndexForListItem= R.layout.movie_list_item;
         LayoutInflater li=LayoutInflater.from(context);
         boolean shouldAtattachtToTheParentNow=false;
 
