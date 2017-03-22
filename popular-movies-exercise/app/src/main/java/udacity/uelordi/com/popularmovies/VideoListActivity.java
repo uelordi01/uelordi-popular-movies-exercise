@@ -11,7 +11,6 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,8 +22,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import udacity.uelordi.com.popularmovies.adapters.VideoListAdapter;
 import udacity.uelordi.com.popularmovies.background.MovielistTaskLoader;
-import udacity.uelordi.com.popularmovies.content.MovieContent;
+import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
@@ -76,7 +76,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     }
 
     @Override
-    public void OnListAvailable(List<MovieContent> result) {
+    public void OnListAvailable(List<MovieContentDetails> result) {
         hideLoadingBar();
         GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
         mMovieList.setLayoutManager(gridManager);
@@ -122,8 +122,8 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
 
 
     @Override
-    public void onListItemClick(MovieContent movie) {
-        Intent my_intent = new Intent(this,MovieDetails.class);
+    public void onListItemClick(MovieContentDetails movie) {
+        Intent my_intent = new Intent(this,MovieDetailsActivity.class);
         int id=movie.getMovieID();
         my_intent.putExtra("movieid",id);
         my_intent.putExtra("poster_path",movie.getPoster_path());

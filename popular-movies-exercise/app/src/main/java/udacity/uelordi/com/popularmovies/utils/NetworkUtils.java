@@ -47,8 +47,7 @@ public final class NetworkUtils {
     private static String SORT_PARAM = "sort_by";
     private final static String API_KEY = "api_key";
     private final static String APPEND_TO_KEY = "append_to_response" ;
-    private final static String REVIEW_PARAM="review";
-    private final static String TRAILER_PARAM="videos";
+    private final static String VALUES_TO_RESPONSE="videos,reviews";
     private final static String MOVIE_ID_PARAM="movie";
 
     //private final static String MOVIE_
@@ -81,25 +80,13 @@ public final class NetworkUtils {
         String result= callToHttp(new URL(urld));
         return result;
     }
-    public String getReviews(int movieID) throws IOException {
+    public String getMovieDetails(int movieID) throws IOException {
         String url=STATIC_MOVIE_DB_URL+"/"+MOVIE_ID_PARAM+"/"+movieID;
 
         Uri builtUri = Uri.parse(url)
                 .buildUpon()
                 .appendQueryParameter(API_KEY, api_key)
-                .appendQueryParameter(APPEND_TO_KEY,REVIEW_PARAM)
-                .build();
-        String urld=builtUri.toString();
-        String result= callToHttp(new URL(urld));
-        return result;
-    }
-    public String getTrailers(int movieID) throws IOException {
-        String url=STATIC_MOVIE_DB_URL+"/"+MOVIE_ID_PARAM+"/"+movieID;
-
-        Uri builtUri = Uri.parse(url)
-                .buildUpon()
-                .appendQueryParameter(API_KEY, api_key)
-                .appendQueryParameter(APPEND_TO_KEY,TRAILER_PARAM)
+                .appendQueryParameter(APPEND_TO_KEY,VALUES_TO_RESPONSE)
                 .build();
         String urld=builtUri.toString();
         String result= callToHttp(new URL(urld));
@@ -114,31 +101,6 @@ public final class NetworkUtils {
                 .build();
         Response response = client.newCall(request).execute();
         return response.body().string();
-    }
-    /**
-     * This method returns the entire result from the HTTP response.
-     *
-     * @param url The URL to fetch the HTTP response from.
-     * @return The contents of the HTTP response.
-     * @throws IOException Related to network and stream reading
-     */
-    public  String getResponseFromHttpUrl(URL url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        try {
-            InputStream in = urlConnection.getInputStream();
-
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
-
-            boolean hasInput = scanner.hasNext();
-            if (hasInput) {
-                return scanner.next();
-            } else {
-                return null;
-            }
-        } finally {
-            urlConnection.disconnect();
-        }
     }
     public static boolean isOnline(Context context)
     {
