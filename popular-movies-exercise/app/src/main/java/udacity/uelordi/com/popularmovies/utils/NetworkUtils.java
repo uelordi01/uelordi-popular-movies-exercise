@@ -43,7 +43,7 @@ public final class NetworkUtils {
     private static final String STATIC_MOVIE_DB_URL =
             "http://api.themoviedb.org/3";
 
-    private final static String api_key="";
+    private final static String api_key="37683374c36effc22bc99f0d2bdf476c";
     private static String SORT_PARAM = "sort_by";
     private final static String API_KEY = "api_key";
     private final static String APPEND_TO_KEY = "append_to_response" ;

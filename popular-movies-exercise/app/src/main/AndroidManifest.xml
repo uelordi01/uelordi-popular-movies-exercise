@@ -32,6 +32,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".VideoListActivity" />
         </activity>
+        <provider android:name="udacity.uelordi.com.popularmovies.database.MoviesProvider"
+            android:authorities="udacity.uelordi.com.popularmovies"/>
     </application>
 
 </manifest>
