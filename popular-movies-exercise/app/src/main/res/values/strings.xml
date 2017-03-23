@@ -9,7 +9,7 @@
     <string name="default_poster">default.jpg</string>
     <string name="default_rating">5</string>
     <string name="default_release_date">Today</string>
-
+    <string name="favorite_add">Pressed as a favorite</string>
     <!-- OPTION ACTIONS -->
     <string name="action_popular">popularity.desc</string>
     <string name="action_rating">vote_average.desc</string>
@@ -17,8 +17,7 @@
     <!-- UI defaultdata-->
     <string name="release_date">Release date:</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
     <!-- Preference values -->
 

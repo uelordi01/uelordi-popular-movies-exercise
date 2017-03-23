@@ -1,15 +1,19 @@
 package udacity.uelordi.com.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -17,10 +21,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import udacity.uelordi.com.popularmovies.adapters.ReviewAdapter;
 import udacity.uelordi.com.popularmovies.background.MovieDetailTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.content.ReviewContent;
+import udacity.uelordi.com.popularmovies.database.MovieContract;
 
 
 public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List> {
@@ -30,6 +36,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     @BindView (R.id.tv_detail_synopsys)TextView m_tv_synopsys;
     @BindView (R.id.tv_detail_release_date)TextView m_tv_release_date;
     @BindView (R.id.rv_movie_reviews) RecyclerView rvReviews;
+
+   @BindView(R.id.bt_favorite_button) Button btFavorite;
     //@BindView (R.id.rv_movie_trailers) RecyclerView mRvTrailers;
 
 
@@ -38,7 +46,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private static String MOVIE_ID_KEY="movieid";
 
     private static final int MOVIE_DETAIL_TASK_ID=6;
-
+    private static final String TAG = "MoveDetailsActivity";
+    MovieContentDetails m_current_content;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +74,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
         if( parent_activity.hasExtra("poster_path") )
         {
-            Picasso.with(m_iv_poster.getContext()).load(parent_activity.getStringExtra("poster_path")).into(m_iv_poster);
+            Picasso.with(m_iv_poster.getContext())
+                                            .load(parent_activity.getStringExtra("poster_path"))
+                                            .into(m_iv_poster);
         }
         if( parent_activity.hasExtra("synopsys") )
         {
@@ -73,7 +84,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
         if( parent_activity.hasExtra("release_date") )
         {
-            m_tv_release_date.setText(getResources().getString(R.string.release_date)+parent_activity.getStringExtra("release_date"));
+            m_tv_release_date.setText(getResources().getString(R.string.release_date)
+                                                    +parent_activity.getStringExtra("release_date"));
         }
         Bundle queryBundle = new Bundle();
         queryBundle.putInt(MOVIE_ID_KEY,parent_activity.getIntExtra("movieid",0));
@@ -92,11 +104,22 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         List<MovieContentDetails> result= data;
         LinearLayoutManager lmanager=new LinearLayoutManager(this);
         rvReviews.setLayoutManager(lmanager);
-        mReviewtAdapter = new ReviewAdapter(result.get(0).getReviewContent());
+        m_current_content=result.get(0);
+        mReviewtAdapter = new ReviewAdapter(m_current_content.getReviewContent());
         rvReviews.setAdapter(mReviewtAdapter);
     }
     @Override
     public void onLoaderReset(Loader<List> loader) {
 
+    }
+
+    @OnClick(R.id.bt_favorite_button)
+    public void submit() {
+        // TODO submit data to server...
+        Log.v(TAG,"favorite button pressed:");
+        Toast.makeText(this,getResources().getString(R.string.favorite_add).toString()
+                                                            , Toast.LENGTH_SHORT).show();
+        ContentValues contentValues= new ContentValues();
+        //contentValues.put(MovieContract.MovieEntry.COLUMN_ID)
     }
 }
