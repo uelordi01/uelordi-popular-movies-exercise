@@ -52,6 +52,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     @Override
     public int getItemCount() {
+
         return m_reviews_populate_array.size();
     }
 

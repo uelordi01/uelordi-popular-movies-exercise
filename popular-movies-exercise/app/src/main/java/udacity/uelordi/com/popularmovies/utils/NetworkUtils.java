@@ -21,15 +21,12 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Scanner;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import udacity.uelordi.com.popularmovies.BuildConfig;
 
 /**
  * These utilities will be used to communicate with the weather servers.
@@ -43,7 +40,7 @@ public final class NetworkUtils {
     private static final String STATIC_MOVIE_DB_URL =
             "http://api.themoviedb.org/3";
 
-    private final static String api_key="";
+    private  static String api_key= BuildConfig.API_KEY;
     private static String SORT_PARAM = "sort_by";
     private final static String API_KEY = "api_key";
     private final static String APPEND_TO_KEY = "append_to_response" ;

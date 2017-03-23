@@ -16,9 +16,23 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-}
 
+        buildTypes {
+            applicationVariants.all { variant ->
+                variant.buildConfigField "String", "API_KEY", "\""+getApiKey()+"\""
+            }
+        }
+
+    }
+    /*buildTypes.each {
+        it.buildConfigField 'String', 'THE_MOVIE_DB_API_TOKEN', api_key
+    }*/
+}
+def getApiKey(){
+    def Properties props = new Properties()
+    props.load(new FileInputStream(new File('local.properties')))
+    return props['api_key']
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
