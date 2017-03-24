@@ -2,6 +2,7 @@ package udacity.uelordi.com.popularmovies;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +39,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     @BindView (R.id.tv_detail_release_date)TextView m_tv_release_date;
     @BindView (R.id.rv_movie_reviews) RecyclerView rvReviews;
 
-   @BindView(R.id.bt_favorite_button) Button btFavorite;
+   @BindView(R.id.bt_favorite_button) ImageButton btFavorite;
     //@BindView (R.id.rv_movie_trailers) RecyclerView mRvTrailers;
 
 
@@ -52,13 +54,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //TODO CREATE THE DBHELPER
-        //TODO CREATE THE ONCREATE AND ONUPGRADE
-        //TODO CREATE THE DATABASE NAME AND DATABASE VERSION ATTRIBUTES
-        //TODO CREATE THE SQL STATEMENT TO CREATE AND DROP THE TABLE (WITH THE REQUIRED PARAMETERS).
-        //TODO DEFINE THE INSERTIONS OF THE TABLE OF FAVORITES ).
-        //TODO CREATE THE CONTRACT CLASS
-        //TODO CREATE THE BASE COLUMNS EXTENDED CLASS.
+
         //TODO CREATE THE INTENTS OF THE TABLE
 
         setContentView(R.layout.activity_movie_details);
@@ -120,6 +116,20 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         Toast.makeText(this,getResources().getString(R.string.favorite_add).toString()
                                                             , Toast.LENGTH_SHORT).show();
         ContentValues contentValues= new ContentValues();
-        //contentValues.put(MovieContract.MovieEntry.COLUMN_ID)
+        contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID,m_current_content.getMovieID());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_TITLE,m_current_content.getTitle());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_SYNOPSYS,m_current_content.getSynopsis());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_USER_RATING,m_current_content.getUser_rating());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_USER_RATING,m_current_content.getUser_rating());
+
+        Uri uri= getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI,contentValues);
+        if(uri != null) {
+            Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+        }
+
+        // Finish activity (this returns back to MainActivity)
+        finish();
+
+
     }
 }
