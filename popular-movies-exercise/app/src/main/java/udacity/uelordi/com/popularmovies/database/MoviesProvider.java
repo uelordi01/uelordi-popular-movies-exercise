@@ -35,6 +35,7 @@ public class MoviesProvider extends ContentProvider {
 
     private static final String MOVIE_ID_SELECTION =
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID + " = ? ";
+
     static UriMatcher buildUriMatcher() {
         final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieContract.AUTHORITY;
@@ -87,17 +88,30 @@ public class MoviesProvider extends ContentProvider {
            }
            case MOST_POPULAR:
            {
-               retCursor = getMoviesFromOption(MovieContract.PopularEntry.TABLE_NAME,projection,selection,selectionArgs,sortOrder);
+               retCursor = getMoviesFromOption(MovieContract.PopularEntry.TABLE_NAME,
+                                                                           projection,
+                                                                            selection,
+                                                                            selectionArgs,
+                                                                           sortOrder);
                break;
            }
            case HIGHEST_RATED:
            {
-               retCursor = getMoviesFromOption(MovieContract.HighestRatedEntry.TABLE_NAME,projection,selection,selectionArgs,sortOrder);
+               retCursor = getMoviesFromOption(MovieContract.HighestRatedEntry.TABLE_NAME,
+                                                                               projection,
+                                                                               selection,
+                                                                               selectionArgs,
+                                                                               sortOrder);
                break;
+
            }
            case FAVORITES:
            {
-               retCursor = getMoviesFromOption(MovieContract.FavoritesEntry.TABLE_NAME,projection,selection,selectionArgs,sortOrder);
+               retCursor = getMoviesFromOption(MovieContract.FavoritesEntry.TABLE_NAME,
+                                                                               projection,
+                                                                               selection,
+                                                                               selectionArgs,
+                                                                               sortOrder);
                break;
            }
        }
@@ -110,7 +124,21 @@ public class MoviesProvider extends ContentProvider {
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        return null;
+        int match = sUriMatcher.match(uri);
+        switch (match) {
+            case MOVIES:
+                return MovieContract.MovieEntry.CONTENT_DIR_TYPE;
+            case MOVIE_WITH_ID:
+                return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
+            case MOST_POPULAR:
+                return MovieContract.PopularEntry.CONTENT_DIR_TYPE;
+            case HIGHEST_RATED:
+                return MovieContract.HighestRatedEntry.CONTENT_DIR_TYPE;
+            case FAVORITES:
+                return MovieContract.FavoritesEntry.CONTENT_DIR_TYPE;
+            default:
+                return null;
+        }
     }
 
     @Nullable
@@ -173,12 +201,68 @@ public class MoviesProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase db = mMovieHelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
+        int rowsDeleted = 0;
+        switch (match) {
+            case MOVIES:
+            {
+                rowsDeleted = db.delete(MovieContract.MovieEntry.TABLE_NAME,
+                                                                    selection,
+                                                                    selectionArgs);
+                break;
+            }
+            case MOVIE_WITH_ID:
+            {
+                long id = MovieContract.MovieEntry.getIdFromUri(uri);
+                rowsDeleted = db.delete(MovieContract.MovieEntry.TABLE_NAME,
+                                                            MOVIE_ID_SELECTION,
+                                                            new String[]{Long.toString(id)});
+                break;
+            }
+            case MOST_POPULAR:
+            {
+                rowsDeleted = db.delete(MovieContract.PopularEntry.TABLE_NAME,selection,selectionArgs);
+                break;
+            }
+            case HIGHEST_RATED:
+            {
+                rowsDeleted = db.delete(MovieContract.HighestRatedEntry.TABLE_NAME,selection,selectionArgs);
+                break;
+            }
+            case FAVORITES:
+            {
+                rowsDeleted = db.delete(MovieContract.FavoritesEntry.TABLE_NAME,selection,selectionArgs);
+                break;
+            }
+            default:
+            {
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+            }
+        }
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsDeleted;
     }
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase db = mMovieHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        int rowsUpdated;
+        switch (match) {
+            case MOVIES:
+                rowsUpdated = db.update(MovieContract.MovieEntry.TABLE_NAME, values,
+                        selection, selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
     }
 
     @Override

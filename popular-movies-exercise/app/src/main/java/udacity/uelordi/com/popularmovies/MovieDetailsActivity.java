@@ -29,6 +29,7 @@ import udacity.uelordi.com.popularmovies.background.MovieDetailTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.content.ReviewContent;
 import udacity.uelordi.com.popularmovies.database.MovieContract;
+import udacity.uelordi.com.popularmovies.services.FavoriteService;
 
 
 public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List> {
@@ -55,10 +56,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         super.onCreate(savedInstanceState);
 
 
-        //TODO CREATE THE INTENTS OF THE TABLE
 
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
+        initInterface();
         Intent parent_activity=getIntent();
         if( parent_activity.hasExtra("title") )
         {
@@ -111,25 +112,26 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     @OnClick(R.id.bt_favorite_button)
     public void submit() {
-        // TODO submit data to server...
         Log.v(TAG,"favorite button pressed:");
-        Toast.makeText(this,getResources().getString(R.string.favorite_add).toString()
-                                                            , Toast.LENGTH_SHORT).show();
-        ContentValues contentValues= new ContentValues();
-        contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID,m_current_content.getMovieID());
-        contentValues.put(MovieContract.MovieEntry.COLUMN_TITLE,m_current_content.getTitle());
-        contentValues.put(MovieContract.MovieEntry.COLUMN_SYNOPSYS,m_current_content.getSynopsis());
-        contentValues.put(MovieContract.MovieEntry.COLUMN_USER_RATING,m_current_content.getUser_rating());
-        contentValues.put(MovieContract.MovieEntry.COLUMN_USER_RATING,m_current_content.getUser_rating());
+        if(m_current_content != null) {
+            if(FavoriteService.getInstance().
+                            isFavorite(m_current_content)){
+                FavoriteService.getInstance().removeFromFavorites(m_current_content);
 
-        Uri uri= getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI,contentValues);
-        if(uri != null) {
-            Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+            }
+            else {
+                FavoriteService.getInstance().addToFavorites(m_current_content);
+            }
         }
-
-        // Finish activity (this returns back to MainActivity)
-        finish();
-
-
+        else
+        {
+            Toast.makeText(this,getResources().
+                            getString(R.string.error_movie_class_null),
+                            Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void initInterface()
+    {
+        FavoriteService.getInstance().setContext(getApplicationContext());
     }
 }

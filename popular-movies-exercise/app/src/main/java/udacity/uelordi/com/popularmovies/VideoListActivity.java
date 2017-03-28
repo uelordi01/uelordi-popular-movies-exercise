@@ -47,9 +47,6 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
 
     private static final int LOADER_TASK_ID=5;
 
-
-
-    //TODO make the preferences without preference_activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +61,6 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
             showLoadingBar();
             Bundle queryBundle = new Bundle();
             queryBundle.putString(SELECTED_SEARCH_OPTION,setupPreferences());
-            //queryBundle.putString(SELECTED_SEARCH_OPTION,filter);
             getSupportLoaderManager().initLoader(LOADER_TASK_ID, queryBundle, this);
         }
         else
@@ -124,7 +120,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     @Override
     public void onListItemClick(MovieContentDetails movie) {
         Intent my_intent = new Intent(this,MovieDetailsActivity.class);
-        int id=movie.getMovieID();
+        long id=movie.getMovieID();
         my_intent.putExtra("movieid",id);
         my_intent.putExtra("poster_path",movie.getPoster_path());
         my_intent.putExtra("title",movie.getTitle());

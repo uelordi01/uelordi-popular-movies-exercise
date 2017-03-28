@@ -1,5 +1,6 @@
 package udacity.uelordi.com.popularmovies.database;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -31,20 +32,27 @@ public class MovieContract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES).build();
         public static final String COLUMN_MOVIE_ID = "movie_id";
 
+        public static final String CONTENT_DIR_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES;
+
         public static final String TABLE_NAME = "movies";
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_USER_RATING = "user_Rating";
         public static final String COLUMN_SYNOPSYS = "synopsys";
         public static final String COLUMN_IMAGE_URL = "poster_path";
+        public static final String COLUMN_RELEASE_DATE = "release_date";
 
-        public final static String CREATE_TABLE = "CREATE TABLE " + MovieContract.MovieEntry.TABLE_NAME + " (" +
+        public final static String SQL_CREATE_TABLE = "CREATE TABLE " + MovieContract.MovieEntry.TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY, " +
                 COLUMN_ID + " TEXT NOT NULL, " +
                 COLUMN_TITLE + " TEXT NOT NULL, " +
                 MovieContract.MovieEntry.COLUMN_SYNOPSYS + " TEXT NOT NULL, " +
                 MovieContract.MovieEntry.COLUMN_USER_RATING +  "REAL NOT NULL," +
-                MovieContract.MovieEntry.COLUMN_IMAGE_URL   + " TEXT NOT NULL)";
+                MovieContract.MovieEntry.COLUMN_IMAGE_URL   + " TEXT NOT NULL"+
+                MovieContract.MovieEntry.COLUMN_RELEASE_DATE+" TEXT NOT NULL)";
 
         public static Uri buildMovieUri(long id) {
             return ContentUris.withAppendedId(BASE_CONTENT_URI, id);
@@ -59,7 +67,9 @@ public class MovieContract {
     public static final class PopularEntry implements BaseColumns {
         public static final Uri CONTENT_URI =  BASE_CONTENT_URI.buildUpon().appendPath(PATH_POPULAR).build();
 
-
+        public static final String CONTENT_DIR_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES
+                        + "/" + PATH_POPULAR;
         public static final String TABLE_NAME = "most_popular_movies";
 
         public static final String CREATE_TABLE =
@@ -77,6 +87,9 @@ public class MovieContract {
 
 
         public static final String TABLE_NAME = "highest_rated_movies";
+        public static final String CONTENT_DIR_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES
+                        + "/" + PATH_RATED;
 
         public static final String CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
@@ -93,6 +106,9 @@ public class MovieContract {
 
 
         public static final String TABLE_NAME = "favorite_movies";
+        public static final String CONTENT_DIR_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES
+                        + "/" + PATH_FAVORITES;
 
         public static final String CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
