@@ -22,15 +22,17 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import udacity.uelordi.com.popularmovies.adapters.OnItemClickListener;
 import udacity.uelordi.com.popularmovies.adapters.VideoListAdapter;
 import udacity.uelordi.com.popularmovies.background.MovielistTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
+import udacity.uelordi.com.popularmovies.content.TrailerContent;
 import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
 public class VideoListActivity extends AppCompatActivity implements onFetchResults,
-                                                            VideoListAdapter.ListItemClickListener,
+                                                            OnItemClickListener,
                                                             LoaderManager.LoaderCallbacks<List>,
                                                 SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -117,20 +119,6 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    public void onListItemClick(MovieContentDetails movie) {
-        Intent my_intent = new Intent(this,MovieDetailsActivity.class);
-        long id=movie.getMovieID();
-        my_intent.putExtra("movieid",id);
-        my_intent.putExtra("poster_path",movie.getPoster_path());
-        my_intent.putExtra("title",movie.getTitle());
-        my_intent.putExtra("synopsys",movie.getSynopsis());
-        my_intent.putExtra("user_rating",movie.getUser_rating());
-        my_intent.putExtra("release_date",movie.getRelease_date());
-        startActivity(my_intent);
-    }
-
     @Override
     public Loader<List> onCreateLoader(int id, Bundle args) {
         String selected_option=args.getString(SELECTED_SEARCH_OPTION);
@@ -188,5 +176,23 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         if( key.equals(getString(R.string.pref_sort_favorites_value)) ) {
 
         }*/
+    }
+
+    @Override
+    public void onItemClick(MovieContentDetails movie) {
+        Intent my_intent = new Intent(this,MovieDetailsActivity.class);
+        long id=movie.getMovieID();
+        my_intent.putExtra("movieid",id);
+        my_intent.putExtra("poster_path",movie.getPoster_path());
+        my_intent.putExtra("title",movie.getTitle());
+        my_intent.putExtra("synopsys",movie.getSynopsis());
+        my_intent.putExtra("user_rating",movie.getUser_rating());
+        my_intent.putExtra("release_date",movie.getRelease_date());
+        startActivity(my_intent);
+    }
+
+    @Override
+    public void onItemClick(TrailerContent content) {
+        //TODO IMPLEMENT THE TRAILER ADAPTER PART:
     }
 }

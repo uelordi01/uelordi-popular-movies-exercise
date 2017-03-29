@@ -22,18 +22,14 @@ import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 
 public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.MovieViewHolder>  {
     private final String TAG = VideoListAdapter.class.getSimpleName();
-    final private ListItemClickListener m_listener;
+    final private OnItemClickListener m_listener;
     List<MovieContentDetails> m_movies_populate_array= new ArrayList<>();
 
     private static int viewHolderCount;
 
-    public interface ListItemClickListener
-    {
-        void onListItemClick(MovieContentDetails movie);
-    }
 
 
-    public VideoListAdapter(ListItemClickListener listener,List<MovieContentDetails> data) {
+    public VideoListAdapter(OnItemClickListener listener,List<MovieContentDetails> data) {
 
         m_listener=listener;
         viewHolderCount=0;
@@ -49,13 +45,6 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
                 .inflate(LayoutIndexForListItem, parent, false);
 
         return new MovieViewHolder(view);
-        /*LayoutInflater li=LayoutInflater.from(context);
-        boolean shouldAtattachtToTheParentNow=false;
-
-        View view= li.inflate(LayoutIndexForListItem,parent,shouldAtattachtToTheParentNow);
-        MovieViewHolder result_view=new MovieViewHolder(view);
-
-        return result_view;*/
     }
 
     @Override
@@ -86,8 +75,11 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
                 if(listIndex<m_movies_populate_array.size())
                 {
                     //m_movie_title.setText(m_movies_populate_array.get(listIndex).getTitle());
-                    Log.v(TAG,"image_path: "+m_movies_populate_array.get(listIndex).getPoster_path());
-                    Picasso.with(itemView.getContext()).load(m_movies_populate_array.get(listIndex).getPoster_path()).into(m_movie_poster);
+                    Log.v(TAG,"image_path: "+m_movies_populate_array.get(listIndex).
+                                                                                getPoster_path());
+                    Picasso.with(itemView.getContext()).load(m_movies_populate_array.
+                                                                get(listIndex).getPoster_path()).
+                                                                                into(m_movie_poster);
                 }
             }
 
@@ -95,7 +87,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
         @Override
         public void onClick(View v) {
             int clickedPosition=getAdapterPosition();
-            m_listener.onListItemClick(m_movies_populate_array.get(clickedPosition));
+            m_listener.onItemClick(m_movies_populate_array.get(clickedPosition));
         }
     }
 }

@@ -16,7 +16,7 @@
     <string name="action_settings">settings</string>
     <!-- UI defaultdata-->
     <string name="release_date">Release date:</string>
-
+    <string name="content_description_movie_video">Movie video thumbnail</string>
 
 
     <!-- Preference values -->
@@ -32,6 +32,7 @@
     <string name="pref_sort_popular_value" translatable="false">popularity.desc</string>
     <string name="pref_sort_rated_value" translatable="false">vote_average.desc</string>
     <string name="pref_sort_favorites_value" translatable="false">favorite</string>
+
 
     <!-- ERRORS-->
     <string name="error_movie_class_null">Error: The movie class is null</string>
