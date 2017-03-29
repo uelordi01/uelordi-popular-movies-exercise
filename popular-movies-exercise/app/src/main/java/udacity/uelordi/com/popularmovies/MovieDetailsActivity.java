@@ -62,31 +62,32 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         ButterKnife.bind(this);
         initInterface();
         Intent parent_activity=getIntent();
-        if( parent_activity.hasExtra("title") )
-        {
-            m_tv_title.setText(parent_activity.getStringExtra("title"));
-        }
-        if( parent_activity.hasExtra("user_rating") )
-        {
-            m_tv_user_rating.setText(parent_activity.getStringExtra("user_rating"));
-        }
-        if( parent_activity.hasExtra("poster_path") )
-        {
-            Picasso.with(m_iv_poster.getContext())
-                    .load(parent_activity.getStringExtra("poster_path"))
-                    .placeholder(R.drawable.no_image_available)
-                    .error(R.drawable.no_image_available)
-                    .into(m_iv_poster);
-        }
-        if( parent_activity.hasExtra("synopsys") )
-        {
-            m_tv_synopsys.setText(parent_activity.getStringExtra("synopsys"));
-        }
-        if( parent_activity.hasExtra("release_date") )
-        {
-            m_tv_release_date.setText(getResources().getString(R.string.release_date)
-                                                    +parent_activity.getStringExtra("release_date"));
-        }
+//        if( parent_activity.hasExtra("title") )
+//        {
+//            m_tv_title.setText(parent_activity.getStringExtra("title"));
+//        }
+//        if( parent_activity.hasExtra("user_rating") )
+//        {
+//            m_tv_user_rating.setText(parent_activity.getStringExtra("user_rating"));
+//        }
+//        if( parent_activity.hasExtra("poster_path") )
+//        {
+//            Picasso.with(m_iv_poster.getContext())
+//                    .load(parent_activity.getStringExtra("poster_path"))
+//                    .placeholder(R.drawable.no_image_available)
+//                    .error(R.drawable.no_image_available)
+//                    .into(m_iv_poster);
+//        }
+//        if( parent_activity.hasExtra("synopsys") )
+//        {
+//            m_tv_synopsys.setText(parent_activity.getStringExtra("synopsys"));
+//        }
+//        if( parent_activity.hasExtra("release_date") )
+//        {
+//            m_tv_release_date.setText(getResources().getString(R.string.release_date)
+//                                                    +parent_activity.getStringExtra("release_date"));
+//        }
+        // TODO MAKE CONVERSION TO LONG TO LOAD THE REVIEWS:
         Bundle queryBundle = new Bundle();
         queryBundle.putLong(MOVIE_ID_KEY,parent_activity.getLongExtra("movieid",0));
         getSupportLoaderManager().initLoader(MOVIE_DETAIL_TASK_ID, queryBundle, this);
@@ -120,15 +121,14 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     public void submit() {
         Log.v(TAG,"favorite button pressed:");
         if(m_current_content != null) {
-//            if(FavoriteService.getInstance().
-//                            isFavorite(m_current_content)){
-//                FavoriteService.getInstance().removeFromFavorites(m_current_content);
-//
-//            }
-//            else {
+            if(FavoriteService.getInstance().
+                            isFavorite(m_current_content)){
+                FavoriteService.getInstance().removeFromFavorites(m_current_content);
+
+            }
+            else {
                 FavoriteService.getInstance().addToFavorites(m_current_content);
-//            }
-//            FavoriteService.getInstance().addToFavorites(m_current_content);
+            }
         }
         else
         {

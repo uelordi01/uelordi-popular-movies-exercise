@@ -1,6 +1,7 @@
 package udacity.uelordi.com.popularmovies.background;
 
 import android.content.Context;
+import android.content.CursorLoader;
 import android.support.v4.content.AsyncTaskLoader;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public abstract class AbstractMovieTaskLoader extends  AsyncTaskLoader<List> {
     }
 
     protected abstract List buildList();
+    protected abstract CursorLoader buildListCursor();
 
     @Override
     public void deliverResult(

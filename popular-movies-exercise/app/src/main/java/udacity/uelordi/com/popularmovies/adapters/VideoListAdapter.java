@@ -1,6 +1,7 @@
 package udacity.uelordi.com.popularmovies.adapters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,9 +26,11 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
     private final String TAG = VideoListAdapter.class.getSimpleName();
     final private OnItemClickListener m_listener;
     List<MovieContentDetails> m_movies_populate_array;
+    private static final int INDEX_MOVIE_ID = 0;
+    private static final int INDEX_IMAGE_VIEW = 1;
     Context mContext;
     private static int viewHolderCount;
-
+    private Cursor mCursor;
 
 
     public VideoListAdapter(OnItemClickListener listener) {
@@ -37,9 +40,9 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
         m_movies_populate_array= new ArrayList<>();
 
     }
-    public void setMovieList(List<MovieContentDetails> data)
+    public void swapCursor(Cursor newCursor)
     {
-        m_movies_populate_array = data;
+        mCursor = newCursor;
         notifyDataSetChanged();
     }
 
@@ -50,20 +53,21 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
         viewHolderCount++;
         View view = LayoutInflater.from(context)
                 .inflate(LayoutIndexForListItem, parent, false);
-
+        view.setFocusable(true);
         return new MovieViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
        //This is called per each view;
-
+         mCursor.moveToPosition(position);
          holder.bind(position);
     }
 
     @Override
     public int getItemCount() {
-        return m_movies_populate_array.size();
+        if (null == mCursor) return 0;
+        return mCursor.getCount();
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
@@ -84,16 +88,13 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
                 if(listIndex<m_movies_populate_array.size())
                 {
                     //m_movie_title.setText(m_movies_populate_array.get(listIndex).getTitle());
-                    Log.v(TAG,"image_path: "+m_movies_populate_array.get(listIndex).
-                                                                                getPoster_path());
-
+                    String cursorPath = mCursor.getString(INDEX_IMAGE_VIEW);
+                    Log.v(TAG,"image_path: "+cursorPath);
                     Picasso.with(itemView.getContext())
-                            .load(m_movies_populate_array.get(listIndex).getPoster_path())
+                            .load(cursorPath)
                             .placeholder(R.drawable.no_image_available)
                             .error(R.drawable.no_image_available)
                             .into(m_movie_poster);
-                   /* m_auxiliar_text.setText(m_movies_populate_array.
-                            get(listIndex).getTitle());*/
                 }
             }
 
@@ -101,7 +102,8 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
         @Override
         public void onClick(View v) {
             int clickedPosition=getAdapterPosition();
-            m_listener.onItemClick(m_movies_populate_array.get(clickedPosition));
+            String movieId = mCursor.getString(INDEX_MOVIE_ID);
+            m_listener.onItemClick(movieId);
         }
     }
 }

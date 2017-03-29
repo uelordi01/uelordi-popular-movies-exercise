@@ -25,7 +25,7 @@ public class MoviesProvider extends ContentProvider {
     public static final int MOVIES = 100;
     public static final int MOVIE_WITH_ID = 101;
     public static final int MOST_POPULAR = 202;
-    public static final int  HIGHEST_RATED= 203;
+    public static final int  HIGHEST_RATED = 203;
     public static final int FAVORITES = 300;
 
     // CDeclare a static variable for the Uri matcher that you construct
@@ -253,13 +253,16 @@ public class MoviesProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
         switch (match) {
-            case MOVIES:
+            case MOVIES: {
                 rowsUpdated = db.update(MovieContract.MovieEntry.TABLE_NAME, values,
                         selection, selectionArgs);
                 break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+
+
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
@@ -271,7 +274,7 @@ public class MoviesProvider extends ContentProvider {
         SQLiteDatabase db = mMovieHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         switch (match) {
-            case MOVIES:
+            case MOVIES: {
                 db.beginTransaction();
                 int returnCount = 0;
                 try {
@@ -288,6 +291,46 @@ public class MoviesProvider extends ContentProvider {
                 }
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
+            }
+            case MOST_POPULAR:
+            {
+                db.beginTransaction();
+                int returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        long id = db.insertWithOnConflict(MovieContract.PopularEntry.TABLE_NAME,
+                                null, value, SQLiteDatabase.CONFLICT_REPLACE);
+                        if (id != -1) {
+                            returnCount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
+            }
+            case HIGHEST_RATED:
+            {
+                db.beginTransaction();
+                int returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        long id = db.insertWithOnConflict(MovieContract.
+                                                                HighestRatedEntry.TABLE_NAME,
+                                                null, value, SQLiteDatabase.CONFLICT_REPLACE);
+                        if (id != -1) {
+                            returnCount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+            }
             default:
                 return super.bulkInsert(uri, values);
         }

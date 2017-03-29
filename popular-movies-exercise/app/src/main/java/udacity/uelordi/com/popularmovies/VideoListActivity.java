@@ -1,9 +1,11 @@
 package udacity.uelordi.com.popularmovies;
 
 
+
 import android.content.Intent;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import android.support.v4.content.CursorLoader;
 
 import java.util.List;
 
@@ -29,11 +31,10 @@ import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.content.TrailerContent;
 import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
-import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
 public class VideoListActivity extends AppCompatActivity implements
                                                             OnItemClickListener,
-                                                            LoaderManager.LoaderCallbacks<List>,
+                                                            LoaderManager.LoaderCallbacks<Cursor>,
                                                 SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = VideoListActivity.class.getSimpleName();
@@ -47,7 +48,8 @@ public class VideoListActivity extends AppCompatActivity implements
 
     private static final String SELECTED_SEARCH_OPTION = "search_option";
 
-    private static final int LOADER_TASK_ID=5;
+    private static final int MOVIES_LOADER_TASK_ID = 5;
+    private static final int FAVORITES_MOVIES_LOADER_TASK_ID = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,7 @@ public class VideoListActivity extends AppCompatActivity implements
 
             }
             else {
-                getSupportLoaderManager().initLoader(LOADER_TASK_ID, queryBundle, this);
+                getSupportLoaderManager().initLoader(MOVIES_LOADER_TASK_ID, queryBundle, this);
             }
 
         }
@@ -117,29 +119,59 @@ public class VideoListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public Loader<List> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int loaderID, Bundle args) {
         String selected_option=args.getString(SELECTED_SEARCH_OPTION);
-        return new MovielistTaskLoader(this,selected_option);
+        switch (loaderID) {
+            case FAVORITES_MOVIES_LOADER_TASK_ID:
+            {
+              // Cursor MyCursor =
+               // return new  MovielistTaskLoader(this,selected_option).buildCursor();
+                /*MovielistTaskLoader task = new MovielistTaskLoader(this,selected_option);
+                task.buildCursor();*/
+                new MovielistTaskLoader(this,selected_option).buildCursor();
+                /*return new CursorLoader(
+                        this,
+                        task.getCurrentUri(),
+                        task.getPROJECTIONS(),
+                        null,
+                        null,
+                        null);*/
+
+
+            }
+            case MOVIES_LOADER_TASK_ID:
+            {
+                //return new MovielistTaskLoader(this,selected_option);
+
+                /*return new CursorLoader(
+                        this,
+                        task.getCurrentUri(),
+                        task.getPROJECTIONS(),
+                        null,
+                        null,
+                        null);*/
+            }
+            default:
+                throw new RuntimeException("Loader Not Implemented: " + loaderID);
+        }
     }
 
     @Override
-    public void onLoadFinished(Loader<List> loader, List data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         hideLoadingBar();
-        // mMovieList=(RecyclerView) findViewById(R.id.rv_movie_list);
-        /*GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
-        mMovieList.setLayoutManager(gridManager);
-        mMovieListAdapter=new VideoListAdapter(VideoListActivity.this,data);
-        mMovieList.setAdapter(mMovieListAdapter);*/
-        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
-        mMovieList.setLayoutManager(gridManager);
-        mMovieListAdapter=new VideoListAdapter(VideoListActivity.this);
-        mMovieListAdapter.setMovieList(data);
-        mMovieList.setAdapter(mMovieListAdapter);
-
     }
-
+//
+//    public void onLoadFinished(Loader<List> loader, List data) {
+//        hideLoadingBar();
+//        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
+//        mMovieList.setLayoutManager(gridManager);
+//        mMovieListAdapter=new VideoListAdapter(VideoListActivity.this);
+//        mMovieListAdapter.setMovieList(data);
+//        mMovieList.setAdapter(mMovieListAdapter);
+//
+//    }
     @Override
-    public void onLoaderReset(Loader<List> loader) {
+    public void onLoaderReset(Loader<Cursor> loader) {
 
     }
     public void restartLoader(String action_type)
@@ -147,11 +179,11 @@ public class VideoListActivity extends AppCompatActivity implements
         Bundle queryBundle = new Bundle();
         queryBundle.putString(SELECTED_SEARCH_OPTION,action_type);
         LoaderManager loaderManager = getSupportLoaderManager();
-        Loader<String> videoListLoader = loaderManager.getLoader(LOADER_TASK_ID);
+        Loader<String> videoListLoader = loaderManager.getLoader(MOVIES_LOADER_TASK_ID);
         if ( videoListLoader == null ) {
-            loaderManager.initLoader(LOADER_TASK_ID, queryBundle, this);
+            loaderManager.initLoader(MOVIES_LOADER_TASK_ID, queryBundle, this);
         } else {
-            loaderManager.restartLoader(LOADER_TASK_ID, queryBundle, this);
+            loaderManager.restartLoader(MOVIES_LOADER_TASK_ID, queryBundle, this);
         }
     }
     /*
@@ -172,16 +204,24 @@ public class VideoListActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClick(MovieContentDetails movie) {
-        Intent my_intent = new Intent(this,MovieDetailsActivity.class);
-        long id=movie.getMovieID();
-        my_intent.putExtra("movieid",id);
-        my_intent.putExtra("poster_path",movie.getPoster_path());
-        my_intent.putExtra("title",movie.getTitle());
-        my_intent.putExtra("synopsys",movie.getSynopsis());
-        my_intent.putExtra("user_rating",movie.getUser_rating());
-        my_intent.putExtra("release_date",movie.getRelease_date());
-        startActivity(my_intent);
+//        Intent my_intent = new Intent(this,MovieDetailsActivity.class);
+//        long id=movie.getMovieID();
+//        my_intent.putExtra("movieid",id);
+//        my_intent.putExtra("poster_path",movie.getPoster_path());
+//        my_intent.putExtra("title",movie.getTitle());
+//        my_intent.putExtra("synopsys",movie.getSynopsis());
+//        my_intent.putExtra("user_rating",movie.getUser_rating());
+//        my_intent.putExtra("release_date",movie.getRelease_date());
+//        startActivity(my_intent);
     }
+
+    @Override
+    public void onItemClick(String movieID) {
+        Intent my_intent = new Intent(this,MovieDetailsActivity.class);
+        String id = movieID;
+        my_intent.putExtra("movieid",id);
+    }
+
     public void loadFavoritesList() {
 
     }

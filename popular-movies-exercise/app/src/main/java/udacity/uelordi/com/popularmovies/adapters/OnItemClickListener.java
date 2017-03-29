@@ -11,5 +11,6 @@ import udacity.uelordi.com.popularmovies.content.TrailerContent;
 
 public interface OnItemClickListener {
     void onItemClick(MovieContentDetails content);
+    void onItemClick(String movieID);
     void onItemClick(TrailerContent content);
 }
