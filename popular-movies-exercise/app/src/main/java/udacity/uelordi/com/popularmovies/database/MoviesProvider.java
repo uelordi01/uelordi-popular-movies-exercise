@@ -36,7 +36,7 @@ public class MoviesProvider extends ContentProvider {
     private static final String MOVIE_ID_SELECTION =
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID + " = ? ";
 
-    static UriMatcher buildUriMatcher() {
+   public static UriMatcher buildUriMatcher() {
         final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieContract.AUTHORITY;
 

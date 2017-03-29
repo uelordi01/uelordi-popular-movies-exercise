@@ -43,19 +43,25 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context=parent.getContext();
-        int LayoutIndexForListItem= R.layout.movie_list_item;
-        LayoutInflater li=LayoutInflater.from(context);
+        int LayoutIndexForListItem =  R.layout.movie_list_item;
+        viewHolderCount++;
+        View view = LayoutInflater.from(context)
+                .inflate(LayoutIndexForListItem, parent, false);
+
+        return new MovieViewHolder(view);
+        /*LayoutInflater li=LayoutInflater.from(context);
         boolean shouldAtattachtToTheParentNow=false;
 
         View view= li.inflate(LayoutIndexForListItem,parent,shouldAtattachtToTheParentNow);
         MovieViewHolder result_view=new MovieViewHolder(view);
-        viewHolderCount++;
-        return result_view;
+
+        return result_view;*/
     }
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
        //This is called per each view;
+
          holder.bind(position);
     }
 
@@ -80,7 +86,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
                 if(listIndex<m_movies_populate_array.size())
                 {
                     //m_movie_title.setText(m_movies_populate_array.get(listIndex).getTitle());
-                    //Log.v(TAG,"image_path: "+m_movies_populate_array.get(listIndex).getPoster_path());
+                    Log.v(TAG,"image_path: "+m_movies_populate_array.get(listIndex).getPoster_path());
                     Picasso.with(itemView.getContext()).load(m_movies_populate_array.get(listIndex).getPoster_path()).into(m_movie_poster);
                 }
             }

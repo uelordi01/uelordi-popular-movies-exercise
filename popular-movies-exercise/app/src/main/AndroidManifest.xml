@@ -33,7 +33,8 @@
                 android:value=".VideoListActivity" />
         </activity>
         <provider android:name="udacity.uelordi.com.popularmovies.database.MoviesProvider"
-            android:authorities="udacity.uelordi.com.popularmovies"/>
+            android:authorities="udacity.uelordi.com.popularmovies"
+            android:exported="false"/>
     </application>
 
 </manifest>

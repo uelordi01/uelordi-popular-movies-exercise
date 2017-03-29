@@ -73,7 +73,7 @@ public final class NetworkUtils {
         String result= callToHttp(new URL(urld));
         return result;
     }
-    public String getMovieDetails(int movieID) throws IOException {
+    public String getMovieDetails(long movieID) throws IOException {
         String url=STATIC_MOVIE_DB_URL+"/"+MOVIE_ID_PARAM+"/"+movieID;
 
         Uri builtUri = Uri.parse(url)

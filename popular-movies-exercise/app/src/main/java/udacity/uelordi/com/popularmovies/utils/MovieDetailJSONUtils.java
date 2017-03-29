@@ -38,7 +38,7 @@ public class MovieDetailJSONUtils {
         String image_path=movie_Json.getString(IMAGE_PATH);
 
         MovieContentDetails mc=new MovieContentDetails();
-        mc.setMovieID(movie_Json.getInt(ID));
+        mc.setMovieID(movie_Json.getLong(ID));
         mc.setTitle(movie_Json.getString(TITLE));
         mc.setPoster_path(image_path);
         mc.setRelease_date(movie_Json.getString(RELEASE_DATE));

@@ -91,7 +91,7 @@ public class MovieContentDetails
     public ContentValues toContentValues()
     {
         ContentValues values = new ContentValues();
-        values.put(MovieContract.MovieEntry.COLUMN_ID,movieID);
+        values.put(MovieContract.MovieEntry._ID,movieID);
         values.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL,poster_path);
         values.put(MovieContract.MovieEntry.COLUMN_TITLE,title);
         values.put(MovieContract.MovieEntry.COLUMN_SYNOPSYS,synopsis);

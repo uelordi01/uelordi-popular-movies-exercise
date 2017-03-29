@@ -12,7 +12,7 @@ import android.provider.BaseColumns;
 public class MovieContract {
 
     // The authority, which is how your code knows which Content Provider to access
-    public static final String AUTHORITY = "udacity.uelordi.com.popularmovies.database";
+    public static final String AUTHORITY = "udacity.uelordi.com.popularmovies";
 
     // The base content URI = "content://" + <authority>
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
@@ -22,7 +22,7 @@ public class MovieContract {
     public static final String PATH_POPULAR = "most_popular";
     public static final String PATH_RATED = "highest_rated";
     public static final String PATH_FAVORITES="favorites";
-    public static final String PATH_MOVIES="table_movies";
+    public static final String PATH_MOVIES="movies";
     public static final String COLUMN_MOVIE_ID_FKEY = "movie_id";
 
     public static final class MovieEntry implements BaseColumns {
@@ -38,20 +38,18 @@ public class MovieContract {
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES;
 
         public static final String TABLE_NAME = "movies";
-        public static final String COLUMN_ID = "id";
         public static final String COLUMN_TITLE = "title";
-        public static final String COLUMN_USER_RATING = "user_Rating";
+        public static final String COLUMN_USER_RATING = "user_rating";
         public static final String COLUMN_SYNOPSYS = "synopsys";
         public static final String COLUMN_IMAGE_URL = "poster_path";
         public static final String COLUMN_RELEASE_DATE = "release_date";
 
         public final static String SQL_CREATE_TABLE = "CREATE TABLE " + MovieContract.MovieEntry.TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY, " +
-                COLUMN_ID + " TEXT NOT NULL, " +
                 COLUMN_TITLE + " TEXT NOT NULL, " +
                 MovieContract.MovieEntry.COLUMN_SYNOPSYS + " TEXT NOT NULL, " +
                 MovieContract.MovieEntry.COLUMN_USER_RATING +  "REAL NOT NULL," +
-                MovieContract.MovieEntry.COLUMN_IMAGE_URL   + " TEXT NOT NULL"+
+                MovieContract.MovieEntry.COLUMN_IMAGE_URL   + " TEXT NOT NULL,"+
                 MovieContract.MovieEntry.COLUMN_RELEASE_DATE+" TEXT NOT NULL)";
 
         public static Uri buildMovieUri(long id) {

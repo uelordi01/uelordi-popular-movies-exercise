@@ -17,9 +17,9 @@ import udacity.uelordi.com.popularmovies.utils.VideosJSONUtils;
  */
 
 public class MovieDetailTaskLoader extends AbstractMovieTaskLoader {
-    private int mVideoId;
+    private long mVideoId;
 
-    public MovieDetailTaskLoader(Context context, int id) {
+    public MovieDetailTaskLoader(Context context, long id) {
         super(context);
         mVideoId=id;
     }

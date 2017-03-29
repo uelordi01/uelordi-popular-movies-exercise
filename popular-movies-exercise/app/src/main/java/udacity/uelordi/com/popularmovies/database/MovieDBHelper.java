@@ -20,7 +20,7 @@ public class MovieDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL(MovieContract.MovieEntry.CREATE_TABLE);
+        db.execSQL(MovieContract.MovieEntry.SQL_CREATE_TABLE);
         db.execSQL(MovieContract.PopularEntry.CREATE_TABLE);
         db.execSQL(MovieContract.HighestRatedEntry.CREATE_TABLE);
         db.execSQL(MovieContract.FavoritesEntry.CREATE_TABLE);

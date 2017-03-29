@@ -61,6 +61,8 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
             showLoadingBar();
             Bundle queryBundle = new Bundle();
             queryBundle.putString(SELECTED_SEARCH_OPTION,setupPreferences());
+            GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
+            mMovieList.setLayoutManager(gridManager);
             getSupportLoaderManager().initLoader(LOADER_TASK_ID, queryBundle, this);
         }
         else
@@ -74,8 +76,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     @Override
     public void OnListAvailable(List<MovieContentDetails> result) {
         hideLoadingBar();
-        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
-        mMovieList.setLayoutManager(gridManager);
+
         mMovieListAdapter=new VideoListAdapter(VideoListActivity.this,result);
         mMovieList.setAdapter(mMovieListAdapter);
     }

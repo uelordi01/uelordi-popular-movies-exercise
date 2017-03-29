@@ -72,8 +72,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         if( parent_activity.hasExtra("poster_path") )
         {
             Picasso.with(m_iv_poster.getContext())
-                                            .load(parent_activity.getStringExtra("poster_path"))
-                                            .into(m_iv_poster);
+                    .load(parent_activity.getStringExtra("poster_path"))
+                    .placeholder(R.drawable.no_image_available)
+                    .error(R.drawable.no_image_available)
+                    .into(m_iv_poster);
         }
         if( parent_activity.hasExtra("synopsys") )
         {
@@ -85,13 +87,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
                                                     +parent_activity.getStringExtra("release_date"));
         }
         Bundle queryBundle = new Bundle();
-        queryBundle.putInt(MOVIE_ID_KEY,parent_activity.getIntExtra("movieid",0));
+        queryBundle.putLong(MOVIE_ID_KEY,parent_activity.getLongExtra("movieid",0));
         getSupportLoaderManager().initLoader(MOVIE_DETAIL_TASK_ID, queryBundle, this);
     }
 
     @Override
     public Loader<List> onCreateLoader(int id, Bundle args) {
-        int movieid=args.getInt(MOVIE_ID_KEY);
+        Long movieid=args.getLong(MOVIE_ID_KEY);
         return new MovieDetailTaskLoader(this,movieid);
     }
 
