@@ -22,15 +22,17 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import udacity.uelordi.com.popularmovies.adapters.OnItemClickListener;
 import udacity.uelordi.com.popularmovies.adapters.VideoListAdapter;
 import udacity.uelordi.com.popularmovies.background.MovielistTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
+import udacity.uelordi.com.popularmovies.content.TrailerContent;
 import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
-public class VideoListActivity extends AppCompatActivity implements onFetchResults,
-                                                            VideoListAdapter.ListItemClickListener,
+public class VideoListActivity extends AppCompatActivity implements
+                                                            OnItemClickListener,
                                                             LoaderManager.LoaderCallbacks<List>,
                                                 SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -47,9 +49,6 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
 
     private static final int LOADER_TASK_ID=5;
 
-
-
-    //TODO make the preferences without preference_activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,8 +63,14 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
             showLoadingBar();
             Bundle queryBundle = new Bundle();
             queryBundle.putString(SELECTED_SEARCH_OPTION,setupPreferences());
-            //queryBundle.putString(SELECTED_SEARCH_OPTION,filter);
-            getSupportLoaderManager().initLoader(LOADER_TASK_ID, queryBundle, this);
+            if(queryBundle.getString(SELECTED_SEARCH_OPTION).
+                    equals(getResources().getString(R.string.pref_sort_favorites_value))) {
+
+            }
+            else {
+                getSupportLoaderManager().initLoader(LOADER_TASK_ID, queryBundle, this);
+            }
+
         }
         else
         {
@@ -73,15 +78,6 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         }
 
 
-    }
-
-    @Override
-    public void OnListAvailable(List<MovieContentDetails> result) {
-        hideLoadingBar();
-        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
-        mMovieList.setLayoutManager(gridManager);
-        mMovieListAdapter=new VideoListAdapter(VideoListActivity.this,result);
-        mMovieList.setAdapter(mMovieListAdapter);
     }
 
     @Override
@@ -120,20 +116,6 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    public void onListItemClick(MovieContentDetails movie) {
-        Intent my_intent = new Intent(this,MovieDetailsActivity.class);
-        int id=movie.getMovieID();
-        my_intent.putExtra("movieid",id);
-        my_intent.putExtra("poster_path",movie.getPoster_path());
-        my_intent.putExtra("title",movie.getTitle());
-        my_intent.putExtra("synopsys",movie.getSynopsis());
-        my_intent.putExtra("user_rating",movie.getUser_rating());
-        my_intent.putExtra("release_date",movie.getRelease_date());
-        startActivity(my_intent);
-    }
-
     @Override
     public Loader<List> onCreateLoader(int id, Bundle args) {
         String selected_option=args.getString(SELECTED_SEARCH_OPTION);
@@ -144,10 +126,16 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     public void onLoadFinished(Loader<List> loader, List data) {
         hideLoadingBar();
         // mMovieList=(RecyclerView) findViewById(R.id.rv_movie_list);
-        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
+        /*GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
         mMovieList.setLayoutManager(gridManager);
         mMovieListAdapter=new VideoListAdapter(VideoListActivity.this,data);
+        mMovieList.setAdapter(mMovieListAdapter);*/
+        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
+        mMovieList.setLayoutManager(gridManager);
+        mMovieListAdapter=new VideoListAdapter(VideoListActivity.this);
+        mMovieListAdapter.setMovieList(data);
         mMovieList.setAdapter(mMovieListAdapter);
+
     }
 
     @Override
@@ -180,16 +168,25 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         restartLoader(key);
-        /*Bundle query =
-        if( key.equals(getString(R.string.pref_sort_popular_value)) )
-        {
+    }
 
-        }
-        if( key.equals(getString(R.string.pref_sort_rated_value)) ) {
+    @Override
+    public void onItemClick(MovieContentDetails movie) {
+        Intent my_intent = new Intent(this,MovieDetailsActivity.class);
+        long id=movie.getMovieID();
+        my_intent.putExtra("movieid",id);
+        my_intent.putExtra("poster_path",movie.getPoster_path());
+        my_intent.putExtra("title",movie.getTitle());
+        my_intent.putExtra("synopsys",movie.getSynopsis());
+        my_intent.putExtra("user_rating",movie.getUser_rating());
+        my_intent.putExtra("release_date",movie.getRelease_date());
+        startActivity(my_intent);
+    }
+    public void loadFavoritesList() {
 
-        }
-        if( key.equals(getString(R.string.pref_sort_favorites_value)) ) {
-
-        }*/
+    }
+    @Override
+    public void onItemClick(TrailerContent content) {
+        //TODO IMPLEMENT THE TRAILER ADAPTER PART:
     }
 }

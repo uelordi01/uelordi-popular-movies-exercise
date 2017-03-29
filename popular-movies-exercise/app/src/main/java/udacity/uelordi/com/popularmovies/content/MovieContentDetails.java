@@ -1,7 +1,11 @@
 package udacity.uelordi.com.popularmovies.content;
 
+import android.content.ContentValues;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import udacity.uelordi.com.popularmovies.database.MovieContract;
 
 /**
  * Created by uelordi on 28/02/2017.
@@ -16,7 +20,7 @@ public class MovieContentDetails
     private String synopsis;
     private String user_rating;
     private String release_date;
-    private int movieID;
+    private long movieID;
     //TODO MAKE ADD MOVIE AND ADD REVIEW:
     List<ReviewContent> reviewContent= new ArrayList<>();
     List<TrailerContent> trailerContent= new ArrayList<>();
@@ -36,11 +40,11 @@ public class MovieContentDetails
         return trailerContent;
     }
 
-    public int getMovieID() {
+    public long getMovieID() {
         return movieID;
     }
 
-    public void setMovieID(int movieID) {
+    public void setMovieID(long movieID) {
         this.movieID = movieID;
     }
 
@@ -82,5 +86,17 @@ public class MovieContentDetails
 
     public void setRelease_date(String release_date) {
         this.release_date = release_date;
+    }
+
+    public ContentValues toContentValues()
+    {
+        ContentValues values = new ContentValues();
+        values.put(MovieContract.MovieEntry._ID,movieID);
+        values.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL,poster_path);
+        values.put(MovieContract.MovieEntry.COLUMN_TITLE,title);
+        values.put(MovieContract.MovieEntry.COLUMN_SYNOPSYS,synopsis);
+        values.put(MovieContract.MovieEntry.COLUMN_USER_RATING,user_rating);
+        values.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,release_date);
+        return values;
     }
 }

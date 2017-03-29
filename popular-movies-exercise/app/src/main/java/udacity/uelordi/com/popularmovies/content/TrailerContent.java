@@ -10,6 +10,17 @@ public class TrailerContent
   private String videoKey;
   private String videoName;
 
+  public String getPosterPath() {
+    return posterPath;
+  }
+
+  public void setPosterPath(String posterPath) {
+    this.posterPath = posterPath;
+  }
+
+  private String posterPath;
+  private final String YOUTUBE_BASE_URL="http://www.youtube.com";
+
   public TrailerContent(String movieID, String videoKey, String trailerName)
   {
     videoId=movieID;
@@ -39,5 +50,9 @@ public class TrailerContent
 
   public void setVideoName(String videoName) {
     this.videoName = videoName;
+  }
+
+  public String getTrailerURL() {
+    return YOUTUBE_BASE_URL + "/" + videoKey;
   }
 }
