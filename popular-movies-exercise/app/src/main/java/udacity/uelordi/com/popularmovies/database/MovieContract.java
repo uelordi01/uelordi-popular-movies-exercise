@@ -47,13 +47,13 @@ public class MovieContract {
         public final static String SQL_CREATE_TABLE = "CREATE TABLE " + MovieContract.MovieEntry.TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY, " +
                 COLUMN_TITLE + " TEXT NOT NULL, " +
-                MovieContract.MovieEntry.COLUMN_SYNOPSYS + " TEXT NOT NULL, " +
-                MovieContract.MovieEntry.COLUMN_USER_RATING +  "REAL NOT NULL," +
-                MovieContract.MovieEntry.COLUMN_IMAGE_URL   + " TEXT NOT NULL,"+
-                MovieContract.MovieEntry.COLUMN_RELEASE_DATE+" TEXT NOT NULL)";
+                COLUMN_SYNOPSYS + " TEXT NOT NULL, " +
+                COLUMN_USER_RATING +  " REAL NOT NULL," +
+                COLUMN_IMAGE_URL   + " TEXT NOT NULL,"+
+                COLUMN_RELEASE_DATE + " TEXT NOT NULL)";
 
         public static Uri buildMovieUri(long id) {
-            return ContentUris.withAppendedId(BASE_CONTENT_URI, id);
+            return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
         public static long getIdFromUri(Uri uri) {

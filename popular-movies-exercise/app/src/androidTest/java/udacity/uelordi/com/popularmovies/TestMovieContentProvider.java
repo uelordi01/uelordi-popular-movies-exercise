@@ -165,7 +165,7 @@ public class TestMovieContentProvider {
 
         /* Create values to insert */
         ContentValues testMovieValues = new ContentValues();
-        testMovieValues.put(MovieContract.MovieEntry._ID,15321);
+        testMovieValues.put(MovieContract.MovieEntry._ID,1);
         testMovieValues.put(MovieContract.MovieEntry.COLUMN_TITLE,"mytitle");
         testMovieValues.put(MovieContract.MovieEntry.COLUMN_SYNOPSYS,"mysinopsis");
         testMovieValues.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL,"myurl.jpg");

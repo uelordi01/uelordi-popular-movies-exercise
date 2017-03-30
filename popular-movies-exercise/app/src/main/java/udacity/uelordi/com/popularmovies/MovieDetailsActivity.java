@@ -33,6 +33,7 @@ import udacity.uelordi.com.popularmovies.services.FavoriteService;
 
 
 public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List> {
+
     @BindView (R.id.tv_detail_title)TextView m_tv_title;
     @BindView (R.id.iv_poster_detail_path)ImageView m_iv_poster;
     @BindView (R.id.tv_detail_user_rating)TextView m_tv_user_rating;
@@ -116,14 +117,15 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     public void submit() {
         Log.v(TAG,"favorite button pressed:");
         if(m_current_content != null) {
-            if(FavoriteService.getInstance().
-                            isFavorite(m_current_content)){
-                FavoriteService.getInstance().removeFromFavorites(m_current_content);
-
-            }
-            else {
-                FavoriteService.getInstance().addToFavorites(m_current_content);
-            }
+//            if(FavoriteService.getInstance().
+//                            isFavorite(m_current_content)){
+//                FavoriteService.getInstance().removeFromFavorites(m_current_content);
+//
+//            }
+//            else {
+//                FavoriteService.getInstance().addToFavorites(m_current_content);
+//            }
+            FavoriteService.getInstance().addToFavorites(m_current_content);
         }
         else
         {
@@ -134,6 +136,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     }
     public void initInterface()
     {
-        FavoriteService.getInstance().setContext(getApplicationContext());
+        FavoriteService.getInstance().setContext(this);
     }
 }
