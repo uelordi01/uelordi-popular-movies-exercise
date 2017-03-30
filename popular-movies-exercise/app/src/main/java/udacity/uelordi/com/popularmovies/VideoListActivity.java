@@ -31,7 +31,7 @@ import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
-public class VideoListActivity extends AppCompatActivity implements onFetchResults,
+public class VideoListActivity extends AppCompatActivity implements
                                                             OnItemClickListener,
                                                             LoaderManager.LoaderCallbacks<List>,
                                                 SharedPreferences.OnSharedPreferenceChangeListener {
@@ -63,8 +63,7 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
             showLoadingBar();
             Bundle queryBundle = new Bundle();
             queryBundle.putString(SELECTED_SEARCH_OPTION,setupPreferences());
-            GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
-            mMovieList.setLayoutManager(gridManager);
+
             getSupportLoaderManager().initLoader(LOADER_TASK_ID, queryBundle, this);
         }
         else
@@ -73,14 +72,6 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         }
 
 
-    }
-
-    @Override
-    public void OnListAvailable(List<MovieContentDetails> result) {
-        hideLoadingBar();
-
-        mMovieListAdapter=new VideoListAdapter(VideoListActivity.this,result);
-        mMovieList.setAdapter(mMovieListAdapter);
     }
 
     @Override
@@ -129,10 +120,16 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     public void onLoadFinished(Loader<List> loader, List data) {
         hideLoadingBar();
         // mMovieList=(RecyclerView) findViewById(R.id.rv_movie_list);
-        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
+        /*GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
         mMovieList.setLayoutManager(gridManager);
         mMovieListAdapter=new VideoListAdapter(VideoListActivity.this,data);
+        mMovieList.setAdapter(mMovieListAdapter);*/
+        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
+        mMovieList.setLayoutManager(gridManager);
+        mMovieListAdapter=new VideoListAdapter(VideoListActivity.this);
+        mMovieListAdapter.setMovieList(data);
         mMovieList.setAdapter(mMovieListAdapter);
+
     }
 
     @Override

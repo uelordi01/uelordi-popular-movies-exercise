@@ -71,12 +71,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
         if( parent_activity.hasExtra("poster_path") )
         {
-            // TODO upload the no_image_available method
-//            Picasso.with(m_iv_poster.getContext())
-//                    .load(parent_activity.getStringExtra("poster_path"))
-//                    .placeholder(R.drawable.no_image_available)
-//                    .error(R.drawable.no_image_available)
-//                    .into(m_iv_poster);
+            Picasso.with(m_iv_poster.getContext())
+                    .load(parent_activity.getStringExtra("poster_path"))
+                    .placeholder(R.drawable.no_image_available)
+                    .error(R.drawable.no_image_available)
+                    .into(m_iv_poster);
         }
         if( parent_activity.hasExtra("synopsys") )
         {
