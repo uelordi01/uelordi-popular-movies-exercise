@@ -17,18 +17,20 @@ public class MovieContentDetails implements Parcelable
 {
 
     private String poster_path;
-    private final String IMAGE_URL_PATH="http://image.tmdb.org/t/p/w185/";
+    private String IMAGE_URL_PATH="http://image.tmdb.org/t/p/w185/";
     private String title;
     private String synopsis;
     private String user_rating;
     private String release_date;
     private long movieID;
+
     //TODO MAKE ADD MOVIE AND ADD REVIEW:
     List<ReviewContent> reviewContent= new ArrayList<>();
     List<TrailerContent> trailerContent= new ArrayList<>();
 
-    protected MovieContentDetails(Parcel in) {
+    public MovieContentDetails(Parcel in) {
         poster_path = in.readString();
+        //IMAGE_URL_PATH = in.readString();
         title = in.readString();
         synopsis = in.readString();
         user_rating = in.readString();
@@ -47,6 +49,10 @@ public class MovieContentDetails implements Parcelable
             return new MovieContentDetails[size];
         }
     };
+
+    public MovieContentDetails() {
+
+    }
 
     public void addReview(String author, String content)
     {
@@ -132,7 +138,7 @@ public class MovieContentDetails implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(poster_path);
-        dest.writeString(IMAGE_URL_PATH);
+        //dest.writeString(IMAGE_URL_PATH);
         dest.writeString(title);
         dest.writeString(synopsis);
         dest.writeString(user_rating);

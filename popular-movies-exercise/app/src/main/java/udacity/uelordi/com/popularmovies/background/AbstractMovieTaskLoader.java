@@ -18,7 +18,6 @@ public abstract class AbstractMovieTaskLoader extends  AsyncTaskLoader<List> {
     }
 
     protected abstract List buildList();
-    protected abstract CursorLoader buildListCursor();
 
     @Override
     public void deliverResult(

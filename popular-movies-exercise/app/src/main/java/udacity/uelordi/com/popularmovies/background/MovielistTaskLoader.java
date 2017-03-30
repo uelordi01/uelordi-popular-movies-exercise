@@ -3,7 +3,7 @@ package udacity.uelordi.com.popularmovies.background;
 import android.content.ContentValues;
 import android.content.Context;
 
-import android.content.CursorLoader;
+import android.support.v4.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -28,7 +28,7 @@ public class MovielistTaskLoader  {
     private Context mContext;
     private Uri currentUri = null;
     private List<MovieContentDetails> mMovieContentList;
-    private final String PROJECTIONS[] = {MovieContract.MovieEntry.COLUMN_IMAGE_URL};
+    private final String PROJECTIONS[] = {MovieContract.MovieEntry.COLUMN_IMAGE_URL,MovieContract.MovieEntry.COLUMN_TITLE};
 
     public Uri getCurrentUri() {
         return currentUri;
@@ -53,6 +53,7 @@ public class MovielistTaskLoader  {
     public CursorLoader buildCursor() {
         String result = null;
         Uri queryURI = null;
+        int rowsCreated = 0;
 
             List<MovieContentDetails> movieList = mMovieContentList;
             ContentValues responseMovies[] = new ContentValues[movieList.size()];
@@ -61,21 +62,21 @@ public class MovielistTaskLoader  {
                 responseMovies[i] = movieList.get(i).toContentValues();
                 responseJoinedTable[i] = createJoinedTableContentValues(movieList.get(i));
             }
-            int rowsCreated = mContext.getContentResolver().bulkInsert(MovieContract.MovieEntry.
+         rowsCreated  = mContext.getContentResolver().bulkInsert(MovieContract.MovieEntry.
                                                                 CONTENT_URI,responseMovies);
             /*if(rowsCreated > 0) {
 
             }*/
             if(mSortedBy.equals(mContext.getResources().
                                         getString(R.string.pref_sort_popular_value))) {
-                mContext.getContentResolver().bulkInsert(
-                                                MovieContract.HighestRatedEntry.CONTENT_URI,
+                rowsCreated =  mContext.getContentResolver().bulkInsert(
+                                                MovieContract.PopularEntry.CONTENT_URI,
                                                 responseJoinedTable);
                 currentUri = MovieContract.PopularEntry.CONTENT_URI;
             }
             else if(mSortedBy.equals(mContext.getResources().
                     getString(R.string.pref_sort_rated_value))){
-                mContext.getContentResolver().bulkInsert(
+                rowsCreated =  mContext.getContentResolver().bulkInsert(
                         MovieContract.HighestRatedEntry.CONTENT_URI,
                         responseJoinedTable);
                 currentUri = MovieContract.HighestRatedEntry.CONTENT_URI;
@@ -87,7 +88,7 @@ public class MovielistTaskLoader  {
         return new CursorLoader(
                 mContext,
                 currentUri,
-                PROJECTIONS,
+                null,
                 null,
                 null,
                 null);
