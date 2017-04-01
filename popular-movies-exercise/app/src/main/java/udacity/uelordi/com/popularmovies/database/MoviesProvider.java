@@ -87,34 +87,6 @@ public class MoviesProvider extends ContentProvider {
                retCursor = getMoviesByID(uri,projection,sortOrder);
                break;
            }
-           case MOST_POPULAR:
-           {
-               retCursor = getMoviesFromOption(MovieContract.PopularEntry.TABLE_NAME,
-                                                                           projection,
-                                                                            selection,
-                                                                            selectionArgs,
-                                                                           sortOrder);
-               break;
-           }
-           case HIGHEST_RATED:
-           {
-               retCursor = getMoviesFromOption(MovieContract.HighestRatedEntry.TABLE_NAME,
-                                                                               projection,
-                                                                               selection,
-                                                                               selectionArgs,
-                                                                               sortOrder);
-               break;
-
-           }
-           case FAVORITES:
-           {
-               retCursor = getMoviesFromOption(MovieContract.FavoritesEntry.TABLE_NAME,
-                                                                               projection,
-                                                                               selection,
-                                                                               selectionArgs,
-                                                                               sortOrder);
-               break;
-           }
        }
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
 
@@ -131,12 +103,6 @@ public class MoviesProvider extends ContentProvider {
                 return MovieContract.MovieEntry.CONTENT_DIR_TYPE;
             case MOVIE_WITH_ID:
                 return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
-            case MOST_POPULAR:
-                return MovieContract.PopularEntry.CONTENT_DIR_TYPE;
-            case HIGHEST_RATED:
-                return MovieContract.HighestRatedEntry.CONTENT_DIR_TYPE;
-            case FAVORITES:
-                return MovieContract.FavoritesEntry.CONTENT_DIR_TYPE;
             default:
                 return null;
         }
@@ -164,37 +130,6 @@ public class MoviesProvider extends ContentProvider {
                 }
                 break;
             }
-            case MOST_POPULAR:
-            {
-                    id = db.insert(MovieContract.PopularEntry.TABLE_NAME, null, values);
-                    if (id > 0) {
-                        returnUri = MovieContract.PopularEntry.CONTENT_URI;
-                    } else {
-                        throw new android.database.SQLException(SQL_INSERT_ERROR + uri);
-                    }
-                    break;
-            }
-            case HIGHEST_RATED:
-            {
-                    id = db.insert(MovieContract.HighestRatedEntry.TABLE_NAME, null, values);
-                    if (id > 0) {
-                        returnUri = MovieContract.HighestRatedEntry.CONTENT_URI;
-                    } else {
-                        throw new android.database.SQLException(SQL_INSERT_ERROR + uri);
-                    }
-                    break;
-            }
-            case FAVORITES:
-            {
-                    id = db.insert(MovieContract.FavoritesEntry.TABLE_NAME, null, values);
-                    if (id > 0) {
-                        returnUri = MovieContract.FavoritesEntry.CONTENT_URI;
-                    } else {
-                        throw new android.database.SQLException(SQL_INSERT_ERROR + uri);
-                    }
-                    break;
-            }
-
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -221,21 +156,6 @@ public class MoviesProvider extends ContentProvider {
                 rowsDeleted = db.delete(MovieContract.MovieEntry.TABLE_NAME,
                                                             MOVIE_ID_SELECTION,
                                                             new String[]{Long.toString(id)});
-                break;
-            }
-            case MOST_POPULAR:
-            {
-                rowsDeleted = db.delete(MovieContract.PopularEntry.TABLE_NAME,selection,selectionArgs);
-                break;
-            }
-            case HIGHEST_RATED:
-            {
-                rowsDeleted = db.delete(MovieContract.HighestRatedEntry.TABLE_NAME,selection,selectionArgs);
-                break;
-            }
-            case FAVORITES:
-            {
-                rowsDeleted = db.delete(MovieContract.FavoritesEntry.TABLE_NAME,selection,selectionArgs);
                 break;
             }
             default:
@@ -294,45 +214,6 @@ public class MoviesProvider extends ContentProvider {
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
             }
-            case MOST_POPULAR:
-            {
-                db.beginTransaction();
-                int returnCount = 0;
-                try {
-                    for (ContentValues value : values) {
-                        long id = db.insertWithOnConflict(MovieContract.PopularEntry.TABLE_NAME,
-                                null, value, SQLiteDatabase.CONFLICT_REPLACE);
-                        if (id != -1) {
-                            returnCount++;
-                        }
-                    }
-                    db.setTransactionSuccessful();
-                } finally {
-                    db.endTransaction();
-                }
-                getContext().getContentResolver().notifyChange(uri, null);
-                return returnCount;
-
-            }
-            case HIGHEST_RATED:
-            {
-                db.beginTransaction();
-                int returnCount = 0;
-                try {
-                    for (ContentValues value : values) {
-                        long id = db.insertWithOnConflict(MovieContract.
-                                                                HighestRatedEntry.TABLE_NAME,
-                                                null, value, SQLiteDatabase.CONFLICT_REPLACE);
-                        if (id != -1) {
-                            returnCount++;
-                        }
-                    }
-                    db.setTransactionSuccessful();
-                } finally {
-                    db.endTransaction();
-                }
-                getContext().getContentResolver().notifyChange(uri, null);
-            }
             default:
                 return super.bulkInsert(uri, values);
         }
@@ -352,32 +233,5 @@ public class MoviesProvider extends ContentProvider {
                 sortOrder);
 
 
-    }
-
-    /*
-     * it takes the movies from depending on the menu option
-     *
-     */
-    public Cursor getMoviesFromOption(String tableName, String [] projection,
-                                                            String selection,
-                                                        String[] selectionArgs,
-                                                            String sortOrder) {
-        SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
-
-        // tableName INNER JOIN movies ON tableName.movie_id = movies._id
-        sqLiteQueryBuilder.setTables(
-                tableName + " INNER JOIN " + MovieContract.MovieEntry.TABLE_NAME +
-                        " ON " + tableName + "." + MovieContract.COLUMN_MOVIE_ID_FKEY +
-                        " = " + MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID
-        );
-
-        return sqLiteQueryBuilder.query(mMovieHelper.getReadableDatabase(),
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                sortOrder
-        );
     }
 }

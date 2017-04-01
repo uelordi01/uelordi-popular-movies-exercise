@@ -25,7 +25,7 @@ public class MovieDetailTaskLoader extends AbstractMovieTaskLoader {
     }
 
     @Override
-    protected List buildList() {
+    public List buildList() {
         String result = null;
         try {
             result = NetworkUtils.getInstance().getMovieDetails(mVideoId);

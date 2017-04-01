@@ -21,17 +21,17 @@ public class MovieDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(MovieContract.MovieEntry.SQL_CREATE_TABLE);
-        db.execSQL(MovieContract.PopularEntry.SQL_CREATE_TABLE);
-        db.execSQL(MovieContract.HighestRatedEntry.SQL_CREATE_TABLE);
-        db.execSQL(MovieContract.FavoritesEntry.SQL_CREATE_TABLE);
-    }
+//        db.execSQL(MovieContract.PopularEntry.SQL_CREATE_TABLE);
+//        db.execSQL(MovieContract.HighestRatedEntry.SQL_CREATE_TABLE);
+//        db.execSQL(MovieContract.FavoritesEntry.SQL_CREATE_TABLE);
+}
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL( DROP_TABLE + MovieContract.MovieEntry.TABLE_NAME);
-        db.execSQL( DROP_TABLE + MovieContract.PopularEntry.TABLE_NAME);
-        db.execSQL( DROP_TABLE + MovieContract.HighestRatedEntry.TABLE_NAME);
-        db.execSQL( DROP_TABLE + MovieContract.FavoritesEntry.TABLE_NAME);
+//        db.execSQL( DROP_TABLE + MovieContract.PopularEntry.TABLE_NAME);
+//        db.execSQL( DROP_TABLE + MovieContract.HighestRatedEntry.TABLE_NAME);
+//        db.execSQL( DROP_TABLE + MovieContract.FavoritesEntry.TABLE_NAME);
         onCreate(db);
     }
 }

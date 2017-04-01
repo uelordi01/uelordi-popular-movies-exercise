@@ -50,6 +50,15 @@ public class MovieContentDetails implements Parcelable
         }
     };
 
+    public MovieContentDetails(Long id, String title, String synopsis, String user_rating,String poster_path, String release_date) {
+        this.movieID = id;
+        this.poster_path = poster_path;
+        this.title = title;
+        this.synopsis = synopsis;
+        this.user_rating = user_rating;
+        this.release_date = release_date;
+    }
+
     public MovieContentDetails() {
 
     }

@@ -22,7 +22,7 @@ public class MovieContract {
     public static final String PATH_POPULAR = "most_popular";
     public static final String PATH_RATED = "highest_rated";
     public static final String PATH_FAVORITES = "favorites";
-    public static final String PATH_MOVIES = "movies";
+    public static final String PATH_MOVIES = "favorite_movies";
     public static final String COLUMN_MOVIE_ID_FKEY = "movie_id";
 
     public static final class MovieEntry implements BaseColumns {
@@ -37,7 +37,7 @@ public class MovieContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES;
 
-        public static final String TABLE_NAME = "movies";
+        public static final String TABLE_NAME = "favorite_movies";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_USER_RATING = "user_rating";
         public static final String COLUMN_SYNOPSYS = "synopsys";
@@ -51,6 +51,7 @@ public class MovieContract {
                 COLUMN_USER_RATING +  "  REAL NOT NULL," +
                 COLUMN_IMAGE_URL   + " TEXT NOT NULL,"+
                 COLUMN_RELEASE_DATE + " TEXT NOT NULL)";
+        // TODO SET BACKDROP PATH
 
         public static Uri buildMovieUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -59,10 +60,26 @@ public class MovieContract {
         public static long getIdFromUri(Uri uri) {
             return ContentUris.parseId(uri);
         }
+
+        public static final String[] MOVIE_COLUMNS = {
+                _ID,
+                COLUMN_TITLE,
+                COLUMN_SYNOPSYS,
+                COLUMN_USER_RATING,
+                COLUMN_IMAGE_URL,
+                COLUMN_RELEASE_DATE
+        };
+
+        public static final int COL_MOVIE_ID = 0;
+        public static final int COL_MOVIE_TITLE = 1;
+        public static final int COL_MOVIE_OVERVIEW = 2;
+        public static final int COL_MOVIE_VOTE_AVERAGE = 3;
+        public static final int COL_MOVIE_POSTER_PATH = 4;
+        public static final int COL_MOVIE_RELEASE_DATE = 5;
         //public static final String COLUMN_RELEASE_DATE = "title";
 
         }
-    public static final class PopularEntry implements BaseColumns {
+   /* public static final class PopularEntry implements BaseColumns {
         public static final Uri CONTENT_URI =  MovieEntry.CONTENT_URI.buildUpon().appendPath(PATH_POPULAR).build();
 
         public static final String CONTENT_DIR_TYPE =
@@ -118,7 +135,7 @@ public class MovieContract {
                         MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + ") " +
 
                         " );";
-    }
+    }*/
 
 
 
