@@ -24,9 +24,9 @@ public class MoviesProvider extends ContentProvider {
 
     public static final int MOVIES = 100;
     public static final int MOVIE_WITH_ID = 101;
-    public static final int MOST_POPULAR = 200;
-    public static final int  HIGHEST_RATED= 300;
-    public static final int FAVORITES = 400;
+    public static final int MOST_POPULAR = 202;
+    public static final int  HIGHEST_RATED= 203;
+    public static final int FAVORITES = 300;
 
     // CDeclare a static variable for the Uri matcher that you construct
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -35,6 +35,7 @@ public class MoviesProvider extends ContentProvider {
 
     private static final String MOVIE_ID_SELECTION =
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID + " = ? ";
+
 
    public static UriMatcher buildUriMatcher() {
         final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);

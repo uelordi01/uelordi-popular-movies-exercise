@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.database.MovieContract;
+import udacity.uelordi.com.popularmovies.database.MoviesProvider;
 
 /**
  * Created by uelordi on 28/03/17.
@@ -28,8 +29,10 @@ public class FavoriteService {
     }
     public void addToFavorites(MovieContentDetails movieObject)
     {
+        // insert the movie:
         mContext.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI,
-                                                    movieObject.toContentValues());
+                movieObject.toContentValues());
+        // insert the favorites table:
         ContentValues content = new ContentValues();
         content.put(MovieContract.COLUMN_MOVIE_ID_FKEY,movieObject.getMovieID());
         mContext.getContentResolver().insert(MovieContract.FavoritesEntry.CONTENT_URI,content);

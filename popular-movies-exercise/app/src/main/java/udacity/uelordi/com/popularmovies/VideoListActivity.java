@@ -63,8 +63,14 @@ public class VideoListActivity extends AppCompatActivity implements
             showLoadingBar();
             Bundle queryBundle = new Bundle();
             queryBundle.putString(SELECTED_SEARCH_OPTION,setupPreferences());
+            if(queryBundle.getString(SELECTED_SEARCH_OPTION).
+                    equals(getResources().getString(R.string.pref_sort_favorites_value))) {
 
-            getSupportLoaderManager().initLoader(LOADER_TASK_ID, queryBundle, this);
+            }
+            else {
+                getSupportLoaderManager().initLoader(LOADER_TASK_ID, queryBundle, this);
+            }
+
         }
         else
         {
@@ -162,17 +168,6 @@ public class VideoListActivity extends AppCompatActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         restartLoader(key);
-        /*Bundle query =
-        if( key.equals(getString(R.string.pref_sort_popular_value)) )
-        {
-
-        }
-        if( key.equals(getString(R.string.pref_sort_rated_value)) ) {
-
-        }
-        if( key.equals(getString(R.string.pref_sort_favorites_value)) ) {
-
-        }*/
     }
 
     @Override
@@ -187,7 +182,9 @@ public class VideoListActivity extends AppCompatActivity implements
         my_intent.putExtra("release_date",movie.getRelease_date());
         startActivity(my_intent);
     }
+    public void loadFavoritesList() {
 
+    }
     @Override
     public void onItemClick(TrailerContent content) {
         //TODO IMPLEMENT THE TRAILER ADAPTER PART:

@@ -21,8 +21,8 @@ public class MovieContract {
     // This is the path for the "tasks" directory
     public static final String PATH_POPULAR = "most_popular";
     public static final String PATH_RATED = "highest_rated";
-    public static final String PATH_FAVORITES="favorites";
-    public static final String PATH_MOVIES="movies";
+    public static final String PATH_FAVORITES = "favorites";
+    public static final String PATH_MOVIES = "movies";
     public static final String COLUMN_MOVIE_ID_FKEY = "movie_id";
 
     public static final class MovieEntry implements BaseColumns {
@@ -34,6 +34,7 @@ public class MovieContract {
 
         public static final String CONTENT_DIR_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES;
+
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES;
 
@@ -63,14 +64,15 @@ public class MovieContract {
 
         }
     public static final class PopularEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =  BASE_CONTENT_URI.buildUpon().appendPath(PATH_POPULAR).build();
+        public static final Uri CONTENT_URI =  MovieEntry.CONTENT_URI.buildUpon().appendPath(PATH_POPULAR).build();
 
         public static final String CONTENT_DIR_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES
                         + "/" + PATH_POPULAR;
-        public static final String TABLE_NAME = "most_popular_movies";
 
-        public static final String CREATE_TABLE =
+        public static final String TABLE_NAME = "most_popular";
+
+        public static final String SQL_CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         COLUMN_MOVIE_ID_FKEY + " INTEGER NOT NULL, " +
@@ -81,15 +83,15 @@ public class MovieContract {
                         " );";
         }
     public static final class HighestRatedEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =  BASE_CONTENT_URI.buildUpon().appendPath(PATH_RATED).build();
+        public static final Uri CONTENT_URI =  MovieEntry.CONTENT_URI.buildUpon().appendPath(PATH_RATED).build();
 
 
-        public static final String TABLE_NAME = "highest_rated_movies";
+        public static final String TABLE_NAME = "highest_rated";
         public static final String CONTENT_DIR_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES
                         + "/" + PATH_RATED;
 
-        public static final String CREATE_TABLE =
+        public static final String SQL_CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         COLUMN_MOVIE_ID_FKEY + " INTEGER NOT NULL, " +
@@ -100,15 +102,15 @@ public class MovieContract {
                         " );";
     }
     public static final class FavoritesEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =  BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVORITES).build();
+        public static final Uri CONTENT_URI =  MovieEntry.CONTENT_URI.buildUpon().appendPath(PATH_FAVORITES).build();
 
 
-        public static final String TABLE_NAME = "favorite_movies";
+        public static final String TABLE_NAME = "favorites";
         public static final String CONTENT_DIR_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES
                         + "/" + PATH_FAVORITES;
 
-        public static final String CREATE_TABLE =
+        public static final String SQL_CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         COLUMN_MOVIE_ID_FKEY + " INTEGER NOT NULL, " +

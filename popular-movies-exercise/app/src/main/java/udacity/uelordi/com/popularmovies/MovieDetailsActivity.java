@@ -104,9 +104,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         List<MovieContentDetails> result= data;
         LinearLayoutManager lmanager=new LinearLayoutManager(this);
         rvReviews.setLayoutManager(lmanager);
-        m_current_content=result.get(0);
-        mReviewtAdapter = new ReviewAdapter(m_current_content.getReviewContent());
-        rvReviews.setAdapter(mReviewtAdapter);
+        if(result != null) {
+            m_current_content=result.get(0);
+            mReviewtAdapter = new ReviewAdapter(m_current_content.getReviewContent());
+            rvReviews.setAdapter(mReviewtAdapter);
+        }
+
     }
     @Override
     public void onLoaderReset(Loader<List> loader) {
@@ -123,9 +126,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 //
 //            }
 //            else {
-//                FavoriteService.getInstance().addToFavorites(m_current_content);
+                FavoriteService.getInstance().addToFavorites(m_current_content);
 //            }
-            FavoriteService.getInstance().addToFavorites(m_current_content);
+//            FavoriteService.getInstance().addToFavorites(m_current_content);
         }
         else
         {
