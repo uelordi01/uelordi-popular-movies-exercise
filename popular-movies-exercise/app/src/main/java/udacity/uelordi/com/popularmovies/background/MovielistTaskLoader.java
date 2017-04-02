@@ -42,22 +42,17 @@ public class MovielistTaskLoader  {
         return PROJECTIONS;
     }
 
-    public MovielistTaskLoader(Context context, String sortedBy)
+    public MovielistTaskLoader(Context context, String sortedBy, List<MovieContentDetails> movieList)
     {
         mContext = context;
         mSortedBy=sortedBy;
+        mMovieContentList = movieList;
     }
 
 
     public CursorLoader buildCursor() {
         String result = null;
         Uri queryURI = null;
-
-        try {
-            result = NetworkUtils.getInstance().getMovieList(mSortedBy);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
             List<MovieContentDetails> movieList = mMovieContentList;
             ContentValues responseMovies[] = new ContentValues[movieList.size()];

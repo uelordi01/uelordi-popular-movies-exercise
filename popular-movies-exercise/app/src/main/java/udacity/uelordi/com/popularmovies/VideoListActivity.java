@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.support.v4.content.CursorLoader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,9 +33,11 @@ import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.content.TrailerContent;
 import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
+import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
 public class VideoListActivity extends AppCompatActivity implements
                                                             OnItemClickListener,
+                                                            onFetchResults,
                                                             LoaderManager.LoaderCallbacks<Cursor>,
                                                 SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -47,7 +51,7 @@ public class VideoListActivity extends AppCompatActivity implements
     private VideoListAdapter mMovieListAdapter;
 
     private static final String SELECTED_SEARCH_OPTION = "search_option";
-
+    private static final String RESULT_LIST_KEY = "vide_list_result";
     private static final int MOVIES_LOADER_TASK_ID = 5;
     private static final int FAVORITES_MOVIES_LOADER_TASK_ID = 6;
 
@@ -70,7 +74,10 @@ public class VideoListActivity extends AppCompatActivity implements
 
             }
             else {
-                getSupportLoaderManager().initLoader(MOVIES_LOADER_TASK_ID, queryBundle, this);
+                //
+                mVideoListTask = new FetchVideoList();
+                mVideoListTask.setListener(this);
+                mVideoListTask.execute(queryBundle.getString(SELECTED_SEARCH_OPTION));
             }
 
         }
@@ -121,6 +128,7 @@ public class VideoListActivity extends AppCompatActivity implements
     @Override
     public Loader<Cursor> onCreateLoader(int loaderID, Bundle args) {
         String selected_option=args.getString(SELECTED_SEARCH_OPTION);
+        List<MovieContentDetails> result = args.getParcelableArrayList(RESULT_LIST_KEY);
         switch (loaderID) {
             case FAVORITES_MOVIES_LOADER_TASK_ID:
             {
@@ -128,7 +136,7 @@ public class VideoListActivity extends AppCompatActivity implements
                // return new  MovielistTaskLoader(this,selected_option).buildCursor();
                 /*MovielistTaskLoader task = new MovielistTaskLoader(this,selected_option);
                 task.buildCursor();*/
-                new MovielistTaskLoader(this,selected_option).buildCursor();
+                new MovielistTaskLoader(this, selected_option, result).buildCursor();
                 /*return new CursorLoader(
                         this,
                         task.getCurrentUri(),
@@ -228,5 +236,13 @@ public class VideoListActivity extends AppCompatActivity implements
     @Override
     public void onItemClick(TrailerContent content) {
         //TODO IMPLEMENT THE TRAILER ADAPTER PART:
+    }
+
+    @Override
+    public void OnListAvailable(List<MovieContentDetails> result) {
+        Bundle queryBundle = new Bundle();
+        queryBundle.putString(SELECTED_SEARCH_OPTION,setupPreferences());
+        queryBundle.putParcelableArrayList(RESULT_LIST_KEY, (ArrayList<? extends Parcelable>) result);
+        getSupportLoaderManager().initLoader(MOVIES_LOADER_TASK_ID, queryBundle, this);
     }
 }

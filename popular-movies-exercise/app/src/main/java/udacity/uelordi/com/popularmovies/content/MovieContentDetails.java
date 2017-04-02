@@ -1,6 +1,8 @@
 package udacity.uelordi.com.popularmovies.content;
 
 import android.content.ContentValues;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,7 @@ import udacity.uelordi.com.popularmovies.database.MovieContract;
  * Created by uelordi on 28/02/2017.
  */
 
-public class MovieContentDetails
+public class MovieContentDetails implements Parcelable
 {
 
     private String poster_path;
@@ -24,6 +26,28 @@ public class MovieContentDetails
     //TODO MAKE ADD MOVIE AND ADD REVIEW:
     List<ReviewContent> reviewContent= new ArrayList<>();
     List<TrailerContent> trailerContent= new ArrayList<>();
+
+    protected MovieContentDetails(Parcel in) {
+        poster_path = in.readString();
+        title = in.readString();
+        synopsis = in.readString();
+        user_rating = in.readString();
+        release_date = in.readString();
+        movieID = in.readLong();
+    }
+
+    public static final Creator<MovieContentDetails> CREATOR = new Creator<MovieContentDetails>() {
+        @Override
+        public MovieContentDetails createFromParcel(Parcel in) {
+            return new MovieContentDetails(in);
+        }
+
+        @Override
+        public MovieContentDetails[] newArray(int size) {
+            return new MovieContentDetails[size];
+        }
+    };
+
     public void addReview(String author, String content)
     {
         reviewContent.add(new ReviewContent(author,content));
@@ -98,5 +122,21 @@ public class MovieContentDetails
         values.put(MovieContract.MovieEntry.COLUMN_USER_RATING,user_rating);
         values.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,release_date);
         return values;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(poster_path);
+        dest.writeString(IMAGE_URL_PATH);
+        dest.writeString(title);
+        dest.writeString(synopsis);
+        dest.writeString(user_rating);
+        dest.writeString(release_date);
+        dest.writeLong(movieID);
     }
 }
