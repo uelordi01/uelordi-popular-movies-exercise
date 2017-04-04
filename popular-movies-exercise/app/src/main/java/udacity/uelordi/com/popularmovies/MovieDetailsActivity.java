@@ -2,6 +2,8 @@ package udacity.uelordi.com.popularmovies;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Movie;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -51,6 +53,14 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     private static final int MOVIE_DETAIL_TASK_ID=6;
     private static final String TAG = "MoveDetailsActivity";
+    public static final String[] MOVIE_DETAILS_PROJECTION = {
+            MovieContract.MovieEntry.COLUMN_TITLE,
+            MovieContract.MovieEntry.COLUMN_SYNOPSYS,
+            MovieContract.MovieEntry.COLUMN_IMAGE_URL,
+            MovieContract.MovieEntry.COLUMN_RELEASE_DATE,
+            MovieContract.MovieEntry.COLUMN_USER_RATING,
+
+    };
     MovieContentDetails m_current_content;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +79,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         // TODO use the query bundle of the onsave state to maintain the id in the memory.
         // TODO write the favorite bitmaps in the physical disk.
         // TODO improve the review part.
+        // TODO HAY QUE HACER OTRO CURSOR LOADER PARA QUE ME DEVUELVA TODO Y HAGA TODO LA MOVIDA DE RELLENO.
+        // TODO tienes que definir las proyecciones.
+        // TODO tienes que definir bien el uri que vas a usar.
 
+        Long id = parent_activity.getLongExtra("movieid",0);
+        Cursor cursor = getContentResolver().query(MovieContract.MovieEntry.buildMovieUri(id),
+                                                    MOVIE_DETAILS_PROJECTION,
+                                                                        null,
+                                                                        null,
+                                                                        null);
         Bundle queryBundle = new Bundle();
-        queryBundle.putLong(MOVIE_ID_KEY,parent_activity.getLongExtra("movieid",0));
+        queryBundle.putLong(MOVIE_ID_KEY,id);
         getSupportLoaderManager().initLoader(MOVIE_DETAIL_TASK_ID, queryBundle, this);
     }
 
