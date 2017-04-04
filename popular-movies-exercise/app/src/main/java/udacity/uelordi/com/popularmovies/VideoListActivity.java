@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.support.v4.content.CursorLoader;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class VideoListActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
         ButterKnife.bind(this);
-        String defaultFilter=setupPreferences();
+        String defaultFilter = setupPreferences();
         hideErrorMessage();
         setAdapters();
         showLoadingBar();
@@ -140,6 +141,7 @@ public class VideoListActivity extends AppCompatActivity implements
     public void onLoaderReset(Loader<Cursor> loader) {
         mMovieListAdapter.swapCursor(null);
     }
+
     public void startLoader(List<MovieContentDetails> result)
     {
         Bundle queryBundle = new Bundle();
@@ -176,21 +178,22 @@ public class VideoListActivity extends AppCompatActivity implements
     @Override
     public void onItemClick(MovieContentDetails movie) {
         Intent my_intent = new Intent(this,MovieDetailsActivity.class);
-//        long id=movie.getMovieID();
+        long id=movie.getMovieID();
 //        my_intent.putExtra("movieid",id);
 //        my_intent.putExtra("poster_path",movie.getPoster_path());
 //        my_intent.putExtra("title",movie.getTitle());
 //        my_intent.putExtra("synopsys",movie.getSynopsis());
 //        my_intent.putExtra("user_rating",movie.getUser_rating());
 //        my_intent.putExtra("release_date",movie.getRelease_date());
-//        startActivity(my_intent);
+        startActivity(my_intent);
     }
 
     @Override
     public void onItemClick(String movieID) {
-        Intent my_intent = new Intent(this,MovieDetailsActivity.class);
-        String id = movieID;
-        my_intent.putExtra("movieid",id);
+        Intent movie_detail_intent = new Intent(this,MovieDetailsActivity.class);
+        long id =Long.parseLong(movieID);
+        movie_detail_intent.putExtra("movieid",id);
+        startActivity(movie_detail_intent);
     }
 
     public void loadFavoritesList() {
@@ -229,6 +232,10 @@ public class VideoListActivity extends AppCompatActivity implements
             } else {
                 if(NetworkUtils.isOnline(getApplicationContext())) {
                 getMoviesFromTheInternet(key);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.connectivity_warning),Toast.LENGTH_SHORT).show();
+                    startLoader(null);
                 }
             }
         }

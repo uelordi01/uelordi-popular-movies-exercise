@@ -30,7 +30,6 @@ public class MovieContract {
         // TaskEntry content URI = base content URI + path
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES).build();
-        public static final String COLUMN_MOVIE_ID = "movie_id";
 
         public static final String CONTENT_DIR_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES;
@@ -49,7 +48,7 @@ public class MovieContract {
                 _ID + " INTEGER PRIMARY KEY, " +
                 COLUMN_TITLE + " TEXT NOT NULL, " +
                 COLUMN_SYNOPSYS + " TEXT NOT NULL, " +
-                COLUMN_USER_RATING +  " REAL NOT NULL," +
+                COLUMN_USER_RATING +  "  REAL NOT NULL," +
                 COLUMN_IMAGE_URL   + " TEXT NOT NULL,"+
                 COLUMN_RELEASE_DATE + " TEXT NOT NULL)";
 

@@ -56,38 +56,20 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
         initInterface();
         Intent parent_activity=getIntent();
-//        if( parent_activity.hasExtra("title") )
-//        {
-//            m_tv_title.setText(parent_activity.getStringExtra("title"));
-//        }
-//        if( parent_activity.hasExtra("user_rating") )
-//        {
-//            m_tv_user_rating.setText(parent_activity.getStringExtra("user_rating"));
-//        }
-//        if( parent_activity.hasExtra("poster_path") )
-//        {
-//            Picasso.with(m_iv_poster.getContext())
-//                    .load(parent_activity.getStringExtra("poster_path"))
-//                    .placeholder(R.drawable.no_image_available)
-//                    .error(R.drawable.no_image_available)
-//                    .into(m_iv_poster);
-//        }
-//        if( parent_activity.hasExtra("synopsys") )
-//        {
-//            m_tv_synopsys.setText(parent_activity.getStringExtra("synopsys"));
-//        }
-//        if( parent_activity.hasExtra("release_date") )
-//        {
-//            m_tv_release_date.setText(getResources().getString(R.string.release_date)
-//                                                    +parent_activity.getStringExtra("release_date"));
-//        }
-        // TODO MAKE CONVERSION TO LONG TO LOAD THE REVIEWS:
+
+        // TODO make the query of the id to get the image.
+        // TODO Make cursor sql consult and get everything very easy
+        // TODO See if it is favorite. so see if there is in the favorite folder.
+        // TODO change the icon of the favorite, with the styles.
+        // TODO get the trailers and the intents.
+        // TODO use the query bundle of the onsave state to maintain the id in the memory.
+        // TODO write the favorite bitmaps in the physical disk.
+        // TODO improve the review part.
+
         Bundle queryBundle = new Bundle();
         queryBundle.putLong(MOVIE_ID_KEY,parent_activity.getLongExtra("movieid",0));
         getSupportLoaderManager().initLoader(MOVIE_DETAIL_TASK_ID, queryBundle, this);

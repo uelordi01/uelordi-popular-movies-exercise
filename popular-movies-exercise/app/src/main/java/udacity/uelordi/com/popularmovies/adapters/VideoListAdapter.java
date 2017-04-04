@@ -27,7 +27,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
     final private OnItemClickListener m_listener;
     List<MovieContentDetails> m_movies_populate_array;
     private static final int INDEX_MOVIE_ID = 0;
-    private static final int INDEX_IMAGE_VIEW = 1;
+    private static final int INDEX_IMAGE_VIEW = 6;
     private static final int INDEX_TITLE_VIEW = 2;
     Context mContext;
     private static int viewHolderCount;

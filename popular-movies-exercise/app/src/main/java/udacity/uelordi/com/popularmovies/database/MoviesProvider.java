@@ -145,7 +145,9 @@ public class MoviesProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-
+        final SQLiteDatabase mDataBase = mMovieHelper.getReadableDatabase();
+        Cursor dbCursor = mDataBase.query(MovieContract.MovieEntry.TABLE_NAME, null, null, null, null, null, null);
+        String[] columnNames = dbCursor.getColumnNames();
         final SQLiteDatabase db = mMovieHelper.getWritableDatabase();
 
         int match = sUriMatcher.match(uri);

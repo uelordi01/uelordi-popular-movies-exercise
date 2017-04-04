@@ -53,7 +53,6 @@ public class MovielistTaskLoader  {
     public CursorLoader buildCursor() {
         String result = null;
         Uri queryURI = null;
-        int rowsCreated = 0;
 
             List<MovieContentDetails> movieList = mMovieContentList;
             ContentValues responseMovies[] = new ContentValues[movieList.size()];
@@ -62,21 +61,19 @@ public class MovielistTaskLoader  {
                 responseMovies[i] = movieList.get(i).toContentValues();
                 responseJoinedTable[i] = createJoinedTableContentValues(movieList.get(i));
             }
-         rowsCreated  = mContext.getContentResolver().bulkInsert(MovieContract.MovieEntry.
+            mContext.getContentResolver().bulkInsert(MovieContract.MovieEntry.
                                                                 CONTENT_URI,responseMovies);
-            /*if(rowsCreated > 0) {
 
-            }*/
             if(mSortedBy.equals(mContext.getResources().
                                         getString(R.string.pref_sort_popular_value))) {
-                rowsCreated =  mContext.getContentResolver().bulkInsert(
+                mContext.getContentResolver().bulkInsert(
                                                 MovieContract.PopularEntry.CONTENT_URI,
                                                 responseJoinedTable);
                 currentUri = MovieContract.PopularEntry.CONTENT_URI;
             }
             else if(mSortedBy.equals(mContext.getResources().
                     getString(R.string.pref_sort_rated_value))){
-                rowsCreated =  mContext.getContentResolver().bulkInsert(
+                 mContext.getContentResolver().bulkInsert(
                         MovieContract.HighestRatedEntry.CONTENT_URI,
                         responseJoinedTable);
                 currentUri = MovieContract.HighestRatedEntry.CONTENT_URI;
