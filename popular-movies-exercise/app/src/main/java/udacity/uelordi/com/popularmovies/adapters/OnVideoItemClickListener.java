@@ -9,8 +9,7 @@ import udacity.uelordi.com.popularmovies.content.TrailerContent;
  * Created by uelordi on 29/03/17.
  */
 
-public interface OnItemClickListener {
+public interface OnVideoItemClickListener {
     void onItemClick(MovieContentDetails content);
     void onItemClick(String movieID);
-    void onItemClick(TrailerContent content);
 }

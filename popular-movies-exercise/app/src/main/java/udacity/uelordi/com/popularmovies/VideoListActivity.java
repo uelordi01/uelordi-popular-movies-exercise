@@ -26,7 +26,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import udacity.uelordi.com.popularmovies.adapters.OnItemClickListener;
+
+import udacity.uelordi.com.popularmovies.adapters.OnVideoItemClickListener;
 import udacity.uelordi.com.popularmovies.adapters.VideoListAdapter;
 import udacity.uelordi.com.popularmovies.background.FavoriteTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
@@ -36,10 +37,10 @@ import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
 public class VideoListActivity extends AppCompatActivity implements
-                                                            OnItemClickListener,
-                                                            onFetchResults,
-                                                            LoaderManager.LoaderCallbacks<Cursor>,
-                                                SharedPreferences.OnSharedPreferenceChangeListener {
+                                            OnVideoItemClickListener,
+                                            onFetchResults,
+                                            LoaderManager.LoaderCallbacks<Cursor>,
+                                SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = VideoListActivity.class.getSimpleName();
 
@@ -183,19 +184,13 @@ public class VideoListActivity extends AppCompatActivity implements
         movie_detail_intent.putExtra("movieid",id);
         startActivity(movie_detail_intent);
     }
-
-    public void loadFavoritesList() {
-
-    }
-    @Override
-    public void onItemClick(TrailerContent content) {
-        //TODO IMPLEMENT THE TRAILER ADAPTER PART:
-    }
     public void setAdapters(){
 
         GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
         mMovieListAdapter = new VideoListAdapter(VideoListActivity.this);
+        String optionType= checkSortingPreferences();
         mMovieList.setLayoutManager(gridManager);
+        mMovieListAdapter.setOptionType(optionType);
         mMovieList.setAdapter(mMovieListAdapter);
     }
     @Override

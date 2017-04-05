@@ -44,13 +44,6 @@ public class MoviesProvider extends ContentProvider {
         uriMatcher.addURI(authority, MovieContract.PATH_MOVIES, MOVIES);
         uriMatcher.addURI(authority, MovieContract.PATH_MOVIES + "/#", MOVIE_WITH_ID);
 
-        uriMatcher.addURI(authority, MovieContract.PATH_MOVIES + "/" +
-                MovieContract.PATH_POPULAR, MOST_POPULAR);
-        uriMatcher.addURI(authority, MovieContract.PATH_MOVIES + "/" +
-                MovieContract.PATH_RATED, HIGHEST_RATED);
-
-        uriMatcher.addURI(authority, MovieContract.PATH_MOVIES + "/" +
-                MovieContract.PATH_FAVORITES, FAVORITES);
 
         return uriMatcher;
     }

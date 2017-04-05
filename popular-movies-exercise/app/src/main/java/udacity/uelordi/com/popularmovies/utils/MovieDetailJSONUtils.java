@@ -30,6 +30,8 @@ public class MovieDetailJSONUtils {
         final String TRAILER_ID = "id";
         final String TRAILER_VIDEO_KEY = "key";
         final String TRAILER_VIDEO_NAME = "name";
+        final String REVIEW_URL = "url";
+        final String BACKDROP_PATH = "backdrop_path";
 
 
         JSONObject movie_Json=new JSONObject(json_string);
@@ -44,6 +46,7 @@ public class MovieDetailJSONUtils {
         mc.setRelease_date(movie_Json.getString(RELEASE_DATE));
         mc.setUser_rating(movie_Json.getString(VOTE_AVERAGE));
         mc.setSynopsis(movie_Json.getString(SYNOPSYS));
+        mc.setBackdropPath(movie_Json.getString(BACKDROP_PATH));
 
         JSONObject review_object = movie_Json.getJSONObject(REVIEW_LIST);
         JSONObject trailer_object = movie_Json.getJSONObject(TRAILER_LIST);
@@ -54,7 +57,9 @@ public class MovieDetailJSONUtils {
         for(int i = 0; i< jRevResult_list.length();i++)
         {
             JSONObject jobject = jRevResult_list.getJSONObject(i);
-            mc.addReview(jobject.getString(REVIEW_AUTHOR),jobject.getString(REVIEW_CONTENT));
+            mc.addReview(jobject.getString(REVIEW_AUTHOR),
+                            jobject.getString(REVIEW_CONTENT),
+                            jobject.getString(REVIEW_URL));
         }
         for(int i = 0; i< jTraiResult_list.length();i++)
         {

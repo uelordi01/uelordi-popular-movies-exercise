@@ -57,16 +57,6 @@ public class FavoriteTaskLoader {
                 null,
                 null);
     }
-    public ContentValues createJoinedTableContentValues(MovieContentDetails detail) {
-        ContentValues content = new ContentValues();
-        content.put(MovieContract.COLUMN_MOVIE_ID_FKEY,detail.getMovieID());
-        return content;
-    }
-    //@Override
-    /*protected List buildList()  {
-        String result = null;
-
-    }*/
 
 
 }

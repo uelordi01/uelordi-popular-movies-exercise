@@ -30,6 +30,8 @@ public class FavoriteService {
     public void addToFavorites(MovieContentDetails movieObject)
     {
         // insert the movie:
+        //store the image in the disk:
+
         mContext.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI,
                 movieObject.toContentValues());
     }

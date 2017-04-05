@@ -11,16 +11,19 @@ public class ReviewContent implements Parcelable
 {
     private String author;
     private String content;
-
-    public ReviewContent(String author, String content)
+    private String reviewUrl;
+    //TODO ADD REVIEW ID TO MAKE AN INTENT TO READ THE REVIEWS:
+    public ReviewContent(String author, String content, String reviewUrl)
     {
         this.author = author;
         this.content = content;
+        this.reviewUrl = reviewUrl;
     }
 
     protected ReviewContent(Parcel in) {
         author = in.readString();
         content = in.readString();
+        reviewUrl = in.readString();
     }
 
     public static final Creator<ReviewContent> CREATOR = new Creator<ReviewContent>() {
@@ -56,9 +59,19 @@ public class ReviewContent implements Parcelable
         return 0;
     }
 
+    public String getReviewUrl() {
+        return reviewUrl;
+    }
+
+    public void setReviewUrl(String reviewUrl) {
+        this.reviewUrl = reviewUrl;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(author);
         dest.writeString(content);
+        dest.writeString(reviewUrl);
+
     }
 }

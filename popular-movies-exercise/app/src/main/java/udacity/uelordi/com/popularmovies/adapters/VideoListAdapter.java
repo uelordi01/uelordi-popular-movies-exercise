@@ -2,6 +2,7 @@ package udacity.uelordi.com.popularmovies.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,12 +13,16 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import udacity.uelordi.com.popularmovies.R;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.database.MovieContract;
+import udacity.uelordi.com.popularmovies.utils.ImageHandler;
 
 /**
  * Created by uelordi on 28/02/2017.
@@ -25,14 +30,15 @@ import udacity.uelordi.com.popularmovies.database.MovieContract;
 
 public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.MovieViewHolder>  {
     private final String TAG = VideoListAdapter.class.getSimpleName();
-    final private OnItemClickListener m_listener;
+    final private OnVideoItemClickListener m_listener;
     List<MovieContentDetails> m_movies_populate_array;
     Context mContext;
     private static int viewHolderCount;
     private Cursor mCursor;
+    private String mOptionType;
 
 
-    public VideoListAdapter(OnItemClickListener listener) {
+    public VideoListAdapter(OnVideoItemClickListener listener) {
 
         m_listener=listener;
         viewHolderCount=0;
@@ -44,6 +50,10 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
         mCursor = newCursor;
         notifyDataSetChanged();
     }
+
+    public void setOptionType(String option) {
+        mOptionType = option;
+    }
     public void addData(Cursor cursor) {
         m_movies_populate_array.clear();
         if (cursor != null && cursor.moveToFirst()) {
@@ -54,8 +64,14 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
                 String overview = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_OVERVIEW);
                 String rating = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_VOTE_AVERAGE);
                 String releaseDate = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_RELEASE_DATE);
-//                String backdropPath = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_BACKDROP_PATH);
-                MovieContentDetails movie = new MovieContentDetails(id , title, overview, rating, posterPath, releaseDate);
+                String backdropPath = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_BACKDROP_PATH);
+                MovieContentDetails movie = new MovieContentDetails(id ,
+                                                                    title,
+                                                                    overview,
+                                                                    rating,
+                                                                    posterPath,
+                                                                    releaseDate,
+                                                                    backdropPath);
                 m_movies_populate_array.add(movie);
             } while (cursor.moveToNext());
         }
@@ -92,23 +108,43 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        final ImageView m_movie_poster;
+        @BindView(R.id.iv_item_movie_poster)
+        ImageView m_movie_poster;
+        @BindView(R.id.tv_aux_title)
          TextView m_auxiliar_text = null;
         public MovieViewHolder(View itemView) {
             super(itemView);
-            m_movie_poster=(ImageView)itemView.findViewById(R.id.iv_item_movie_poster);
-            m_auxiliar_text = (TextView)itemView.findViewById(R.id.tv_aux_title);
+            ButterKnife.bind(this,itemView);
             itemView.setOnClickListener(this);
         }
         void bind(int listIndex)
         {
             Log.d(TAG,"Position #"+listIndex);
-
+            String movie_path = null;
                     //m_movie_title.setText(m_movies_populate_array.get(listIndex).getTitle());
-                    String cursorPath = m_movies_populate_array.get(listIndex).getPoster_path();
-                    Log.v(TAG,"image_path: "+cursorPath);
+                    if(mOptionType.equals(itemView.getResources().getString(R.string.pref_sort_favorites_value))) {
+                        movie_path =ImageHandler.getInstance().getImagePath(itemView.getContext(),
+                                                    m_movies_populate_array
+                                                    .get(listIndex).getPoster_path());
+                        //File f= new File(movie_path);
+                        Picasso.with(itemView.getContext())
+                                .load(movie_path)
+                                .config(Bitmap.Config.RGB_565)
+                                .placeholder(R.drawable.no_image_available)
+                                .error(R.drawable.no_image_available)
+                                .into(m_movie_poster);
+                    }
+                    else {
+                        movie_path=m_movies_populate_array.
+                                get(listIndex).getBaseIMAGE_URL_PATH() +
+                                m_movies_populate_array
+                                        .get(listIndex).getPoster_path();
+                    }
+
+                    Log.v(TAG,"image_path: "+movie_path);
+
                     Picasso.with(itemView.getContext())
-                            .load(cursorPath)
+                            .load(movie_path)
                             .placeholder(R.drawable.no_image_available)
                             .error(R.drawable.no_image_available)
                             .into(m_movie_poster);
