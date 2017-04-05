@@ -39,10 +39,10 @@ public class VideosJSONUtils {
             mc.setRelease_date(jobject.getString(RELEASE_DATE));
             mc.setUser_rating(jobject.getString(VOTE_AVERAGE));
             mc.setSynopsis(jobject.getString(SYNOPSYS));
-            if(image_path!="null")
-            {
+            /*if(image_path!="null")
+            {*/
                 result_array.add(mc);
-            }
+            //}
         }
         return result_array;
     }

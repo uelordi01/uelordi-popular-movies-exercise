@@ -1,9 +1,12 @@
 package udacity.uelordi.com.popularmovies;
 
 
+
 import android.content.Intent;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -16,22 +19,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.support.v4.content.CursorLoader;
+import android.widget.Toast;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import udacity.uelordi.com.popularmovies.adapters.OnItemClickListener;
 import udacity.uelordi.com.popularmovies.adapters.VideoListAdapter;
 import udacity.uelordi.com.popularmovies.background.MovielistTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
+import udacity.uelordi.com.popularmovies.content.TrailerContent;
 import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
-public class VideoListActivity extends AppCompatActivity implements onFetchResults,
-                                                            VideoListAdapter.ListItemClickListener,
-                                                            LoaderManager.LoaderCallbacks<List>,
+public class VideoListActivity extends AppCompatActivity implements
+                                                            OnItemClickListener,
+                                                            onFetchResults,
+                                                            LoaderManager.LoaderCallbacks<Cursor>,
                                                 SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = VideoListActivity.class.getSimpleName();
@@ -40,48 +48,25 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     @BindView (R.id.connectivity_error) TextView mErrorView;
     @BindView (R.id.pg_movie_list)  ProgressBar mVideoListProgressBar;
     @BindView (R.id.rv_movie_list) RecyclerView mMovieList;
+    private int mPosition = RecyclerView.NO_POSITION;
 
     private VideoListAdapter mMovieListAdapter;
 
     private static final String SELECTED_SEARCH_OPTION = "search_option";
+    private static final String RESULT_LIST_KEY = "vide_list_result";
+    private static final int MOVIES_LOADER_TASK_ID = 5;
+    private static final int FAVORITES_MOVIES_LOADER_TASK_ID = 6;
 
-    private static final int LOADER_TASK_ID=5;
-
-
-
-    //TODO make the preferences without preference_activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
-
         ButterKnife.bind(this);
-        String filter=getResources().getString(R.string.action_popular);
+        String defaultFilter = setupPreferences();
         hideErrorMessage();
-
-        if(NetworkUtils.isOnline(getApplicationContext()))
-        {
-            showLoadingBar();
-            Bundle queryBundle = new Bundle();
-            queryBundle.putString(SELECTED_SEARCH_OPTION,setupPreferences());
-            //queryBundle.putString(SELECTED_SEARCH_OPTION,filter);
-            getSupportLoaderManager().initLoader(LOADER_TASK_ID, queryBundle, this);
-        }
-        else
-        {
-            showErrorMessage();
-        }
-
-
-    }
-
-    @Override
-    public void OnListAvailable(List<MovieContentDetails> result) {
-        hideLoadingBar();
-        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
-        mMovieList.setLayoutManager(gridManager);
-        mMovieListAdapter=new VideoListAdapter(VideoListActivity.this,result);
-        mMovieList.setAdapter(mMovieListAdapter);
+        setAdapters();
+        showLoadingBar();
+        getMovieList(defaultFilter);
     }
 
     @Override
@@ -120,50 +105,57 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
-    public void onListItemClick(MovieContentDetails movie) {
-        Intent my_intent = new Intent(this,MovieDetailsActivity.class);
-        int id=movie.getMovieID();
-        my_intent.putExtra("movieid",id);
-        my_intent.putExtra("poster_path",movie.getPoster_path());
-        my_intent.putExtra("title",movie.getTitle());
-        my_intent.putExtra("synopsys",movie.getSynopsis());
-        my_intent.putExtra("user_rating",movie.getUser_rating());
-        my_intent.putExtra("release_date",movie.getRelease_date());
-        startActivity(my_intent);
-    }
-
-    @Override
-    public Loader<List> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int loaderID, Bundle args) {
         String selected_option=args.getString(SELECTED_SEARCH_OPTION);
-        return new MovielistTaskLoader(this,selected_option);
+        List<MovieContentDetails> result = args.getParcelableArrayList(RESULT_LIST_KEY);
+        switch (loaderID) {
+            case FAVORITES_MOVIES_LOADER_TASK_ID:
+            {
+                new MovielistTaskLoader(this, selected_option, result).buildCursor();
+            }
+            case MOVIES_LOADER_TASK_ID:
+            {
+                MovielistTaskLoader loader= new MovielistTaskLoader(this, selected_option, result);
+                return loader.buildCursor();
+            }
+            default:
+                throw new RuntimeException("Loader Not Implemented: " + loaderID);
+        }
     }
 
     @Override
-    public void onLoadFinished(Loader<List> loader, List data) {
-        hideLoadingBar();
-        // mMovieList=(RecyclerView) findViewById(R.id.rv_movie_list);
-        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
-        mMovieList.setLayoutManager(gridManager);
-        mMovieListAdapter=new VideoListAdapter(VideoListActivity.this,data);
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mMovieListAdapter.swapCursor(data);
+        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+//      COMPLETED (30) Smooth scroll the RecyclerView to mPosition
+        mMovieList.smoothScrollToPosition(mPosition);
+        int count = data.getCount();
+//      COMPLETED (31) If the Cursor's size is not equal to 0, call showWeatherDataView
+        if (count != 0) hideLoadingBar();
         mMovieList.setAdapter(mMovieListAdapter);
+
     }
 
     @Override
-    public void onLoaderReset(Loader<List> loader) {
-
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mMovieListAdapter.swapCursor(null);
     }
-    public void restartLoader(String action_type)
+
+    public void startLoader(List<MovieContentDetails> result)
     {
         Bundle queryBundle = new Bundle();
-        queryBundle.putString(SELECTED_SEARCH_OPTION,action_type);
+        queryBundle.putString(SELECTED_SEARCH_OPTION,checkSortingPreferences());
+        if(result != null) {
+            queryBundle.putParcelableArrayList(RESULT_LIST_KEY, (ArrayList<? extends Parcelable>) result);
+        }
         LoaderManager loaderManager = getSupportLoaderManager();
-        Loader<String> videoListLoader = loaderManager.getLoader(LOADER_TASK_ID);
+
+        Loader<String> videoListLoader = loaderManager.getLoader(MOVIES_LOADER_TASK_ID);
         if ( videoListLoader == null ) {
-            loaderManager.initLoader(LOADER_TASK_ID, queryBundle, this);
+            getSupportLoaderManager().initLoader(MOVIES_LOADER_TASK_ID, queryBundle, this);
         } else {
-            loaderManager.restartLoader(LOADER_TASK_ID, queryBundle, this);
+            loaderManager.restartLoader(MOVIES_LOADER_TASK_ID, queryBundle, this);
         }
     }
     /*
@@ -179,17 +171,73 @@ public class VideoListActivity extends AppCompatActivity implements onFetchResul
     }
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        restartLoader(key);
-        /*Bundle query =
-        if( key.equals(getString(R.string.pref_sort_popular_value)) )
-        {
+        //restartLoader(key);
+        getMovieList(key);
+    }
 
+    @Override
+    public void onItemClick(MovieContentDetails movie) {
+        Intent my_intent = new Intent(this,MovieDetailsActivity.class);
+        long id=movie.getMovieID();
+//        my_intent.putExtra("movieid",id);
+//        my_intent.putExtra("poster_path",movie.getPoster_path());
+//        my_intent.putExtra("title",movie.getTitle());
+//        my_intent.putExtra("synopsys",movie.getSynopsis());
+//        my_intent.putExtra("user_rating",movie.getUser_rating());
+//        my_intent.putExtra("release_date",movie.getRelease_date());
+        startActivity(my_intent);
+    }
+
+    @Override
+    public void onItemClick(String movieID) {
+        Intent movie_detail_intent = new Intent(this,MovieDetailsActivity.class);
+        long id =Long.parseLong(movieID);
+        movie_detail_intent.putExtra("movieid",id);
+        startActivity(movie_detail_intent);
+    }
+
+    public void loadFavoritesList() {
+
+    }
+    @Override
+    public void onItemClick(TrailerContent content) {
+        //TODO IMPLEMENT THE TRAILER ADAPTER PART:
+    }
+    public void setAdapters(){
+
+        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
+        mMovieListAdapter = new VideoListAdapter(VideoListActivity.this);
+        mMovieList.setLayoutManager(gridManager);
+        mMovieList.setAdapter(mMovieListAdapter);
+    }
+    @Override
+    public void OnListAvailable(List<MovieContentDetails> result) {
+        startLoader(result);
+    }
+    public void getMoviesFromTheInternet(String key) {
+        mVideoListTask = new FetchVideoList();
+        mVideoListTask.setListener(this);
+        mVideoListTask.execute(key);
+    }
+    public String checkSortingPreferences() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String defaultValue=sharedPreferences.getString(getString(R.string.pref_sort_key),
+                getString(R.string.pref_sort_popular_value));
+        return defaultValue;
+    }
+    public void getMovieList(String key) {
+        if(key != null) {
+            if (key.equals(getResources().getString(R.string.pref_sort_favorites_value))) {
+
+            } else {
+                if(NetworkUtils.isOnline(getApplicationContext())) {
+                getMoviesFromTheInternet(key);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.connectivity_warning),Toast.LENGTH_SHORT).show();
+                    startLoader(null);
+                }
+            }
         }
-        if( key.equals(getString(R.string.pref_sort_rated_value)) ) {
-
-        }
-        if( key.equals(getString(R.string.pref_sort_favorites_value)) ) {
-
-        }*/
     }
 }

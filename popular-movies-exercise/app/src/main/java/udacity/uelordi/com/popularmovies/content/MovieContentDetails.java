@@ -1,25 +1,59 @@
 package udacity.uelordi.com.popularmovies.content;
 
+import android.content.ContentValues;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import udacity.uelordi.com.popularmovies.database.MovieContract;
 
 /**
  * Created by uelordi on 28/02/2017.
  */
 
-public class MovieContentDetails
+public class MovieContentDetails implements Parcelable
 {
 
     private String poster_path;
-    private final String IMAGE_URL_PATH="http://image.tmdb.org/t/p/w185/";
+    private String IMAGE_URL_PATH="http://image.tmdb.org/t/p/w185/";
     private String title;
     private String synopsis;
     private String user_rating;
     private String release_date;
-    private int movieID;
+    private long movieID;
+
     //TODO MAKE ADD MOVIE AND ADD REVIEW:
     List<ReviewContent> reviewContent= new ArrayList<>();
     List<TrailerContent> trailerContent= new ArrayList<>();
+
+    public MovieContentDetails(Parcel in) {
+        poster_path = in.readString();
+        //IMAGE_URL_PATH = in.readString();
+        title = in.readString();
+        synopsis = in.readString();
+        user_rating = in.readString();
+        release_date = in.readString();
+        movieID = in.readLong();
+    }
+
+    public static final Creator<MovieContentDetails> CREATOR = new Creator<MovieContentDetails>() {
+        @Override
+        public MovieContentDetails createFromParcel(Parcel in) {
+            return new MovieContentDetails(in);
+        }
+
+        @Override
+        public MovieContentDetails[] newArray(int size) {
+            return new MovieContentDetails[size];
+        }
+    };
+
+    public MovieContentDetails() {
+
+    }
+
     public void addReview(String author, String content)
     {
         reviewContent.add(new ReviewContent(author,content));
@@ -36,11 +70,11 @@ public class MovieContentDetails
         return trailerContent;
     }
 
-    public int getMovieID() {
+    public long getMovieID() {
         return movieID;
     }
 
-    public void setMovieID(int movieID) {
+    public void setMovieID(long movieID) {
         this.movieID = movieID;
     }
 
@@ -82,5 +116,33 @@ public class MovieContentDetails
 
     public void setRelease_date(String release_date) {
         this.release_date = release_date;
+    }
+
+    public ContentValues toContentValues()
+    {
+        ContentValues values = new ContentValues();
+        values.put(MovieContract.MovieEntry._ID,movieID);
+        values.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL,poster_path);
+        values.put(MovieContract.MovieEntry.COLUMN_TITLE,title);
+        values.put(MovieContract.MovieEntry.COLUMN_SYNOPSYS,synopsis);
+        values.put(MovieContract.MovieEntry.COLUMN_USER_RATING,user_rating);
+        values.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,release_date);
+        return values;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(poster_path);
+        //dest.writeString(IMAGE_URL_PATH);
+        dest.writeString(title);
+        dest.writeString(synopsis);
+        dest.writeString(user_rating);
+        dest.writeString(release_date);
+        dest.writeLong(movieID);
     }
 }
