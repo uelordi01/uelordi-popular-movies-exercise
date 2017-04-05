@@ -89,7 +89,15 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
                                                                         null,
                                                                         null,
                                                                         null);
+
+
         Bundle queryBundle = new Bundle();
+        if(cursor.getCount()>0){
+            String title = cursor.getString(0);
+            m_tv_title.setText(title);
+        }
+
+
         queryBundle.putLong(MOVIE_ID_KEY,id);
         getSupportLoaderManager().initLoader(MOVIE_DETAIL_TASK_ID, queryBundle, this);
     }
