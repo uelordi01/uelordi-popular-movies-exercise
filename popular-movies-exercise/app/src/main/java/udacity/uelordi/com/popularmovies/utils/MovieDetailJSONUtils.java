@@ -56,7 +56,7 @@ public class MovieDetailJSONUtils {
             JSONObject jobject = jRevResult_list.getJSONObject(i);
             mc.addReview(jobject.getString(REVIEW_AUTHOR),jobject.getString(REVIEW_CONTENT));
         }
-        for(int i = 0; i< jRevResult_list.length();i++)
+        for(int i = 0; i< jTraiResult_list.length();i++)
         {
             JSONObject jobject = jTraiResult_list.getJSONObject(i);
             mc.addTrailer(jobject.getString(TRAILER_ID),

@@ -125,8 +125,9 @@ public class VideoListActivity extends AppCompatActivity implements
         mMovieList.smoothScrollToPosition(mPosition);
         int count = data.getCount();
 //      COMPLETED (31) If the Cursor's size is not equal to 0, call showWeatherDataView
-        if (count != 0) hideLoadingBar();
+        //if (count != 0) hideLoadingBar();
         mMovieList.setAdapter(mMovieListAdapter);
+        hideLoadingBar();
 
     }
 
