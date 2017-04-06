@@ -63,7 +63,8 @@
                 android:id="@+id/bt_favorite_button"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@android:drawable/btn_star"
+                android:src="@drawable/no_favorite"
+                android:background="@null"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 />

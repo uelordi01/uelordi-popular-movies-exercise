@@ -3,8 +3,14 @@ package udacity.uelordi.com.popularmovies;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.Movie;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -124,10 +130,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             if(FavoriteService.getInstance().
                             isFavorite(mCurrentMovieObject)){
                 FavoriteService.getInstance().removeFromFavorites(mCurrentMovieObject);
+                btFavorite.setImageResource(R.drawable.no_favorite);
 
             }
             else {
                 FavoriteService.getInstance().addToFavorites(mCurrentMovieObject);
+                btFavorite.setImageResource(R.drawable.favorite_pressed_button);
             }
         }
         else
@@ -147,6 +155,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     public void initInterface()
     {
         FavoriteService.getInstance().setContext(this);
+        if(FavoriteService.getInstance().isFavorite(mCurrentMovieObject)) {
+            btFavorite.setImageResource(R.drawable.favorite_pressed_button);
+        }
+        else {
+
+        }
         if(mCurrentMovieObject != null) {
             mTvTitle.setText(mCurrentMovieObject.getTitle());
             mTvSynopsys.setText(mCurrentMovieObject.getSynopsis());
