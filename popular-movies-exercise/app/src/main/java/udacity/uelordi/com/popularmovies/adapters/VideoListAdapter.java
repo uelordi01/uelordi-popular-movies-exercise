@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -122,32 +124,38 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
             Log.d(TAG,"Position #"+listIndex);
             String movie_path = null;
                     //m_movie_title.setText(m_movies_populate_array.get(listIndex).getTitle());
-                    if(mOptionType.equals(itemView.getResources().getString(R.string.pref_sort_favorites_value))) {
-                        movie_path =ImageHandler.getInstance().getImagePath(itemView.getContext(),
-                                                    m_movies_populate_array
-                                                    .get(listIndex).getPoster_path());
-                        //File f= new File(movie_path);
-                        Picasso.with(itemView.getContext())
-                                .load(movie_path)
-                                .config(Bitmap.Config.RGB_565)
-                                .placeholder(R.drawable.no_image_available)
-                                .error(R.drawable.no_image_available)
-                                .into(m_movie_poster);
-                    }
-                    else {
+//                  if(mOptionType.equals(itemView.getResources().getString(R.string.pref_sort_favorites_value))) {
+//                        movie_path =ImageHandler.getInstance().getImagePath(itemView.getContext(),
+//                                                    m_movies_populate_array
+//                                                    .get(listIndex).getPoster_path());
+//                        //File f= new File(movie_path);
+//                        Picasso.with(itemView.getContext())
+//                                .load(movie_path)
+//                                .config(Bitmap.Config.RGB_565)
+//                                .placeholder(R.drawable.no_image_available)
+//                                .error(R.drawable.no_image_available)
+//                                .into(m_movie_poster);
+//                    }
+//                    else {
                         movie_path=m_movies_populate_array.
                                 get(listIndex).getBaseIMAGE_URL_PATH() +
                                 m_movies_populate_array
                                         .get(listIndex).getPoster_path();
-                    }
+//                    }
 
                     Log.v(TAG,"image_path: "+movie_path);
-
-                    Picasso.with(itemView.getContext())
-                            .load(movie_path)
+                    Glide.with(itemView.getContext()).load(
+                            movie_path)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .placeholder(R.drawable.no_image_available)
                             .error(R.drawable.no_image_available)
                             .into(m_movie_poster);
+
+//                    Picasso.with(itemView.getContext())
+//                            .load(movie_path)
+//                            .placeholder(R.drawable.no_image_available)
+//                            .error(R.drawable.no_image_available)
+//                            .into(m_movie_poster);
 
 
         }

@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -41,6 +43,7 @@ import udacity.uelordi.com.popularmovies.content.TrailerContent;
 import udacity.uelordi.com.popularmovies.database.MovieContract;
 import udacity.uelordi.com.popularmovies.services.FavoriteService;
 import udacity.uelordi.com.popularmovies.utils.ImageHandler;
+import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 
 
 public class MovieDetailsActivity extends AppCompatActivity implements
@@ -63,9 +66,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements
     ReviewAdapter mReviewtAdapter;
     TrailerAdapter mTrailerAdatper;
     private MovieContentDetails mCurrentMovieObject;
+
     private static String MOVIE_ID_KEY="movieid";
 
-    private static final int MOVIE_DETAIL_TASK_ID=6;
+    private static final int MOVIE_DETAIL_TASK_ID = 6;
     private static final String TAG = "MoveDetailsActivity";
     public static final String VIDEO_OBJECT_KEY = "video_list_key";
 
@@ -107,7 +111,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements
             }
         }
         else {
-            loadTrailersAndReviews();
+            if(NetworkUtils.getInstance().isOnline(getApplicationContext())) {
+                loadTrailersAndReviews();
+            }
+            else {
+                showNetworkingErrors();
+            }
+
         }
 
     }
@@ -166,8 +176,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements
                 btFavorite.setImageResource(R.drawable.no_favorite);
             }
             else {
-
-                ImageHandler.getInstance().saveFile(getApplicationContext(),mIvPoster,mCurrentMovieObject.getPoster_path());
                 FavoriteService.getInstance().addToFavorites(mCurrentMovieObject);
                 btFavorite.setImageResource(R.drawable.favorite_pressed_button);
             }
@@ -211,12 +219,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements
             String movie_path =mCurrentMovieObject.getBaseIMAGE_URL_PATH()
                                 + mCurrentMovieObject.getPoster_path();
             Log.v(TAG,"image_path: "+movie_path);
-            Picasso.with(getApplicationContext())
-                    .load(movie_path)
+            Glide.with(getApplicationContext()).load(
+                    movie_path)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.no_image_available)
                     .error(R.drawable.no_image_available)
                     .into(mIvPoster);
-
         }
     }
     @Override
@@ -229,5 +237,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements
     public void onReviewItemClick(ReviewContent content) {
         Intent trailerIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(content.getReviewUrl()));
         startActivity(trailerIntent);
+    }
+    public void showNetworkingErrors() {
+        Toast.makeText(getApplicationContext(),getResources().
+                        getString(R.string.connectivity_warning_reviews_trailers).toString(),
+                                                                    Toast.LENGTH_SHORT).show();
     }
 }
