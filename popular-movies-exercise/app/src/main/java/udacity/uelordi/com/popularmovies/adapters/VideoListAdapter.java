@@ -24,7 +24,6 @@ import butterknife.ButterKnife;
 import udacity.uelordi.com.popularmovies.R;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.database.MovieContract;
-import udacity.uelordi.com.popularmovies.utils.ImageHandler;
 
 /**
  * Created by uelordi on 28/02/2017.
