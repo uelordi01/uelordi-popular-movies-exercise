@@ -42,7 +42,6 @@ import udacity.uelordi.com.popularmovies.content.ReviewContent;
 import udacity.uelordi.com.popularmovies.content.TrailerContent;
 import udacity.uelordi.com.popularmovies.database.MovieContract;
 import udacity.uelordi.com.popularmovies.services.FavoriteService;
-import udacity.uelordi.com.popularmovies.utils.ImageHandler;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 
 
