@@ -66,6 +66,7 @@
                 android:layout_height="60dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:contentDescription="@string/image_content_description"
                 android:background="@null"
                 android:src="@drawable/no_favorite" />
 
