@@ -17,13 +17,9 @@ public class MovieContract {
     // The base content URI = "content://" + <authority>
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
-    // Define the possible paths for accessing data in this contract
-    // This is the path for the "tasks" directory
-    public static final String PATH_POPULAR = "most_popular";
-    public static final String PATH_RATED = "highest_rated";
-    public static final String PATH_FAVORITES = "favorites";
-    public static final String PATH_MOVIES = "movies";
-    public static final String COLUMN_MOVIE_ID_FKEY = "movie_id";
+
+    public static final String PATH_MOVIES = "favorite_movies";
+
 
     public static final class MovieEntry implements BaseColumns {
 
@@ -37,12 +33,13 @@ public class MovieContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES;
 
-        public static final String TABLE_NAME = "movies";
+        public static final String TABLE_NAME = "favorite_movies";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_USER_RATING = "user_rating";
         public static final String COLUMN_SYNOPSYS = "synopsys";
         public static final String COLUMN_IMAGE_URL = "poster_path";
         public static final String COLUMN_RELEASE_DATE = "release_date";
+        public static final String COLUMN_BACKDROP_PATH = "backdrop_path";
 
         public final static String SQL_CREATE_TABLE = "CREATE TABLE " + MovieContract.MovieEntry.TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY, " +
@@ -50,6 +47,7 @@ public class MovieContract {
                 COLUMN_SYNOPSYS + " TEXT NOT NULL, " +
                 COLUMN_USER_RATING +  "  REAL NOT NULL," +
                 COLUMN_IMAGE_URL   + " TEXT NOT NULL,"+
+                COLUMN_BACKDROP_PATH + " TEXT NOT NULL, "+
                 COLUMN_RELEASE_DATE + " TEXT NOT NULL)";
 
         public static Uri buildMovieUri(long id) {
@@ -59,67 +57,24 @@ public class MovieContract {
         public static long getIdFromUri(Uri uri) {
             return ContentUris.parseId(uri);
         }
-        //public static final String COLUMN_RELEASE_DATE = "title";
+
+        public static final String[] MOVIE_COLUMNS = {
+                _ID,
+                COLUMN_TITLE,
+                COLUMN_SYNOPSYS,
+                COLUMN_USER_RATING,
+                COLUMN_IMAGE_URL,
+                COLUMN_RELEASE_DATE,
+                COLUMN_BACKDROP_PATH
+        };
+
+        public static final int COL_MOVIE_ID = 0;
+        public static final int COL_MOVIE_TITLE = 1;
+        public static final int COL_MOVIE_OVERVIEW = 2;
+        public static final int COL_MOVIE_VOTE_AVERAGE = 3;
+        public static final int COL_MOVIE_POSTER_PATH = 4;
+        public static final int COL_MOVIE_BACKDROP_PATH = 5;
+        public static final int COL_MOVIE_RELEASE_DATE = 6;
 
         }
-    public static final class PopularEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =  MovieEntry.CONTENT_URI.buildUpon().appendPath(PATH_POPULAR).build();
-
-        public static final String CONTENT_DIR_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES
-                        + "/" + PATH_POPULAR;
-
-        public static final String TABLE_NAME = "most_popular";
-
-        public static final String SQL_CREATE_TABLE =
-                "CREATE TABLE " + TABLE_NAME + " (" +
-                        _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        COLUMN_MOVIE_ID_FKEY + " INTEGER NOT NULL, " +
-
-                        " FOREIGN KEY (" + COLUMN_MOVIE_ID_FKEY + ") REFERENCES " +
-                        MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + ") " +
-
-                        " );";
-        }
-    public static final class HighestRatedEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =  MovieEntry.CONTENT_URI.buildUpon().appendPath(PATH_RATED).build();
-
-
-        public static final String TABLE_NAME = "highest_rated";
-        public static final String CONTENT_DIR_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES
-                        + "/" + PATH_RATED;
-
-        public static final String SQL_CREATE_TABLE =
-                "CREATE TABLE " + TABLE_NAME + " (" +
-                        _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        COLUMN_MOVIE_ID_FKEY + " INTEGER NOT NULL, " +
-
-                        " FOREIGN KEY (" + COLUMN_MOVIE_ID_FKEY + ") REFERENCES " +
-                        MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + ") " +
-
-                        " );";
-    }
-    public static final class FavoritesEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =  MovieEntry.CONTENT_URI.buildUpon().appendPath(PATH_FAVORITES).build();
-
-
-        public static final String TABLE_NAME = "favorites";
-        public static final String CONTENT_DIR_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES
-                        + "/" + PATH_FAVORITES;
-
-        public static final String SQL_CREATE_TABLE =
-                "CREATE TABLE " + TABLE_NAME + " (" +
-                        _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        COLUMN_MOVIE_ID_FKEY + " INTEGER NOT NULL, " +
-
-                        " FOREIGN KEY (" + COLUMN_MOVIE_ID_FKEY + ") REFERENCES " +
-                        MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + ") " +
-
-                        " );";
-    }
-
-
-
 }

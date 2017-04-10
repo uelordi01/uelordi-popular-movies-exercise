@@ -7,10 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import butterknife.BindView;
@@ -19,27 +21,26 @@ import udacity.uelordi.com.popularmovies.R;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.content.TrailerContent;
 
-
-/**
- * Created by uelordi on 28/03/17.
- */
-// TODO, FINISH YOUR ADAPTER:
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder> {
     @Nullable
-    private OnItemClickListener onItemClickListener;
+    private OnTrailerItemListener onItemClickListener;
     private final Context context;
     List <TrailerContent> mTrailerList =  new ArrayList<>();
-    List<MovieContentDetails> m_movies_populate_array= new ArrayList<>();
 
-    public TrailerAdapter(Context context,OnItemClickListener callback) {
+    public TrailerAdapter(Context context,OnTrailerItemListener callback) {
         mTrailerList = new ArrayList<>();
         this.context = context;
         onItemClickListener = callback;
     }
     public void setTrailerList(List<TrailerContent> tcontent) {
         mTrailerList = tcontent;
+        notifyDataSetChanged();
     }
-
+    public  ArrayList<TrailerContent> getTrailerArrayList(){
+        ArrayList<TrailerContent> listoftrailers = new ArrayList<>(mTrailerList.size());
+        listoftrailers.addAll( mTrailerList);
+        return listoftrailers;
+    }
     @Override
     public TrailerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int LayoutIndexForListItem =  R.layout.trailer_list_item;
@@ -65,6 +66,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
         @BindView(R.id.movie_video_thumbnail)
         ImageView movieVideoThumbnail;
+        @BindView(R.id.tv_trailer_title)
+        TextView mTrailerTitle;
 
         public TrailerViewHolder(View itemView) {
 
@@ -73,14 +76,15 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
             itemView.setOnClickListener(this);
         }
         void bind(int position) {
-            mTrailerList.get(position).getVideoKey();
-            Picasso.with(context).load(mTrailerList.
+            String title = mTrailerList.get(position).getVideoName();
+            mTrailerTitle.setText(title);
+            /*Picasso.with(context).load(mTrailerList.
                     get(position).getPosterPath()).
-                    into(movieVideoThumbnail);
+                    into(movieVideoThumbnail);*/
         }
         @Override
         public void onClick(View v) {
-            onItemClickListener.onItemClick(mTrailerList.get(getAdapterPosition()));
+            onItemClickListener.onTrailerItemClick(mTrailerList.get(getAdapterPosition()));
         }
     }
 }

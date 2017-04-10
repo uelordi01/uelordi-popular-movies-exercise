@@ -4,6 +4,7 @@
     <string name="filter_rated_menu">Rated</string>
     <string name="connectivity_error">Connection error: please check if your device is connected to the internet</string>
     <string name="connectivity_warning">warning, no internet connection, the movies will no longer updated</string>
+    <string name="connectivity_warning_reviews_trailers">warning, no internet connection, the trailers and reviews are not available</string>
     <string name="image_content_description">The selected movie poster</string>
     <string name="default_title">Movie Title</string>
     <string name="default_synopsys">overview</string>

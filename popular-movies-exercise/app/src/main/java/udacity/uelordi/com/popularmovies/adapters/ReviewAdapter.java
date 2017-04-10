@@ -8,13 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import udacity.uelordi.com.popularmovies.R;
-import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.content.ReviewContent;
 
 /**
@@ -23,13 +20,24 @@ import udacity.uelordi.com.popularmovies.content.ReviewContent;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
-    private List<ReviewContent> m_reviews_populate_array= new ArrayList<>();
+    private List<ReviewContent> mReviewsPopulateArray= new ArrayList<>();
     private static int viewHolderCount;
     private final static String TAG = "ReviewAdapter";
+    private OnReviewItemListener mListener;
+    private Context mContext;
 
-    public ReviewAdapter(List<ReviewContent> content) {
+    public ReviewAdapter(Context context, OnReviewItemListener listener) {
         viewHolderCount=0;
-        m_reviews_populate_array=content;
+        mListener = listener;
+    }
+    public void setReviewList(List<ReviewContent> data){
+        mReviewsPopulateArray = data;
+        notifyDataSetChanged();
+    }
+    public ArrayList<ReviewContent> getReviewArrayList() {
+        ArrayList<ReviewContent> listoftrailers = new ArrayList<>(mReviewsPopulateArray.size());
+        listoftrailers.addAll( mReviewsPopulateArray);
+        return listoftrailers;
     }
 
     @Override
@@ -53,30 +61,32 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     @Override
     public int getItemCount() {
 
-        return m_reviews_populate_array.size();
+        return mReviewsPopulateArray.size();
     }
-
-     class ReviewViewHolder extends RecyclerView.ViewHolder
+     class ReviewViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        TextView m_review_author;
-        TextView m_review_content;
+        TextView mReviewAuthor;
+        TextView mReviewContent;
         public ReviewViewHolder(View itemView) {
             super(itemView);
-            m_review_author = (TextView)itemView.findViewById(R.id.tv_movie_review_author);
-            m_review_content =(TextView)itemView.findViewById(R.id.tv_movie_review_content);
+            itemView.setOnClickListener(this);
+            mReviewAuthor = (TextView)itemView.findViewById(R.id.tv_movie_review_author);
+            mReviewContent =(TextView)itemView.findViewById(R.id.tv_movie_review_content);
         }
         void bind(int listIndex)
         {
             Log.d(TAG,"Position #"+listIndex);
-            if(m_reviews_populate_array.size()>0)
+            if(mReviewsPopulateArray.size()>0)
             {
-                if(listIndex<m_reviews_populate_array.size()) {
-                    m_review_author.setText(m_reviews_populate_array.get(listIndex).getAuthor());
-                    m_review_content.setText(m_reviews_populate_array.get(listIndex).getContent());
+                if(listIndex<mReviewsPopulateArray.size()) {
+                    mReviewAuthor.setText(mReviewsPopulateArray.get(listIndex).getAuthor());
+                    mReviewContent.setText(mReviewsPopulateArray.get(listIndex).getContent());
                 }
             }
-
         }
-
+        @Override
+        public void onClick(View v) {
+            mListener.onReviewItemClick(mReviewsPopulateArray.get(getAdapterPosition()));
+        }
     }
 }

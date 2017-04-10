@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.support.v4.content.CursorLoader;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,9 +26,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import udacity.uelordi.com.popularmovies.adapters.OnItemClickListener;
+
+import udacity.uelordi.com.popularmovies.adapters.OnVideoItemClickListener;
 import udacity.uelordi.com.popularmovies.adapters.VideoListAdapter;
-import udacity.uelordi.com.popularmovies.background.MovielistTaskLoader;
+import udacity.uelordi.com.popularmovies.background.FavoriteTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.content.TrailerContent;
 import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
@@ -37,10 +37,10 @@ import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
 public class VideoListActivity extends AppCompatActivity implements
-                                                            OnItemClickListener,
-                                                            onFetchResults,
-                                                            LoaderManager.LoaderCallbacks<Cursor>,
-                                                SharedPreferences.OnSharedPreferenceChangeListener {
+                                            OnVideoItemClickListener,
+                                            onFetchResults,
+                                            LoaderManager.LoaderCallbacks<Cursor>,
+                                SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = VideoListActivity.class.getSimpleName();
 
@@ -107,17 +107,10 @@ public class VideoListActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int loaderID, Bundle args) {
-        String selected_option=args.getString(SELECTED_SEARCH_OPTION);
-        List<MovieContentDetails> result = args.getParcelableArrayList(RESULT_LIST_KEY);
         switch (loaderID) {
             case FAVORITES_MOVIES_LOADER_TASK_ID:
             {
-                new MovielistTaskLoader(this, selected_option, result).buildCursor();
-            }
-            case MOVIES_LOADER_TASK_ID:
-            {
-                MovielistTaskLoader loader= new MovielistTaskLoader(this, selected_option, result);
-                return loader.buildCursor();
+               return  new FavoriteTaskLoader(this).buildCursor();
             }
             default:
                 throw new RuntimeException("Loader Not Implemented: " + loaderID);
@@ -126,14 +119,16 @@ public class VideoListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mMovieListAdapter.swapCursor(data);
+       // mMovieListAdapter.swapCursor(data);
+        mMovieListAdapter.addData(data);
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
 //      COMPLETED (30) Smooth scroll the RecyclerView to mPosition
         mMovieList.smoothScrollToPosition(mPosition);
         int count = data.getCount();
 //      COMPLETED (31) If the Cursor's size is not equal to 0, call showWeatherDataView
-        if (count != 0) hideLoadingBar();
+        //if (count != 0) hideLoadingBar();
         mMovieList.setAdapter(mMovieListAdapter);
+        hideLoadingBar();
 
     }
 
@@ -142,20 +137,20 @@ public class VideoListActivity extends AppCompatActivity implements
         mMovieListAdapter.swapCursor(null);
     }
 
-    public void startLoader(List<MovieContentDetails> result)
+    public void startLoader()
     {
-        Bundle queryBundle = new Bundle();
-        queryBundle.putString(SELECTED_SEARCH_OPTION,checkSortingPreferences());
-        if(result != null) {
-            queryBundle.putParcelableArrayList(RESULT_LIST_KEY, (ArrayList<? extends Parcelable>) result);
-        }
+//        Bundle queryBundle = new Bundle();
+//        queryBundle.putString(SELECTED_SEARCH_OPTION,checkSortingPreferences());
+//        if(result != null) {
+//            queryBundle.putParcelableArrayList(RESULT_LIST_KEY, (ArrayList<? extends Parcelable>) result);
+//        }
         LoaderManager loaderManager = getSupportLoaderManager();
 
-        Loader<String> videoListLoader = loaderManager.getLoader(MOVIES_LOADER_TASK_ID);
+        Loader<String> videoListLoader = loaderManager.getLoader(FAVORITES_MOVIES_LOADER_TASK_ID);
         if ( videoListLoader == null ) {
-            getSupportLoaderManager().initLoader(MOVIES_LOADER_TASK_ID, queryBundle, this);
+            getSupportLoaderManager().initLoader(FAVORITES_MOVIES_LOADER_TASK_ID, null, this);
         } else {
-            loaderManager.restartLoader(MOVIES_LOADER_TASK_ID, queryBundle, this);
+            loaderManager.restartLoader(FAVORITES_MOVIES_LOADER_TASK_ID, null, this);
         }
     }
     /*
@@ -177,15 +172,9 @@ public class VideoListActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClick(MovieContentDetails movie) {
-        Intent my_intent = new Intent(this,MovieDetailsActivity.class);
-        long id=movie.getMovieID();
-//        my_intent.putExtra("movieid",id);
-//        my_intent.putExtra("poster_path",movie.getPoster_path());
-//        my_intent.putExtra("title",movie.getTitle());
-//        my_intent.putExtra("synopsys",movie.getSynopsis());
-//        my_intent.putExtra("user_rating",movie.getUser_rating());
-//        my_intent.putExtra("release_date",movie.getRelease_date());
-        startActivity(my_intent);
+        Intent detail_activity = new Intent(this,MovieDetailsActivity.class);
+        detail_activity.putExtra(MovieDetailsActivity.VIDEO_OBJECT_KEY,movie);
+        startActivity(detail_activity);
     }
 
     @Override
@@ -195,24 +184,19 @@ public class VideoListActivity extends AppCompatActivity implements
         movie_detail_intent.putExtra("movieid",id);
         startActivity(movie_detail_intent);
     }
-
-    public void loadFavoritesList() {
-
-    }
-    @Override
-    public void onItemClick(TrailerContent content) {
-        //TODO IMPLEMENT THE TRAILER ADAPTER PART:
-    }
     public void setAdapters(){
 
         GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
         mMovieListAdapter = new VideoListAdapter(VideoListActivity.this);
+        String optionType= checkSortingPreferences();
         mMovieList.setLayoutManager(gridManager);
+        mMovieListAdapter.setOptionType(optionType);
         mMovieList.setAdapter(mMovieListAdapter);
     }
     @Override
     public void OnListAvailable(List<MovieContentDetails> result) {
-        startLoader(result);
+        mMovieListAdapter.addData(result);
+        hideLoadingBar();
     }
     public void getMoviesFromTheInternet(String key) {
         mVideoListTask = new FetchVideoList();
@@ -228,15 +212,17 @@ public class VideoListActivity extends AppCompatActivity implements
     public void getMovieList(String key) {
         if(key != null) {
             if (key.equals(getResources().getString(R.string.pref_sort_favorites_value))) {
-
+                startLoader();
             } else {
-                if(NetworkUtils.isOnline(getApplicationContext())) {
-                getMoviesFromTheInternet(key);
-                }
-                else {
-                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.connectivity_warning),Toast.LENGTH_SHORT).show();
-                    startLoader(null);
-                }
+                    if(NetworkUtils.isOnline(getApplicationContext())) {
+                        getMoviesFromTheInternet(key);
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(),
+                                getResources().getString(R.string.connectivity_warning),
+                                Toast.LENGTH_SHORT).show();
+                        showErrorMessage();
+                    }
             }
         }
     }

@@ -23,6 +23,7 @@ public class VideosJSONUtils {
         final String VOTE_AVERAGE="vote_average";
         final String SYNOPSYS="overview";
         final String IMAGE_PATH="poster_path";
+        final String BACKDROP_PATH = "backdrop_path";
 
         JSONObject movie_Json=new JSONObject(json_string);
 
@@ -39,6 +40,7 @@ public class VideosJSONUtils {
             mc.setRelease_date(jobject.getString(RELEASE_DATE));
             mc.setUser_rating(jobject.getString(VOTE_AVERAGE));
             mc.setSynopsis(jobject.getString(SYNOPSYS));
+            mc.setBackdropPath(jobject.getString(BACKDROP_PATH));
             /*if(image_path!="null")
             {*/
                 result_array.add(mc);

@@ -17,14 +17,17 @@ public class MovieContentDetails implements Parcelable
 {
 
     private String poster_path;
+    private String backdrop_path;
     private String IMAGE_URL_PATH="http://image.tmdb.org/t/p/w185/";
     private String title;
     private String synopsis;
     private String user_rating;
     private String release_date;
-    private long movieID;
 
-    //TODO MAKE ADD MOVIE AND ADD REVIEW:
+
+
+    private long movieID;
+    // TODO SET THE REVIEW ID IN THE REVIEW CONTENT:
     List<ReviewContent> reviewContent= new ArrayList<>();
     List<TrailerContent> trailerContent= new ArrayList<>();
 
@@ -36,6 +39,7 @@ public class MovieContentDetails implements Parcelable
         user_rating = in.readString();
         release_date = in.readString();
         movieID = in.readLong();
+        backdrop_path = in.readString();
     }
 
     public static final Creator<MovieContentDetails> CREATOR = new Creator<MovieContentDetails>() {
@@ -50,13 +54,23 @@ public class MovieContentDetails implements Parcelable
         }
     };
 
+    public MovieContentDetails(Long id, String title, String synopsis, String user_rating,String poster_path, String release_date,String backdrop_path) {
+        this.movieID = id;
+        this.poster_path = poster_path;
+        this.title = title;
+        this.synopsis = synopsis;
+        this.user_rating = user_rating;
+        this.release_date = release_date;
+        this.backdrop_path = backdrop_path;
+    }
+
     public MovieContentDetails() {
 
     }
 
-    public void addReview(String author, String content)
+    public void addReview(String author, String content, String url)
     {
-        reviewContent.add(new ReviewContent(author,content));
+        reviewContent.add(new ReviewContent(author,content,url));
     }
     public void addTrailer(String movieID, String videoKey, String trailerName)
     {
@@ -70,6 +84,7 @@ public class MovieContentDetails implements Parcelable
         return trailerContent;
     }
 
+
     public long getMovieID() {
         return movieID;
     }
@@ -82,10 +97,20 @@ public class MovieContentDetails implements Parcelable
         return poster_path;
     }
 
-    public void setPoster_path(String poster_path) {
-        this.poster_path = IMAGE_URL_PATH+poster_path;
+    public String getBaseIMAGE_URL_PATH() {
+        return IMAGE_URL_PATH;
     }
 
+    public void setPoster_path(String poster_path) {
+        this.poster_path = poster_path;
+    }
+    public String getBackdropPath() {
+        return backdrop_path;
+    }
+
+    public void setBackdropPath(String backdrop_path) {
+        this.backdrop_path = backdrop_path;
+    }
     public String getTitle() {
         return title;
     }
@@ -126,7 +151,9 @@ public class MovieContentDetails implements Parcelable
         values.put(MovieContract.MovieEntry.COLUMN_TITLE,title);
         values.put(MovieContract.MovieEntry.COLUMN_SYNOPSYS,synopsis);
         values.put(MovieContract.MovieEntry.COLUMN_USER_RATING,user_rating);
+        values.put(MovieContract.MovieEntry.COLUMN_BACKDROP_PATH,backdrop_path);
         values.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,release_date);
+
         return values;
     }
 
@@ -144,5 +171,6 @@ public class MovieContentDetails implements Parcelable
         dest.writeString(user_rating);
         dest.writeString(release_date);
         dest.writeLong(movieID);
+        dest.writeString(backdrop_path);
     }
 }

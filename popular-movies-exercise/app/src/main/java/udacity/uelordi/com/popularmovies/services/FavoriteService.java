@@ -30,26 +30,24 @@ public class FavoriteService {
     public void addToFavorites(MovieContentDetails movieObject)
     {
         // insert the movie:
+        //store the image in the disk:
+
         mContext.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI,
                 movieObject.toContentValues());
-        // insert the favorites table:
-        ContentValues content = new ContentValues();
-        content.put(MovieContract.COLUMN_MOVIE_ID_FKEY,movieObject.getMovieID());
-        mContext.getContentResolver().insert(MovieContract.FavoritesEntry.CONTENT_URI,content);
     }
     public void removeFromFavorites(MovieContentDetails movieObject)
     {
-        mContext.getContentResolver().delete(MovieContract.FavoritesEntry.CONTENT_URI,
-                MovieContract.COLUMN_MOVIE_ID_FKEY + "=" + movieObject.getMovieID(),
+        mContext.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,
+                MovieContract.MovieEntry._ID + "=" + movieObject.getMovieID(),
                 null);
     }
     public boolean isFavorite(MovieContentDetails movieObject)
     {
         boolean favorite = false;
         Cursor cursor = mContext.getContentResolver().query(
-                MovieContract.FavoritesEntry.CONTENT_URI,
+                MovieContract.MovieEntry.CONTENT_URI,
                 null,
-                MovieContract.COLUMN_MOVIE_ID_FKEY + " = " + movieObject.getMovieID(),
+                MovieContract.MovieEntry._ID + " = " + movieObject.getMovieID(),
                 null,
                 null
         );

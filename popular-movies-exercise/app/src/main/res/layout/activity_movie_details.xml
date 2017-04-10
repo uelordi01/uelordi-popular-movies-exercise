@@ -59,43 +59,62 @@
                 android:textSize="15sp"
                 android:text="@string/default_release_date" />
             </LinearLayout>
+
             <ImageButton
                 android:id="@+id/bt_favorite_button"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@android:drawable/btn_star"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                />
+                android:background="@null"
+                android:src="@drawable/no_favorite" />
 
         </LinearLayout>
+
         <!-- make the start callable in the style resources as a selector-->
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_margin="10dp">
+        <TextView
+            android:id="@+id/tv_detail_synopsys"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_margin="10dp"
+            android:text="@string/default_synopsys"
+            />
     </android.support.v7.widget.CardView>
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/tv_detail_synopsys"
+        android:layout_height="wrap_content">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_movie_trailer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_margin="10dp"
-        android:text="@string/default_synopsys"
-        />
+        android:scrollbars="vertical" />
     </android.support.v7.widget.CardView>
-
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_movie_reviews"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical" />
+        </android.support.v7.widget.CardView>
+
     </LinearLayout>
 </ScrollView>
 
