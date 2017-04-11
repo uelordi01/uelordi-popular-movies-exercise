@@ -18,7 +18,7 @@ public class MovieContentDetails implements Parcelable
 
     private String poster_path;
     private String backdrop_path;
-    private String IMAGE_URL_PATH="http://image.tmdb.org/t/p/w185/";
+    private final String IMAGE_URL_PATH="http://image.tmdb.org/t/p/w185/";
     private String title;
     private String synopsis;
     private String user_rating;
@@ -27,13 +27,11 @@ public class MovieContentDetails implements Parcelable
 
 
     private long movieID;
-    // TODO SET THE REVIEW ID IN THE REVIEW CONTENT:
-    List<ReviewContent> reviewContent= new ArrayList<>();
-    List<TrailerContent> trailerContent= new ArrayList<>();
+    private List<ReviewContent> reviewContent = new ArrayList<>();
+    private List<TrailerContent> trailerContent = new ArrayList<>();
 
     public MovieContentDetails(Parcel in) {
         poster_path = in.readString();
-        //IMAGE_URL_PATH = in.readString();
         title = in.readString();
         synopsis = in.readString();
         user_rating = in.readString();

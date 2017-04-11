@@ -8,24 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import udacity.uelordi.com.popularmovies.R;
-import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.content.TrailerContent;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder> {
     @Nullable
     private OnTrailerItemListener onItemClickListener;
     private final Context context;
-    List <TrailerContent> mTrailerList =  new ArrayList<>();
+    private List <TrailerContent> mTrailerList =  new ArrayList<>();
 
     public TrailerAdapter(Context context,OnTrailerItemListener callback) {
         mTrailerList = new ArrayList<>();
@@ -78,13 +72,12 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         void bind(int position) {
             String title = mTrailerList.get(position).getVideoName();
             mTrailerTitle.setText(title);
-            /*Picasso.with(context).load(mTrailerList.
-                    get(position).getPosterPath()).
-                    into(movieVideoThumbnail);*/
         }
         @Override
         public void onClick(View v) {
-            onItemClickListener.onTrailerItemClick(mTrailerList.get(getAdapterPosition()));
+            if(onItemClickListener != null) {
+                onItemClickListener.onTrailerItemClick(mTrailerList.get(getAdapterPosition()));
+            }
         }
     }
 }

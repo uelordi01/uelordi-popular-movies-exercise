@@ -1,14 +1,11 @@
 package udacity.uelordi.com.popularmovies.database;
 
 import android.content.ContentProvider;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,9 +21,6 @@ public class MoviesProvider extends ContentProvider {
 
     public static final int MOVIES = 100;
     public static final int MOVIE_WITH_ID = 101;
-    public static final int MOST_POPULAR = 202;
-    public static final int  HIGHEST_RATED = 203;
-    public static final int FAVORITES = 300;
 
     // CDeclare a static variable for the Uri matcher that you construct
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -56,8 +50,10 @@ public class MoviesProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-       final SQLiteDatabase db = mMovieHelper.getReadableDatabase();
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection,
+                        @Nullable String selection,
+                        @Nullable String[] selectionArgs,
+                        @Nullable String sortOrder) {
        int match = sUriMatcher.match(uri);
        Cursor retCursor = null;
        switch (match)
@@ -104,11 +100,7 @@ public class MoviesProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        final SQLiteDatabase mDataBase = mMovieHelper.getReadableDatabase();
-        Cursor dbCursor = mDataBase.query(MovieContract.MovieEntry.TABLE_NAME, null, null, null, null, null, null);
-        String[] columnNames = dbCursor.getColumnNames();
         final SQLiteDatabase db = mMovieHelper.getWritableDatabase();
-
         int match = sUriMatcher.match(uri);
         Uri returnUri = null; // URI to be returned
         long id;
@@ -211,7 +203,7 @@ public class MoviesProvider extends ContentProvider {
                 return super.bulkInsert(uri, values);
         }
     }
-    public Cursor getMoviesByID(Uri uri, String [] projection, String sortOrder) {
+    private Cursor getMoviesByID(Uri uri, String [] projection, String sortOrder) {
         long id = MovieContract.MovieEntry.getIdFromUri(uri);
         String[] selectionArgs = new String[]{Long.toString(id)};
         String selection = MOVIE_ID_SELECTION;

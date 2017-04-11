@@ -41,10 +41,7 @@ public class VideosJSONUtils {
             mc.setUser_rating(jobject.getString(VOTE_AVERAGE));
             mc.setSynopsis(jobject.getString(SYNOPSYS));
             mc.setBackdropPath(jobject.getString(BACKDROP_PATH));
-            /*if(image_path!="null")
-            {*/
-                result_array.add(mc);
-            //}
+            result_array.add(mc);
         }
         return result_array;
     }

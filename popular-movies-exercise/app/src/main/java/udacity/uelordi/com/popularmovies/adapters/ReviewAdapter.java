@@ -11,6 +11,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import udacity.uelordi.com.popularmovies.R;
 import udacity.uelordi.com.popularmovies.content.ReviewContent;
 
@@ -24,9 +26,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     private static int viewHolderCount;
     private final static String TAG = "ReviewAdapter";
     private OnReviewItemListener mListener;
-    private Context mContext;
 
-    public ReviewAdapter(Context context, OnReviewItemListener listener) {
+    public ReviewAdapter(OnReviewItemListener listener) {
         viewHolderCount=0;
         mListener = listener;
     }
@@ -45,9 +46,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         Context context=parent.getContext();
         int LayoutIndexForListItem= R.layout.review_list_item;
         LayoutInflater li=LayoutInflater.from(context);
-        boolean shouldAtattachtToTheParentNow=false;
-
-        View view= li.inflate(LayoutIndexForListItem,parent,shouldAtattachtToTheParentNow);
+        View view= li.inflate(LayoutIndexForListItem,parent,false);
         ReviewAdapter.ReviewViewHolder result_view=new ReviewAdapter.ReviewViewHolder(view);
         viewHolderCount++;
         return result_view;
@@ -65,19 +64,19 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     }
      class ReviewViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
+        @BindView(R.id.tv_movie_review_author)
         TextView mReviewAuthor;
+        @BindView(R.id.tv_movie_review_content)
         TextView mReviewContent;
         public ReviewViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this,itemView);
             itemView.setOnClickListener(this);
-            mReviewAuthor = (TextView)itemView.findViewById(R.id.tv_movie_review_author);
-            mReviewContent =(TextView)itemView.findViewById(R.id.tv_movie_review_content);
         }
         void bind(int listIndex)
         {
             Log.d(TAG,"Position #"+listIndex);
-            if(mReviewsPopulateArray.size()>0)
-            {
+            if(mReviewsPopulateArray.size()>0) {
                 if(listIndex<mReviewsPopulateArray.size()) {
                     mReviewAuthor.setText(mReviewsPopulateArray.get(listIndex).getAuthor());
                     mReviewContent.setText(mReviewsPopulateArray.get(listIndex).getContent());

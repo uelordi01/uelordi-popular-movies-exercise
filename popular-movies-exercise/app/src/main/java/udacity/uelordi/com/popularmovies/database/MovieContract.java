@@ -14,7 +14,6 @@ public class MovieContract {
     // The authority, which is how your code knows which Content Provider to access
     public static final String AUTHORITY = "udacity.uelordi.com.popularmovies";
 
-    // The base content URI = "content://" + <authority>
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
 
