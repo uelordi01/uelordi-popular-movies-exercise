@@ -3,7 +3,6 @@ package udacity.uelordi.com.popularmovies;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.PersistableBundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -20,11 +19,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,14 +27,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import udacity.uelordi.com.popularmovies.adapters.OnReviewItemListener;
 import udacity.uelordi.com.popularmovies.adapters.OnTrailerItemListener;
-import udacity.uelordi.com.popularmovies.adapters.OnVideoItemClickListener;
 import udacity.uelordi.com.popularmovies.adapters.ReviewAdapter;
 import udacity.uelordi.com.popularmovies.adapters.TrailerAdapter;
 import udacity.uelordi.com.popularmovies.background.MovieDetailTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.content.ReviewContent;
 import udacity.uelordi.com.popularmovies.content.TrailerContent;
-import udacity.uelordi.com.popularmovies.database.MovieContract;
 import udacity.uelordi.com.popularmovies.services.FavoriteService;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 
@@ -66,43 +58,32 @@ public class MovieDetailsActivity extends AppCompatActivity implements
     TrailerAdapter mTrailerAdatper;
     private MovieContentDetails mCurrentMovieObject;
 
-    private static String MOVIE_ID_KEY="movieid";
+    private static String MOVIE_ID_KEY = "movieid";
 
     private static final int MOVIE_DETAIL_TASK_ID = 6;
     private static final String TAG = "MoveDetailsActivity";
     public static final String VIDEO_OBJECT_KEY = "video_list_key";
 
-    public static final String ARG_MOVIE = "ARG_MOVIE";
     public static final String EXTRA_TRAILERS = "EXTRA_TRAILERS";
     public static final String EXTRA_REVIEWS = "EXTRA_REVIEWS";
 
-    public static final String[] MOVIE_DETAILS_PROJECTION = {
-            MovieContract.MovieEntry.COLUMN_TITLE,
-            MovieContract.MovieEntry.COLUMN_SYNOPSYS,
-            MovieContract.MovieEntry.COLUMN_IMAGE_URL,
-            MovieContract.MovieEntry.COLUMN_RELEASE_DATE,
-            MovieContract.MovieEntry.COLUMN_USER_RATING,
-
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO DEFINE CORRECTLY THE MOVIES LOADING WITH SAVE INSTANCE.
-        // TODO DEFINE THE REVIEW ONCLICK CORRECTLY.
 
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
 
         initInterface();
         if(savedInstanceState != null) {
-            if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_TRAILERS)) {
+            if (savedInstanceState.containsKey(EXTRA_TRAILERS)) {
 
                 List<TrailerContent> trailers = savedInstanceState.
                                         getParcelableArrayList(EXTRA_TRAILERS);
                 mTrailerAdatper.setTrailerList(trailers);
                 Log.v(TAG," oncreate trailers size -> "+trailers.size());
             }
-            if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_REVIEWS)) {
+            if (savedInstanceState.containsKey(EXTRA_REVIEWS)) {
                 List<ReviewContent> reviews = savedInstanceState.
                                             getParcelableArrayList(EXTRA_REVIEWS);
                 Log.v(TAG,"oncreate reviews size -> "+reviews.size());
@@ -110,7 +91,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements
             }
         }
         else {
-            if(NetworkUtils.getInstance().isOnline(getApplicationContext())) {
+            if(NetworkUtils.isOnline(getApplicationContext())) {
                 loadTrailersAndReviews();
             }
             else {
@@ -126,12 +107,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
         ArrayList<TrailerContent> trailers = mTrailerAdatper.getTrailerArrayList();
         Log.v(TAG,"onsavedinstance trailers size -> "+trailers.size());
-        if (trailers != null && !trailers.isEmpty()) {
+        if (!trailers.isEmpty()) {
             outState.putParcelableArrayList(EXTRA_TRAILERS, trailers);
         }
 
         ArrayList<ReviewContent> reviews = mReviewtAdapter.getReviewArrayList();
-        if (reviews != null && !reviews.isEmpty()) {
+        if (!reviews.isEmpty()) {
             Log.v(TAG,"onsavedinstance reviews size -> "+reviews.size());
             outState.putParcelableArrayList(EXTRA_REVIEWS, reviews);
         }
@@ -145,7 +126,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements
     @Override
     public Loader<List> onCreateLoader(int id, Bundle args) {
         Long movieid=args.getLong(MOVIE_ID_KEY);
-        return (Loader<List>) new MovieDetailTaskLoader(this,movieid);
+        return new MovieDetailTaskLoader(this,movieid);
     }
 
     @Override
@@ -197,7 +178,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         GridLayoutManager trmanager=new GridLayoutManager(MovieDetailsActivity.this,3);
         rvReviews.setLayoutManager(lmanager);
         rvTrailers.setLayoutManager(trmanager);
-        mReviewtAdapter = new ReviewAdapter(this,this);
+        mReviewtAdapter = new ReviewAdapter(this);
         mTrailerAdatper = new TrailerAdapter(this,this);
         rvReviews.setAdapter(mReviewtAdapter);
         rvTrailers.setAdapter(mTrailerAdatper);
@@ -206,9 +187,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         FavoriteService.getInstance().setContext(this);
         if(FavoriteService.getInstance().isFavorite(mCurrentMovieObject)) {
             btFavorite.setImageResource(R.drawable.favorite_pressed_button);
-        }
-        else {
-
         }
         if(mCurrentMovieObject != null) {
             mTvTitle.setText(mCurrentMovieObject.getTitle());
@@ -238,7 +216,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         startActivity(trailerIntent);
     }
     public void showNetworkingErrors() {
-        Toast.makeText(getApplicationContext(),getResources().
+        Toast.makeText(getApplicationContext(),
                         getString(R.string.connectivity_warning_reviews_trailers).toString(),
                                                                     Toast.LENGTH_SHORT).show();
     }

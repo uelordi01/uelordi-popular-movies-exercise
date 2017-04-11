@@ -40,19 +40,15 @@ public final class NetworkUtils {
     private static final String STATIC_MOVIE_DB_URL =
             "http://api.themoviedb.org/3";
 
-    private  static String api_key= BuildConfig.API_KEY;
-    private static String SORT_PARAM = "sort_by";
+    private static String api_key= BuildConfig.API_KEY;
+    private final static String SORT_PARAM = "sort_by";
     private final static String API_KEY = "api_key";
     private final static String APPEND_TO_KEY = "append_to_response" ;
     private final static String VALUES_TO_RESPONSE="videos,reviews";
     private final static String MOVIE_ID_PARAM="movie";
 
-    //private final static String MOVIE_
 
-    public enum ACTION_TYPE{GET_MOVIE_LIST,GET_REVIEWS,GET_TRAILERS}
-    private static ACTION_TYPE mCurrentActionType;
-
-    private NetworkUtils() {};
+    private NetworkUtils() {}
     public static synchronized NetworkUtils getInstance()
     {
         if(m_instance == null)
@@ -70,8 +66,7 @@ public final class NetworkUtils {
                 .appendQueryParameter(API_KEY, api_key)
                 .build();
         String urld=builtUri.toString();
-        String result= callToHttp(new URL(urld));
-        return result;
+        return callToHttp(new URL(urld));
     }
     public String getMovieDetails(long movieID) throws IOException {
         String url=STATIC_MOVIE_DB_URL+"/"+MOVIE_ID_PARAM+"/"+movieID;
@@ -82,12 +77,11 @@ public final class NetworkUtils {
                 .appendQueryParameter(APPEND_TO_KEY,VALUES_TO_RESPONSE)
                 .build();
         String urld=builtUri.toString();
-        String result= callToHttp(new URL(urld));
-        return result;
+        return callToHttp(new URL(urld));
+
     }
 
     public String callToHttp(URL url) throws IOException {
-        boolean success;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)

@@ -3,13 +3,8 @@ package udacity.uelordi.com.popularmovies;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
 import org.json.JSONException;
-
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.VideosJSONUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
@@ -25,8 +20,6 @@ public class FetchVideoList extends AsyncTask<String,Void,String>
     protected String doInBackground(String... sortedBy) {
         String result=null;
         try {
-            //URL url= NetworkUtils.getInstance().buildUrl(sortedBy[0]);
-            //result=NetworkUtils.getResponseFromHttpUrl(url);//NetworkUtils.callToHttp(url);//
             result=NetworkUtils.getInstance().getMovieList(sortedBy[0]);//
         } catch (IOException e) {
             e.printStackTrace();

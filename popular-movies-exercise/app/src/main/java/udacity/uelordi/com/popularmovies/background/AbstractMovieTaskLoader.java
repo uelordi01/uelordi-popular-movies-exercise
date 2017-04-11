@@ -1,7 +1,6 @@
 package udacity.uelordi.com.popularmovies.background;
 
 import android.content.Context;
-import android.content.CursorLoader;
 import android.support.v4.content.AsyncTaskLoader;
 
 import java.util.List;

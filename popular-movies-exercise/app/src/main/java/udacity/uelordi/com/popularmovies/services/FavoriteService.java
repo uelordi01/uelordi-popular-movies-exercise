@@ -1,20 +1,18 @@
 package udacity.uelordi.com.popularmovies.services;
 
-import android.content.ContentValues;
+
 import android.content.Context;
 import android.database.Cursor;
-
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.database.MovieContract;
-import udacity.uelordi.com.popularmovies.database.MoviesProvider;
 
 /**
  * Created by uelordi on 28/03/17.
  */
 
 public class FavoriteService {
-    Context mContext;
-    private static FavoriteService m_instance= null;
+    private Context mContext;
+    private static FavoriteService m_instance = null;
     public static FavoriteService getInstance()
     {
         if(m_instance == null)
@@ -29,9 +27,6 @@ public class FavoriteService {
     }
     public void addToFavorites(MovieContentDetails movieObject)
     {
-        // insert the movie:
-        //store the image in the disk:
-
         mContext.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI,
                 movieObject.toContentValues());
     }

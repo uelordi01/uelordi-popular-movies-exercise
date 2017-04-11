@@ -12,7 +12,7 @@ public class ReviewContent implements Parcelable
     private String author;
     private String content;
     private String reviewUrl;
-    //TODO ADD REVIEW ID TO MAKE AN INTENT TO READ THE REVIEWS:
+
     public ReviewContent(String author, String content, String reviewUrl)
     {
         this.author = author;

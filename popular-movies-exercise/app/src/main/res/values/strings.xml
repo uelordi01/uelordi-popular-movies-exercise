@@ -6,7 +6,11 @@
     <string name="connectivity_warning">warning, no internet connection, the movies will no longer updated</string>
     <string name="connectivity_warning_reviews_trailers">warning, no internet connection, the trailers and reviews are not available</string>
     <string name="image_content_description">The selected movie poster</string>
+    <string name="image_favorite_content_description">Favorite selection button</string>
     <string name="default_title">Movie Title</string>
+    <string name="default_trailer">Trailer Title</string>
+    <string name="default_review">Review Title</string>
+    <string name="default_review_content">Review Content</string>
     <string name="default_synopsys">overview</string>
     <string name="default_poster">default.jpg</string>
     <string name="default_rating">5</string>

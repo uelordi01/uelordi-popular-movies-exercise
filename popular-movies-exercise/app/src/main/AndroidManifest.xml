@@ -27,8 +27,7 @@
         </activity>
         <activity
             android:name=".preferences.SettingsActivity"
-            android:label="@string/action_settings"
-            android:parentActivityName=".VideoListActivity">
+            android:label="@string/action_settings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".VideoListActivity" />

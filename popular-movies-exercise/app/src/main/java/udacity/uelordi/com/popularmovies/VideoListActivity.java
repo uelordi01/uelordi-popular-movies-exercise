@@ -6,7 +6,6 @@ import android.content.Intent;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +19,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,7 +28,6 @@ import udacity.uelordi.com.popularmovies.adapters.OnVideoItemClickListener;
 import udacity.uelordi.com.popularmovies.adapters.VideoListAdapter;
 import udacity.uelordi.com.popularmovies.background.FavoriteTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
-import udacity.uelordi.com.popularmovies.content.TrailerContent;
 import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
@@ -44,17 +40,13 @@ public class VideoListActivity extends AppCompatActivity implements
 
     private static final String TAG = VideoListActivity.class.getSimpleName();
 
-    private FetchVideoList mVideoListTask;
+
     @BindView (R.id.connectivity_error) TextView mErrorView;
     @BindView (R.id.pg_movie_list)  ProgressBar mVideoListProgressBar;
     @BindView (R.id.rv_movie_list) RecyclerView mMovieList;
     private int mPosition = RecyclerView.NO_POSITION;
 
     private VideoListAdapter mMovieListAdapter;
-
-    private static final String SELECTED_SEARCH_OPTION = "search_option";
-    private static final String RESULT_LIST_KEY = "vide_list_result";
-    private static final int MOVIES_LOADER_TASK_ID = 5;
     private static final int FAVORITES_MOVIES_LOADER_TASK_ID = 6;
 
     @Override
@@ -119,14 +111,9 @@ public class VideoListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-       // mMovieListAdapter.swapCursor(data);
         mMovieListAdapter.addData(data);
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-//      COMPLETED (30) Smooth scroll the RecyclerView to mPosition
         mMovieList.smoothScrollToPosition(mPosition);
-        int count = data.getCount();
-//      COMPLETED (31) If the Cursor's size is not equal to 0, call showWeatherDataView
-        //if (count != 0) hideLoadingBar();
         mMovieList.setAdapter(mMovieListAdapter);
         hideLoadingBar();
 
@@ -139,13 +126,7 @@ public class VideoListActivity extends AppCompatActivity implements
 
     public void startLoader()
     {
-//        Bundle queryBundle = new Bundle();
-//        queryBundle.putString(SELECTED_SEARCH_OPTION,checkSortingPreferences());
-//        if(result != null) {
-//            queryBundle.putParcelableArrayList(RESULT_LIST_KEY, (ArrayList<? extends Parcelable>) result);
-//        }
         LoaderManager loaderManager = getSupportLoaderManager();
-
         Loader<String> videoListLoader = loaderManager.getLoader(FAVORITES_MOVIES_LOADER_TASK_ID);
         if ( videoListLoader == null ) {
             getSupportLoaderManager().initLoader(FAVORITES_MOVIES_LOADER_TASK_ID, null, this);
@@ -166,7 +147,6 @@ public class VideoListActivity extends AppCompatActivity implements
     }
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        //restartLoader(key);
         getMovieList(key);
     }
 
@@ -177,20 +157,11 @@ public class VideoListActivity extends AppCompatActivity implements
         startActivity(detail_activity);
     }
 
-    @Override
-    public void onItemClick(String movieID) {
-        Intent movie_detail_intent = new Intent(this,MovieDetailsActivity.class);
-        long id =Long.parseLong(movieID);
-        movie_detail_intent.putExtra("movieid",id);
-        startActivity(movie_detail_intent);
-    }
     public void setAdapters(){
 
         GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
         mMovieListAdapter = new VideoListAdapter(VideoListActivity.this);
-        String optionType= checkSortingPreferences();
         mMovieList.setLayoutManager(gridManager);
-        mMovieListAdapter.setOptionType(optionType);
         mMovieList.setAdapter(mMovieListAdapter);
     }
     @Override
@@ -199,6 +170,7 @@ public class VideoListActivity extends AppCompatActivity implements
         hideLoadingBar();
     }
     public void getMoviesFromTheInternet(String key) {
+        FetchVideoList mVideoListTask;
         mVideoListTask = new FetchVideoList();
         mVideoListTask.setListener(this);
         mVideoListTask.execute(key);
@@ -209,7 +181,7 @@ public class VideoListActivity extends AppCompatActivity implements
                 getString(R.string.pref_sort_popular_value));
         return defaultValue;
     }
-    public void getMovieList(String key) {
+    private void getMovieList(String key) {
         if(key != null) {
             if (key.equals(getResources().getString(R.string.pref_sort_favorites_value))) {
                 startLoader();

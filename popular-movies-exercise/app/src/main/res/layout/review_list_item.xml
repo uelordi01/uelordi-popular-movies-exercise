@@ -15,12 +15,14 @@
                 android:id="@+id/tv_movie_review_author"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="20"/>
+                android:layout_weight="20"
+                android:text="@string/default_review"/>
             <TextView
                 android:id="@+id/tv_movie_review_content"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="80"/>
+                android:layout_weight="80"
+                android:text="@string/default_review_content"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
