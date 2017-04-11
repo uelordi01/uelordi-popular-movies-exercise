@@ -193,6 +193,7 @@ public class VideoListActivity extends AppCompatActivity implements
                         Toast.makeText(getApplicationContext(),
                                 getResources().getString(R.string.connectivity_warning),
                                 Toast.LENGTH_SHORT).show();
+                        hideLoadingBar();
                         showErrorMessage();
                     }
             }

@@ -18,7 +18,7 @@ public class MovieContentDetails implements Parcelable
 
     private String poster_path;
     private String backdrop_path;
-    private final String IMAGE_URL_PATH="http://image.tmdb.org/t/p/w185/";
+    private final String IMAGE_URL_PATH="http://image.tmdb.org/t/p/w185";
     private String title;
     private String synopsis;
     private String user_rating;
