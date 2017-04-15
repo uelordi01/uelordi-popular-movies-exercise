@@ -5,7 +5,9 @@ package udacity.uelordi.com.popularmovies;
 import android.content.Intent;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +50,8 @@ public class VideoListActivity extends AppCompatActivity implements
 
     private VideoListAdapter mMovieListAdapter;
     private static final int FAVORITES_MOVIES_LOADER_TASK_ID = 6;
+    private final static String VIDEO_LIST_KEY = "saved_movie_list";
+    private static Bundle mBundleRecyclerViewState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +99,23 @@ public class VideoListActivity extends AppCompatActivity implements
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = mMovieList.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable(VIDEO_LIST_KEY, listState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mBundleRecyclerViewState != null) {
+            Parcelable listState = mBundleRecyclerViewState.getParcelable(VIDEO_LIST_KEY);
+            mMovieList.getLayoutManager().onRestoreInstanceState(listState);
+        }
     }
 
     @Override
@@ -158,8 +179,17 @@ public class VideoListActivity extends AppCompatActivity implements
     }
 
     public void setAdapters(){
-
-        GridLayoutManager gridManager=new GridLayoutManager(VideoListActivity.this,2);
+        // TODO: change your grid layout manager from staggered layout
+        // https://inducesmile.com/android/android-staggeredgridlayoutmanager-example-tutorial/
+        // it seems that staggered is an asymetric gridView.
+        int numViewsForRow = 0;
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+            numViewsForRow = 2;
+        } else {
+            numViewsForRow = 4;
+        }
+        GridLayoutManager gridManager = new GridLayoutManager(VideoListActivity.this,numViewsForRow);
         mMovieListAdapter = new VideoListAdapter(VideoListActivity.this);
         mMovieList.setLayoutManager(gridManager);
         mMovieList.setAdapter(mMovieListAdapter);

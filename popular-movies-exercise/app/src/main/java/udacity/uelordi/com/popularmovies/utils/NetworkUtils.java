@@ -58,11 +58,11 @@ public final class NetworkUtils {
         return m_instance;
     }
     public String getMovieList(String sort) throws IOException {
-        String url=STATIC_MOVIE_DB_URL+"/discover/movie";
+        String url=STATIC_MOVIE_DB_URL+"/movie/"+sort;
 
         Uri builtUri = Uri.parse(url)
                 .buildUpon()
-                .appendQueryParameter(SORT_PARAM, sort)
+                //.appendQueryParameter(SORT_PARAM, sort)
                 .appendQueryParameter(API_KEY, api_key)
                 .build();
         String urld=builtUri.toString();

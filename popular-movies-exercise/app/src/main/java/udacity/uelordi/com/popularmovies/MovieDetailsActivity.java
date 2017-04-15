@@ -207,13 +207,17 @@ public class MovieDetailsActivity extends AppCompatActivity implements
     @Override
     public void onTrailerItemClick(TrailerContent content) {
         Intent trailerIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(content.getTrailerURL()));
-        startActivity(trailerIntent);
+        if (trailerIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(trailerIntent);
+        }
     }
 
     @Override
     public void onReviewItemClick(ReviewContent content) {
-        Intent trailerIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(content.getReviewUrl()));
-        startActivity(trailerIntent);
+        Intent reviewIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(content.getReviewUrl()));
+        if (reviewIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(reviewIntent);
+        }
     }
     public void showNetworkingErrors() {
         Toast.makeText(getApplicationContext(),
