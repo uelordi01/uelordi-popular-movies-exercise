@@ -3,21 +3,64 @@ package udacity.uelordi.com.popularmovies.content;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by uelordi on 28/02/2017.
  */
 
-public class TrailerContent implements Parcelable
-{
-  private String videoId;
-  private String videoKey;
-  private String videoName;
+public class TrailerContent implements Parcelable {
+
+  @SerializedName("id")
+  @Expose
+  private String id;
+  @SerializedName("iso_639_1")
+  @Expose
+  private String iso6391;
+  @SerializedName("iso_3166_1")
+  @Expose
+  private String iso31661;
+  @SerializedName("key")
+  @Expose
+  private String key;
+  @SerializedName("name")
+  @Expose
+  private String name;
+  @SerializedName("site")
+  @Expose
+  private String site;
+  @SerializedName("size")
+  @Expose
+  private Integer size;
+  @SerializedName("type")
+  @Expose
+  private String type;
 
   protected TrailerContent(Parcel in) {
-    videoId = in.readString();
-    videoKey = in.readString();
-    videoName = in.readString();
-    posterPath = in.readString();
+    id = in.readString();
+    iso6391 = in.readString();
+    iso31661 = in.readString();
+    key = in.readString();
+    name = in.readString();
+    site = in.readString();
+    type = in.readString();
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(id);
+    dest.writeString(iso6391);
+    dest.writeString(iso31661);
+    dest.writeString(key);
+    dest.writeString(name);
+    dest.writeString(site);
+    dest.writeString(type);
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
   }
 
   public static final Creator<TrailerContent> CREATOR = new Creator<TrailerContent>() {
@@ -31,64 +74,5 @@ public class TrailerContent implements Parcelable
       return new TrailerContent[size];
     }
   };
-
-  public String getPosterPath() {
-    return posterPath;
-  }
-
-  public void setPosterPath(String posterPath) {
-    this.posterPath = posterPath;
-  }
-
-  private String posterPath;
-  private final String YOUTUBE_BASE_URL="http://www.youtube.com/watch?v=";
-
-  public TrailerContent(String movieID, String videoKey, String trailerName)
-  {
-    videoId=movieID;
-    this.videoKey=videoKey;
-    videoName=trailerName;
-  }
-
-  public String getVideoId() {
-    return videoId;
-  }
-
-  public void setVideoId(String videoId) {
-    this.videoId = videoId;
-  }
-
-  public String getVideoKey() {
-    return videoKey;
-  }
-
-  public void setVideoKey(String videoKey) {
-    this.videoKey = videoKey;
-  }
-
-  public String getVideoName() {
-    return videoName;
-  }
-
-  public void setVideoName(String videoName) {
-    this.videoName = videoName;
-  }
-
-  public String getTrailerURL() {
-    return YOUTUBE_BASE_URL  + videoKey;
-  }
-
-  @Override
-  public int describeContents() {
-    return 0;
-  }
-
-  @Override
-  public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(videoId);
-    dest.writeString(videoKey);
-    dest.writeString(videoName);
-    dest.writeString(posterPath);
-    dest.writeString(YOUTUBE_BASE_URL);
-  }
 }
+
