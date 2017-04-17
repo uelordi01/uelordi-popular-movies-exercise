@@ -62,13 +62,16 @@ public class VideoListActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String filter =setupPreferences();
         setContentView(R.layout.activity_video_list);
         ButterKnife.bind(this);
-        String defaultFilter = setupPreferences();
+        if(savedInstanceState != null) {
+                filter = savedInstanceState.getString(SORTING_EXTRA_PREF);
+        }
         hideErrorMessage();
         setAdapters();
         showLoadingBar();
-        getMovieList(defaultFilter);
+        getMovieList(filter);
     }
 
     @Override
@@ -115,7 +118,6 @@ public class VideoListActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        mMovieList.getLayoutManager().onRestoreInstanceState(mListState);
     }
 
     @Override
@@ -150,7 +152,7 @@ public class VideoListActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mMovieListAdapter.addData(data);
-
+        mMovieList.getLayoutManager().onRestoreInstanceState(mListState);
         hideLoadingBar();
 
     }
