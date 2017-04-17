@@ -50,8 +50,14 @@ public class VideoListActivity extends AppCompatActivity implements
 
     private VideoListAdapter mMovieListAdapter;
     private static final int FAVORITES_MOVIES_LOADER_TASK_ID = 6;
+
     private final static String VIDEO_LIST_KEY = "saved_movie_list";
+    private final static String RECYCLER_VIEW_LIST_INDEX = "recycler_view_list_index";
+    private final static String SORTING_EXTRA_PREF = "sort_pref";
+
     private static Bundle mBundleRecyclerViewState;
+    GridLayoutManager mGridManager;
+    private Parcelable mListState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,17 +110,28 @@ public class VideoListActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        mBundleRecyclerViewState = new Bundle();
-        Parcelable listState = mMovieList.getLayoutManager().onSaveInstanceState();
-        mBundleRecyclerViewState.putParcelable(VIDEO_LIST_KEY, listState);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mBundleRecyclerViewState != null) {
-            Parcelable listState = mBundleRecyclerViewState.getParcelable(VIDEO_LIST_KEY);
-            mMovieList.getLayoutManager().onRestoreInstanceState(listState);
+        mMovieList.getLayoutManager().onRestoreInstanceState(mListState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mListState = mMovieList.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(VIDEO_LIST_KEY,mListState);
+        String preference = checkSortingPreferences();
+        outState.putString(SORTING_EXTRA_PREF,preference);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState != null) {
+            mListState = savedInstanceState.getParcelable(VIDEO_LIST_KEY);
         }
     }
 
@@ -133,9 +150,7 @@ public class VideoListActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mMovieListAdapter.addData(data);
-        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-        mMovieList.smoothScrollToPosition(mPosition);
-        mMovieList.setAdapter(mMovieListAdapter);
+
         hideLoadingBar();
 
     }
@@ -168,7 +183,9 @@ public class VideoListActivity extends AppCompatActivity implements
     }
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        getMovieList(key);
+        String defaultValue=sharedPreferences.getString(key,
+                getString(R.string.pref_sort_popular_value));
+        getMovieList(defaultValue);
     }
 
     @Override
@@ -179,24 +196,22 @@ public class VideoListActivity extends AppCompatActivity implements
     }
 
     public void setAdapters(){
-        // TODO: change your grid layout manager from staggered layout
-        // https://inducesmile.com/android/android-staggeredgridlayoutmanager-example-tutorial/
-        // it seems that staggered is an asymetric gridView.
         int numViewsForRow = 0;
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
         {
             numViewsForRow = 2;
         } else {
-            numViewsForRow = 4;
+            numViewsForRow = 3;
         }
-        GridLayoutManager gridManager = new GridLayoutManager(VideoListActivity.this,numViewsForRow);
+        mGridManager = new GridLayoutManager(VideoListActivity.this,numViewsForRow);
         mMovieListAdapter = new VideoListAdapter(VideoListActivity.this);
-        mMovieList.setLayoutManager(gridManager);
+        mMovieList.setLayoutManager(mGridManager);
         mMovieList.setAdapter(mMovieListAdapter);
     }
     @Override
     public void OnListAvailable(List<MovieContentDetails> result) {
         mMovieListAdapter.addData(result);
+        mMovieList.getLayoutManager().onRestoreInstanceState(mListState);
         hideLoadingBar();
     }
     public void getMoviesFromTheInternet(String key) {

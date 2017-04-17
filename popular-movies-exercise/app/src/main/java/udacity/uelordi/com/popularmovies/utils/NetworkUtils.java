@@ -62,7 +62,6 @@ public final class NetworkUtils {
 
         Uri builtUri = Uri.parse(url)
                 .buildUpon()
-                //.appendQueryParameter(SORT_PARAM, sort)
                 .appendQueryParameter(API_KEY, api_key)
                 .build();
         String urld=builtUri.toString();
