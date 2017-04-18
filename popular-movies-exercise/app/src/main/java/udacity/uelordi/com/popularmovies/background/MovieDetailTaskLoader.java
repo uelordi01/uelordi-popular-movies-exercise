@@ -22,11 +22,11 @@ public class MovieDetailTaskLoader extends AbstractMovieTaskLoader {
     @Override
     public List buildList() {
         String result = null;
-        try {
-            result = NetworkUtils.getInstance().getMovieDetails(mVideoId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            //result = NetworkUtils.getInstance().getMovieDetails(mVideoId);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         // return MovieDetailJSONUtils.getMovieDetail(result);
         return null;
     }

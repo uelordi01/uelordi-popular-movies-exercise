@@ -15,10 +15,10 @@ import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 
 public interface DBMovieServiceEndPoint {
     @GET("movie/{id}/videos")
-    Observable<TrailerResponse> getMovieVideos(@Path("id") long movieId);
+    Call<TrailerResponse> getMovieVideos(@Path("id") long movieId, @Query("api_key") String api_key);
 
     @GET("movie/{id}/reviews")
-    Observable<ReviewResponse> getMovieReviews(@Path("id") long movieId);
+    Call<ReviewResponse> getMovieReviews(@Path("id") long movieId, @Query("api_key") String api_key);
 
     @GET("movie/{sort_by}")
     Call<MovieListResponse> getMovieList(@Path("sort_by") String sortBy, @Query("api_key") String api_key);

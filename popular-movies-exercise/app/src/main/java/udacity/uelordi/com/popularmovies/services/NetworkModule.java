@@ -19,7 +19,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import udacity.uelordi.com.popularmovies.BuildConfig;
+import udacity.uelordi.com.popularmovies.adapters.OnReviewItemListener;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
+import udacity.uelordi.com.popularmovies.utils.OnReviewListener;
+import udacity.uelordi.com.popularmovies.utils.OnTrailerListener;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
 /**
@@ -39,6 +42,8 @@ public class NetworkModule {
     private Retrofit retrofit;
     private DBMovieServiceEndPoint client;
     private onFetchResults m_callback=null;
+    private OnReviewListener m_rev_callback;
+    private OnTrailerListener m_trai_callback;
 
 
     public NetworkModule() {
@@ -66,12 +71,19 @@ public class NetworkModule {
     public void configureCallback(onFetchResults callback) {
         m_callback = callback;
     }
+    public void configureCallback(OnReviewListener listener){
+        m_rev_callback = listener;
+    }
+    public void configureCallback(OnTrailerListener listener){
+        m_trai_callback = listener;
+    }
     public void getMovieList(String sort_by) {
         Call<MovieListResponse> call = client.getMovieList(sort_by,api_key);
         call.enqueue(
                 new Callback<MovieListResponse>() {
                     @Override
-                    public void onResponse(Call<MovieListResponse> call, Response<MovieListResponse> response) {
+                    public void onResponse(Call<MovieListResponse> call,
+                                           Response<MovieListResponse> response) {
                         List<MovieContentDetails> list = response.body().getResults();
                         if(m_callback != null) {
                             m_callback.OnListAvailable(list);
@@ -90,6 +102,46 @@ public class NetworkModule {
                 }
         );
     }
+    public void getReviewList(long movieID) {
+        Call<ReviewResponse> call = client.getMovieReviews(movieID,api_key);
+        call.enqueue(
+                new Callback<ReviewResponse>() {
+                    @Override
+                    public void onResponse(Call<ReviewResponse> call,
+                                           Response<ReviewResponse> response) {
+                        if(m_rev_callback != null) {
+                            m_rev_callback.OnReviewListAvailable(response.body().getResults());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ReviewResponse> call, Throwable t) {
+                        Log.e(TAG,t.getMessage());
+                    }
+                }
+        );
+    }
+    public void getTrailerList(long movieID) {
+        Call<TrailerResponse> call = client.getMovieVideos(movieID,api_key);
+        call.enqueue(
+            new Callback<TrailerResponse>() {
+
+                @Override
+                public void onResponse(Call<TrailerResponse> call,
+                                       Response<TrailerResponse> response) {
+                    if(m_trai_callback != null) {
+                        m_trai_callback.OnTrailerListAvailable(response.body().getResults());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<TrailerResponse> call, Throwable t) {
+
+                }
+            }
+        );
+    }
+
     public static  NetworkModule getInstance()
     {
         if(mInstance == null)

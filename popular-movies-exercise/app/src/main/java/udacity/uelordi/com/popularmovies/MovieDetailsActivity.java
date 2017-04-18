@@ -36,12 +36,16 @@ import udacity.uelordi.com.popularmovies.content.TrailerContent;
 import udacity.uelordi.com.popularmovies.services.FavoriteService;
 import udacity.uelordi.com.popularmovies.services.NetworkModule;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
+import udacity.uelordi.com.popularmovies.utils.OnReviewListener;
+import udacity.uelordi.com.popularmovies.utils.OnTrailerListener;
 
 
 public class MovieDetailsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List> ,
         OnTrailerItemListener,
-        OnReviewItemListener
+        OnReviewItemListener,
+        OnReviewListener,
+        OnTrailerListener
 
 {
 
@@ -92,7 +96,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements
             }
         }
         else {
-            if(NetworkUtils.isOnline(getApplicationContext())) {
+            if(NetworkModule.isOnline(getApplicationContext())) {
                 loadTrailersAndReviews();
             }
             else {
@@ -119,10 +123,15 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         }
     }
     public void loadTrailersAndReviews() {
-        Bundle queryBundle = new Bundle();
+//        Bundle queryBundle = new Bundle();
+//
+//        queryBundle.putLong(MOVIE_ID_KEY,mCurrentMovieObject.getId());
+//        getSupportLoaderManager().initLoader(MOVIE_DETAIL_TASK_ID, queryBundle, this);
+        NetworkModule.getInstance().configureCallback((OnReviewListener)this);
+        NetworkModule.getInstance().configureCallback((OnTrailerListener) this);
 
-        queryBundle.putLong(MOVIE_ID_KEY,mCurrentMovieObject.getId());
-        getSupportLoaderManager().initLoader(MOVIE_DETAIL_TASK_ID, queryBundle, this);
+        NetworkModule.getInstance().getReviewList(mCurrentMovieObject.getId());
+        NetworkModule.getInstance().getTrailerList(mCurrentMovieObject.getId());
     }
     @Override
     public Loader<List> onCreateLoader(int id, Bundle args) {
@@ -190,9 +199,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements
             btFavorite.setImageResource(R.drawable.favorite_pressed_button);
         }
         if(mCurrentMovieObject != null) {
-            mTvTitle.setText(mCurrentMovieObject.getTitle());
+            mTvTitle.setText(mCurrentMovieObject.getOriginalTitle());
             mTvSynopsys.setText(mCurrentMovieObject.getOverview());
-            mTvUserRating.setText(String.valueOf(mCurrentMovieObject.getPopularity()));
+            mTvUserRating.setText(String.valueOf(mCurrentMovieObject.getVoteAverage()));
             mTvReleaseDate.setText(mCurrentMovieObject.getReleaseDate());
             String movie_path = NetworkModule.getInstance().getImageUrlPah()
                                 + mCurrentMovieObject.getPosterPath();
@@ -224,5 +233,15 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         Toast.makeText(getApplicationContext(),
                         getString(R.string.connectivity_warning_reviews_trailers).toString(),
                                                                     Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void OnReviewListAvailable(List<ReviewContent> result) {
+        mReviewtAdapter.setReviewList(result);
+    }
+
+    @Override
+    public void OnTrailerListAvailable(List<TrailerContent> result) {
+       mTrailerAdatper.setTrailerList(result);
     }
 }

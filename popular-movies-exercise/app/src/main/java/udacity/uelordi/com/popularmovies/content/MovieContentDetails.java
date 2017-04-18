@@ -67,10 +67,13 @@ public class MovieContentDetails implements Parcelable {
         posterPath = in.readString();
         overview = in.readString();
         releaseDate = in.readString();
+        id  = in.readLong();
         originalTitle = in.readString();
         originalLanguage = in.readString();
         title = in.readString();
         backdropPath = in.readString();
+        voteAverage = in.readDouble();
+
     }
 
     @Override
@@ -79,10 +82,13 @@ public class MovieContentDetails implements Parcelable {
         dest.writeString(posterPath);
         dest.writeString(overview);
         dest.writeString(releaseDate);
+        dest.writeLong(id);
         dest.writeString(originalTitle);
         dest.writeString(originalLanguage);
         dest.writeString(title);
         dest.writeString(backdropPath);
+        dest.writeDouble(voteAverage);
+
     }
 
     @Override
@@ -214,21 +220,23 @@ public class MovieContentDetails implements Parcelable {
         this.voteAverage = voteAverage;
     }
 
-    public MovieContentDetails(long id,String originalTitle, String overview, Double popularity,String posterPath, String releaseDate, String backdropPath) {
+    public MovieContentDetails(long id,String originalTitle, String overview, Double voteAverage
+            ,String posterPath, String releaseDate, String backdropPath) {
         this.posterPath = posterPath;
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.id = id;
         this.originalTitle = originalTitle;
         this.backdropPath = backdropPath;
-        this.popularity = popularity;
+        this.voteAverage = voteAverage;
+        //this.popularity = popularity;
     }
 
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
         values.put(MovieContract.MovieEntry._ID,id);
         values.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL,posterPath);
-        values.put(MovieContract.MovieEntry.COLUMN_TITLE,title);
+        values.put(MovieContract.MovieEntry.COLUMN_TITLE,originalTitle);
         values.put(MovieContract.MovieEntry.COLUMN_SYNOPSYS,overview);
         values.put(MovieContract.MovieEntry.COLUMN_USER_RATING, voteAverage);
         values.put(MovieContract.MovieEntry.COLUMN_BACKDROP_PATH,backdropPath);
