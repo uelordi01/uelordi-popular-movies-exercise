@@ -70,7 +70,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
             itemView.setOnClickListener(this);
         }
         void bind(int position) {
-            String title = mTrailerList.get(position).getVideoName();
+            String title = mTrailerList.get(position).getName();
             mTrailerTitle.setText(title);
         }
         @Override

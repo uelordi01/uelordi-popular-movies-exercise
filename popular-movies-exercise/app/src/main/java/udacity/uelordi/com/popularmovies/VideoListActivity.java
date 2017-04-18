@@ -21,6 +21,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,6 +33,7 @@ import udacity.uelordi.com.popularmovies.adapters.VideoListAdapter;
 import udacity.uelordi.com.popularmovies.background.FavoriteTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
+import udacity.uelordi.com.popularmovies.services.NetworkModule;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 
@@ -216,11 +219,13 @@ public class VideoListActivity extends AppCompatActivity implements
         mMovieList.getLayoutManager().onRestoreInstanceState(mListState);
         hideLoadingBar();
     }
-    public void getMoviesFromTheInternet(String key) {
-        FetchVideoList mVideoListTask;
-        mVideoListTask = new FetchVideoList();
-        mVideoListTask.setListener(this);
-        mVideoListTask.execute(key);
+    public void getMoviesFromTheInternet(String key) throws IOException {
+        NetworkModule.getInstance().configureCallback(this);
+        try {
+            NetworkModule.getInstance().getMovieList(key);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
     public String checkSortingPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -233,8 +238,13 @@ public class VideoListActivity extends AppCompatActivity implements
             if (key.equals(getResources().getString(R.string.pref_sort_favorites_value))) {
                 startLoader();
             } else {
-                    if(NetworkUtils.isOnline(getApplicationContext())) {
-                        getMoviesFromTheInternet(key);
+                    if(NetworkModule.getInstance()
+                            .isOnline(getApplicationContext())) {
+                        try {
+                            getMoviesFromTheInternet(key);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                     else {
                         Toast.makeText(getApplicationContext(),

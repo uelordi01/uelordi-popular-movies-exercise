@@ -4,7 +4,7 @@ import android.content.Context;
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.List;
-import udacity.uelordi.com.popularmovies.utils.MovieDetailJSONUtils;
+
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 
 /**
@@ -27,11 +27,7 @@ public class MovieDetailTaskLoader extends AbstractMovieTaskLoader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            return MovieDetailJSONUtils.getMovieDetail(result);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        // return MovieDetailJSONUtils.getMovieDetail(result);
         return null;
     }
 

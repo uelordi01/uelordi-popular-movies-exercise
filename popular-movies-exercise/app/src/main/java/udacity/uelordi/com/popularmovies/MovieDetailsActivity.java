@@ -34,6 +34,7 @@ import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.content.ReviewContent;
 import udacity.uelordi.com.popularmovies.content.TrailerContent;
 import udacity.uelordi.com.popularmovies.services.FavoriteService;
+import udacity.uelordi.com.popularmovies.services.NetworkModule;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 
 
@@ -120,7 +121,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements
     public void loadTrailersAndReviews() {
         Bundle queryBundle = new Bundle();
 
-        queryBundle.putLong(MOVIE_ID_KEY,mCurrentMovieObject.getMovieID());
+        queryBundle.putLong(MOVIE_ID_KEY,mCurrentMovieObject.getId());
         getSupportLoaderManager().initLoader(MOVIE_DETAIL_TASK_ID, queryBundle, this);
     }
     @Override
@@ -136,8 +137,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements
 
         if(result != null) {
             mCurrentMovieObject=result.get(0);
-            mReviewtAdapter.setReviewList(mCurrentMovieObject.getReviewContent());
-            mTrailerAdatper.setTrailerList(mCurrentMovieObject.getTrailerContent());
+//            mReviewtAdapter.setReviewList(mCurrentMovieObject.getReviewContent());
+//            mTrailerAdatper.setTrailerList(mCurrentMovieObject.getTrailerContent());
         }
 
     }
@@ -190,11 +191,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         }
         if(mCurrentMovieObject != null) {
             mTvTitle.setText(mCurrentMovieObject.getTitle());
-            mTvSynopsys.setText(mCurrentMovieObject.getSynopsis());
-            mTvUserRating.setText(mCurrentMovieObject.getUser_rating());
-            mTvReleaseDate.setText(mCurrentMovieObject.getRelease_date());
-            String movie_path =mCurrentMovieObject.getBaseIMAGE_URL_PATH()
-                                + mCurrentMovieObject.getPoster_path();
+            mTvSynopsys.setText(mCurrentMovieObject.getOverview());
+            mTvUserRating.setText(String.valueOf(mCurrentMovieObject.getPopularity()));
+            mTvReleaseDate.setText(mCurrentMovieObject.getReleaseDate());
+            String movie_path = NetworkModule.getInstance().getImageUrlPah()
+                                + mCurrentMovieObject.getPosterPath();
             Log.v(TAG,"image_path: "+movie_path);
             Glide.with(getApplicationContext()).load(
                     movie_path)

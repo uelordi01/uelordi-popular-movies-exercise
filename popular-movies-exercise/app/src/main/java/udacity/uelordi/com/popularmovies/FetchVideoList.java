@@ -5,38 +5,38 @@ import android.os.AsyncTask;
 import android.util.Log;
 import org.json.JSONException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
+import udacity.uelordi.com.popularmovies.services.NetworkModule;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
-import udacity.uelordi.com.popularmovies.utils.VideosJSONUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 /**
  * Created by uelordi on 04/03/17.
  * The asynctask which holds the internet connection in background
  */
-public class FetchVideoList extends AsyncTask<String,Void,String>
+public class FetchVideoList extends AsyncTask<String,Void,List<MovieContentDetails>>
 {
     private onFetchResults m_callback=null;
     private final String TAG = FetchVideoList.class.getSimpleName();
     @Override
-    protected String doInBackground(String... sortedBy) {
-        String result=null;
-        try {
-            result=NetworkUtils.getInstance().getMovieList(sortedBy[0]);//
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
+    protected List<MovieContentDetails> doInBackground(String... sortedBy) {
+//        try {
+//            //return NetworkModule.getInstance().getMovieList(sortedBy[0]);
+//            return null;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        return null;
     }
 
     @Override
-    protected void onPostExecute(String s) {
+    protected void onPostExecute(List<MovieContentDetails> s) {
         super.onPostExecute(s);
         if(m_callback!=null)
         {
-            try {
-                m_callback.OnListAvailable(VideosJSONUtils.getMovieListFromJson(s));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            m_callback.OnListAvailable(s);
         }
         else
         {

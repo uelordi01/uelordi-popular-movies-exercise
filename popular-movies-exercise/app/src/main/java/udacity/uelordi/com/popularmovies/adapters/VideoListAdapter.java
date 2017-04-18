@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import udacity.uelordi.com.popularmovies.R;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.database.MovieContract;
+import udacity.uelordi.com.popularmovies.services.NetworkModule;
 
 /**
  * Created by uelordi on 28/02/2017.
@@ -55,7 +56,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
                 MovieContentDetails movie = new MovieContentDetails(id ,
                                                                     title,
                                                                     overview,
-                                                                    rating,
+                                                                    Double.parseDouble(rating),
                                                                     posterPath,
                                                                     releaseDate,
                                                                     backdropPath);
@@ -102,10 +103,9 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
         void bind(int listIndex)
         {
             Log.d(TAG,"Position #"+listIndex);
-            String movie_path=mMoviesPopulateArray.
-                                get(listIndex).getBaseIMAGE_URL_PATH() +
+            String movie_path= NetworkModule.getInstance().getImageUrlPah() +
                                 mMoviesPopulateArray
-                                        .get(listIndex).getPoster_path();
+                                        .get(listIndex).getPosterPath();
 
                     Log.v(TAG,"image_path: "+movie_path);
                     Glide.with(itemView.getContext()).load(

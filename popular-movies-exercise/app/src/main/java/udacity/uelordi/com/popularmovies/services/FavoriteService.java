@@ -33,7 +33,7 @@ public class FavoriteService {
     public void removeFromFavorites(MovieContentDetails movieObject)
     {
         mContext.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,
-                MovieContract.MovieEntry._ID + "=" + movieObject.getMovieID(),
+                MovieContract.MovieEntry._ID + "=" + movieObject.getId(),
                 null);
     }
     public boolean isFavorite(MovieContentDetails movieObject)
@@ -42,7 +42,7 @@ public class FavoriteService {
         Cursor cursor = mContext.getContentResolver().query(
                 MovieContract.MovieEntry.CONTENT_URI,
                 null,
-                MovieContract.MovieEntry._ID + " = " + movieObject.getMovieID(),
+                MovieContract.MovieEntry._ID + " = " + movieObject.getId(),
                 null,
                 null
         );

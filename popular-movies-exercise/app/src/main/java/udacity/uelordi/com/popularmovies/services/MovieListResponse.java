@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
+
 /**
  * Created by uelordi on 18/04/2017.
  */
@@ -15,7 +17,7 @@ public class MovieListResponse {
     private Integer page;
     @SerializedName("results")
     @Expose
-    private List<MovieListResponse> results = null;
+    private List<MovieContentDetails> results = null;
     @SerializedName("total_results")
     @Expose
     private Integer totalResults;
@@ -31,11 +33,11 @@ public class MovieListResponse {
         this.page = page;
     }
 
-    public List<MovieListResponse> getResults() {
+    public List<MovieContentDetails> getResults() {
         return results;
     }
 
-    public void setResults(List<MovieListResponse> results) {
+    public void setResults(List<MovieContentDetails> results) {
         this.results = results;
     }
 
