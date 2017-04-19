@@ -45,7 +45,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         OnTrailerItemListener,
         OnReviewItemListener,
         OnReviewListener,
-        OnTrailerListener
+        OnTrailerListener,
+        FavoriteService.FavoriteListener
 
 {
 
@@ -159,7 +160,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements
     @OnClick(R.id.bt_favorite_button)
     public void submit()  {
         Log.v(TAG,"favorite button pressed:");
-        if(mCurrentMovieObject != null) {
+        /*if(mCurrentMovieObject != null) {
             if(FavoriteService.getInstance().
                             isFavorite(mCurrentMovieObject)){
                 FavoriteService.getInstance().removeFromFavorites(mCurrentMovieObject);
@@ -175,7 +176,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements
             Toast.makeText(this,getResources().
                             getString(R.string.error_movie_class_null),
                             Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
 
@@ -194,10 +195,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         rvTrailers.setAdapter(mTrailerAdatper);
 
 
-        FavoriteService.getInstance().setContext(this);
-        if(FavoriteService.getInstance().isFavorite(mCurrentMovieObject)) {
-            btFavorite.setImageResource(R.drawable.favorite_pressed_button);
-        }
+        //FavoriteService.getInstance().setContext(this);
+        FavoriteService.getInstance().registerContentResolver(getContentResolver(),this);
+        FavoriteService.getInstance().checkFavorite(mCurrentMovieObject, false);
         if(mCurrentMovieObject != null) {
             mTvTitle.setText(mCurrentMovieObject.getOriginalTitle());
             mTvSynopsys.setText(mCurrentMovieObject.getOverview());
@@ -243,5 +243,48 @@ public class MovieDetailsActivity extends AppCompatActivity implements
     @Override
     public void OnTrailerListAvailable(List<TrailerContent> result) {
        mTrailerAdatper.setTrailerList(result);
+    }
+
+    @Override
+    public void onIsFavorite(boolean isFavorite, boolean performAction) {
+        if(performAction) {
+            if(mCurrentMovieObject != null) {
+                if (isFavorite) {
+                    FavoriteService.getInstance().removeFromFavorites(mCurrentMovieObject);
+                } else {
+                    FavoriteService.getInstance().addToFavorites(mCurrentMovieObject);
+                }
+            }
+            else {
+                Toast.makeText(this,getResources().
+                                getString(R.string.error_movie_class_null),
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            if(isFavorite) {
+                btFavorite.setImageResource(R.drawable.favorite_pressed_button);
+            }
+            else {
+                btFavorite.setImageResource(R.drawable.no_favorite);
+            }
+        }
+    }
+    @Override
+    public void onAddFavoriteCompleted(boolean result) {
+        if(result) {
+            btFavorite.setImageResource(R.drawable.favorite_pressed_button);
+        }
+    }
+
+    @Override
+    public void onRemoveFavoriteCompleted(boolean result) {
+        if(result) {
+            btFavorite.setImageResource(R.drawable.no_favorite);
+        }
+    }
+
+    @Override
+    public void onFavoriteError(String error) {
+
     }
 }
