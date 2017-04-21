@@ -38,7 +38,10 @@
     <string name="pref_sort_popular_value" translatable="false">popular</string>
     <string name="pref_sort_rated_value" translatable="false">top_rated</string>
     <string name="pref_sort_favorites_value" translatable="false">favorite</string>
-
+    <!-- SyncAdapter related strings-->
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">popularmovies.uelordi.com</string>
+    <string name="content_authority">udacity.uelordi.com.popularmovies</string>
 
     <!-- ERRORS-->
     <string name="error_movie_class_null">Error: The movie class is null</string>

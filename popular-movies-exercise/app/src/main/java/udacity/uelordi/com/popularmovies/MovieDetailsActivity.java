@@ -160,6 +160,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements
     @OnClick(R.id.bt_favorite_button)
     public void submit()  {
         Log.v(TAG,"favorite button pressed:");
+        FavoriteService.getInstance().checkFavorite(mCurrentMovieObject,true);
         /*if(mCurrentMovieObject != null) {
             if(FavoriteService.getInstance().
                             isFavorite(mCurrentMovieObject)){
@@ -244,7 +245,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements
     public void OnTrailerListAvailable(List<TrailerContent> result) {
        mTrailerAdatper.setTrailerList(result);
     }
-
     @Override
     public void onIsFavorite(boolean isFavorite, boolean performAction) {
         if(performAction) {

@@ -16,7 +16,7 @@ import udacity.uelordi.com.popularmovies.database.MovieContract;
 /**
  * Created by uelordi on 28/03/17.
  */
-// TODO you need something to make callback to the DetailsActivity:
+
 public class FavoriteService {
     private static final String TAG = "FavoriteService";
     private static FavoriteService m_instance = null;
@@ -83,6 +83,7 @@ public class FavoriteService {
         protected void onDeleteComplete(int token, Object cookie, int result) {
             super.onDeleteComplete(token, cookie, result);
             mListener.onRemoveFavoriteCompleted(true);
+            // TODO IMPLEMENT THE RESULT CASE TO THROW THE ERROR
         }
 
     }
@@ -96,7 +97,7 @@ public class FavoriteService {
                 null);
     }
     public void checkFavorite(MovieContentDetails movieObject, boolean performAction) {
-        boolean mforceActionPerform = performAction;
+        mForceActionPerform = performAction;
         mFavoriteTask.startQuery(3, null,
                 MovieContract.MovieEntry.CONTENT_URI,
                 null,

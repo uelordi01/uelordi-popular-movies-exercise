@@ -36,7 +36,12 @@ import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
 import udacity.uelordi.com.popularmovies.services.NetworkModule;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
-
+// TODO implement a syncadapter.
+// TODO implements the notifications.
+// TODO IMPLEMENT THE ERROR HANDLING AS THE LATEST COURSERS. (SERVER DOWN, DESTINATION UNREACHABLE, DATABASE EMPTY)
+// TODO IMPLEMENT BROADCAST RECEIVER.
+// TODO IMPLEMENT THE STYLES.
+// TODO IMPLEMENT GCM (GOOGLE CLOUD MESSAGE) WITH GOOGLE PLAY DRIVER()
 public class VideoListActivity extends AppCompatActivity implements
                                             OnVideoItemClickListener,
                                             onFetchResults,

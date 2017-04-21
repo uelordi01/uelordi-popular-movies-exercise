@@ -31,6 +31,30 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".VideoListActivity" />
         </activity>
+        <service
+            android:name=".sync.SyncMoviesService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":sync" >
+            <intent-filter>
+                <action android:name="@string/content_authority" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+        </service>
+        <service
+            android:name=".sync.MovieAuthenticatorService"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
         <provider android:name="udacity.uelordi.com.popularmovies.database.MoviesProvider"
             android:authorities="udacity.uelordi.com.popularmovies"
             android:exported="false"/>
