@@ -2,6 +2,10 @@ package udacity.uelordi.com.popularmovies;
 
 
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 
 import android.content.SharedPreferences;
@@ -32,6 +36,8 @@ import udacity.uelordi.com.popularmovies.adapters.OnVideoItemClickListener;
 import udacity.uelordi.com.popularmovies.adapters.VideoListAdapter;
 import udacity.uelordi.com.popularmovies.background.FavoriteTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
+import udacity.uelordi.com.popularmovies.database.MovieContract;
+import udacity.uelordi.com.popularmovies.database.MoviesProvider;
 import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
 import udacity.uelordi.com.popularmovies.services.NetworkModule;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
@@ -81,7 +87,20 @@ public class VideoListActivity extends AppCompatActivity implements
         showLoadingBar();
         getMovieList(filter);
     }
+    private Account createDummyAccount(Context context) {
+        Account dummyAccount = new Account("dummyaccount", "com.example.restaurant");
+        AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
+        accountManager.addAccountExplicitly(dummyAccount, null, null);
+        ContentResolver.setSyncAutomatically(dummyAccount, MovieContract.AUTHORITY, true);
+        return dummyAccount;
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkGooglePlayServices();
+        ContentResolver.requestSync(createDummyAccount(this), MovieContract.AUTHORITY, Bundle.EMPTY);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.filter_menu, menu);
@@ -123,10 +142,6 @@ public class VideoListActivity extends AppCompatActivity implements
         super.onPause();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
