@@ -47,4 +47,12 @@
     <string name="error_movie_class_null">Error: The movie class is null</string>
     <string name="connectivity_error">Connection error: please check if your device is connected to the internet</string>
     <string name="callback_nodefined_error">No callback defined</string>
+    <!-- ERRORS FROM MOVIE_LIST_EMPTY -->
+    <string name="empty_movie_list">No movie information</string>
+    <string name="empty_movie_list_no_internet">No movie information, no internet connection</string>
+    <string name="empty_movie_list_server_down">No movie information, server is down</string>
+    <string name="empty_movie_list_server_error">No movie information, the server is not returning valid data </string>
+
+
+
 </resources>

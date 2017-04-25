@@ -83,12 +83,12 @@ public class VideoListActivity extends AppCompatActivity implements
                 filter = savedInstanceState.getString(SORTING_EXTRA_PREF);
         }
         hideErrorMessage();
-        setAdapters();
+        initInterface();
         showLoadingBar();
         getMovieList(filter);
     }
     private Account createDummyAccount(Context context) {
-        Account dummyAccount = new Account("dummyaccount", "com.example.restaurant");
+        Account dummyAccount = new Account("dummyaccount", "com.udacity.uelordi");
         AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
         accountManager.addAccountExplicitly(dummyAccount, null, null);
         ContentResolver.setSyncAutomatically(dummyAccount, MovieContract.AUTHORITY, true);
@@ -98,7 +98,7 @@ public class VideoListActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        checkGooglePlayServices();
+        // checkGooglePlayServices();
         ContentResolver.requestSync(createDummyAccount(this), MovieContract.AUTHORITY, Bundle.EMPTY);
     }
     @Override
@@ -220,7 +220,7 @@ public class VideoListActivity extends AppCompatActivity implements
         startActivity(detail_activity);
     }
 
-    public void setAdapters(){
+    public void initInterface(){
         int numViewsForRow = 0;
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
         {
@@ -235,9 +235,15 @@ public class VideoListActivity extends AppCompatActivity implements
     }
     @Override
     public void OnListAvailable(List<MovieContentDetails> result) {
-        mMovieListAdapter.addData(result);
-        mMovieList.getLayoutManager().onRestoreInstanceState(mListState);
         hideLoadingBar();
+        if(result.size() > 0) {
+            mMovieListAdapter.addData(result);
+            mMovieList.getLayoutManager().onRestoreInstanceState(mListState);
+
+        } else {
+
+        }
+
     }
     public void getMoviesFromTheInternet(String key) throws IOException {
         NetworkModule.getInstance().configureCallback(this);

@@ -19,12 +19,12 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = GcmBroadcastReceiver.class.getName();
     @Override
     public void onReceive(Context context, Intent intent) {
-        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
+        /*GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
         if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(gcm.getMessageType(intent)) &&
         intent.getExtras().containsKey("com.example.restaurant.SYNC_REQ")) {
             Log.d(TAG, "GCM sync notification! Requesting DB sync for server dbversion " + intent.getStringExtra("dbversion"));
             ContentResolver.requestSync(new Account("dummyaccount", context.getString(R.string.sync_account_type)), MovieContract.AUTHORITY, Bundle.EMPTY);
-        }
+        }*/
 
     }
 }
