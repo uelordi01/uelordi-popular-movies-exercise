@@ -2,13 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="udacity.uelordi.com.popularmovies">
 
-    <uses-permission
-        android:name="android.permission.AUTHENTICATE_ACCOUNTS"
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"
         android:maxSdkVersion="22" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+
 
     <application
         android:allowBackup="true"
@@ -44,7 +44,6 @@
             <intent-filter>
                 <action android:name="@string/content_authority" />
             </intent-filter>
-
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
@@ -60,6 +59,17 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+        <!-- The Google Cloud Messaging receiver and services -->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="udacity.uelordi.com.popularmovies." />
+            </intent-filter>
+        </receiver>
         <provider android:name="udacity.uelordi.com.popularmovies.database.MoviesProvider"
             android:authorities="udacity.uelordi.com.popularmovies"
             android:exported="false"/>

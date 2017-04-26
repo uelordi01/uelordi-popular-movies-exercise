@@ -84,17 +84,19 @@ public class NetworkModule {
                     @Override
                     public void onResponse(Call<MovieListResponse> call,
                                            Response<MovieListResponse> response) {
-                        List<MovieContentDetails> list = response.body().getResults();
-                        if(m_callback != null) {
-                            m_callback.OnListAvailable(list);
+                        if(response.isSuccessful()) {
+                            List<MovieContentDetails> list = response.body().getResults();
+                            if(m_callback != null) {
+                                m_callback.OnListAvailable(list);
+                            }
+                            else
+                            {
+                                Log.e(TAG,"No callback defined");
+                            }
+                        } else {
+                            Log.e(TAG,"unknown_error");
                         }
-                        else
-                        {
-                            Log.e(TAG,"No callback defined");
-                        }
-
                     }
-
                     @Override
                     public void onFailure(Call<MovieListResponse> call, Throwable t) {
                         Log.e(TAG,t.getMessage());

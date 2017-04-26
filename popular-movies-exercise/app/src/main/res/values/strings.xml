@@ -52,7 +52,8 @@
     <string name="empty_movie_list_no_internet">No movie information, no internet connection</string>
     <string name="empty_movie_list_server_down">No movie information, server is down</string>
     <string name="empty_movie_list_server_error">No movie information, the server is not returning valid data </string>
-
+    <!-- google play services -->
+    <string name="gcm_defaultSenderId" translatable="false"></string>
 
 
 </resources>
