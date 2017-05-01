@@ -39,6 +39,7 @@ import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.database.MovieContract;
 import udacity.uelordi.com.popularmovies.database.MoviesProvider;
 import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
+import udacity.uelordi.com.popularmovies.services.MovieListUtils;
 import udacity.uelordi.com.popularmovies.services.NetworkModule;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
@@ -48,6 +49,7 @@ import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 // TODO IMPLEMENT BROADCAST RECEIVER.
 // TODO IMPLEMENT THE STYLES.
 // TODO IMPLEMENT GCM (GOOGLE CLOUD MESSAGE) WITH GOOGLE PLAY DRIVER()
+
 public class VideoListActivity extends AppCompatActivity implements
                                             OnVideoItemClickListener,
                                             onFetchResults,
@@ -85,7 +87,9 @@ public class VideoListActivity extends AppCompatActivity implements
         hideErrorMessage();
         initInterface();
         showLoadingBar();
-        getMovieList(filter);
+        //TODO CREATE THE INTENT SERVICE PERFECTLY:
+        MovieListUtils.initialize(this);
+// getMovieList(filter);
     }
     private Account createDummyAccount(Context context) {
         Account dummyAccount = new Account("dummyaccount", "com.udacity.uelordi");

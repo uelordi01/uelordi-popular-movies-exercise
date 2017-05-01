@@ -77,6 +77,16 @@ public class NetworkModule {
     public void configureCallback(OnTrailerListener listener){
         m_trai_callback = listener;
     }
+    public  List<MovieContentDetails> syncMoviesListByOption(String sort_by) {
+        Call<MovieListResponse> call = client.getMovieList(sort_by,api_key);
+        try {
+            MovieListResponse  result = call.execute().body();
+            return result.getResults();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public void getMovieList(String sort_by) {
         Call<MovieListResponse> call = client.getMovieList(sort_by,api_key);
         call.enqueue(
@@ -136,7 +146,6 @@ public class NetworkModule {
                         m_trai_callback.OnTrailerListAvailable(response.body().getResults());
                     }
                 }
-
                 @Override
                 public void onFailure(Call<TrailerResponse> call, Throwable t) {
 

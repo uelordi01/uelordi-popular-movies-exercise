@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,8 @@ public class MoviesProvider extends ContentProvider {
 
     public static final int MOVIES = 100;
     public static final int MOVIE_WITH_ID = 101;
+    public static final int MOVIE_POPULAR = 200;
+
 
     // CDeclare a static variable for the Uri matcher that you construct
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -37,6 +40,8 @@ public class MoviesProvider extends ContentProvider {
 
         uriMatcher.addURI(authority, MovieContract.PATH_MOVIES, MOVIES);
         uriMatcher.addURI(authority, MovieContract.PATH_MOVIES + "/#", MOVIE_WITH_ID);
+
+       uriMatcher.addURI(authority, MovieContract.PATH_MOVIES_POPULAR, MOVIE_POPULAR);
 
 
         return uriMatcher;
@@ -74,6 +79,15 @@ public class MoviesProvider extends ContentProvider {
            case MOVIE_WITH_ID:
            {
                retCursor = getMoviesByID(uri,projection,sortOrder);
+               break;
+           }
+           case MOVIE_POPULAR:
+           {
+               retCursor = getMoviesFromReferenceTable(MovieContract.PopularEntry.TABLE_NAME,
+                                                        projection,
+                       selection,
+                       selectionArgs,
+                       sortOrder);
                break;
            }
        }
@@ -218,5 +232,26 @@ public class MoviesProvider extends ContentProvider {
                 sortOrder);
 
 
+    }
+    private Cursor getMoviesFromReferenceTable(String tableName, String[] projection, String selection,
+                                              String[] selectionArgs, String sortOrder) {
+
+        SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
+
+        sqLiteQueryBuilder.setTables(
+                tableName + " INNER JOIN " + MovieContract.MovieEntry.TABLE_NAME +
+                        " ON " + tableName + "." + MovieContract.COLUMN_MOVIE_ID_KEY +
+                        " = " + MovieContract.MovieEntry.TABLE_NAME +
+                                                    "." + MovieContract.MovieEntry._ID
+        );
+
+        return sqLiteQueryBuilder.query(mMovieHelper.getReadableDatabase(),
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
     }
 }

@@ -16,8 +16,11 @@ public class MovieContract {
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
-
-    public static final String PATH_MOVIES = "favorite_movies";
+    public static final String PATH_MOVIES = "movies";
+    public static final String PATH_MOVIES_POPULAR = "popularmovies";
+    public static final String PATH_MOVIES_RATED = "ratedmovies";
+    public static final String PATH_MOVIES_FAVORITE = "favoritemovies";
+    public static final String  COLUMN_MOVIE_ID_KEY = "movie_id";
 
 
     public static final class MovieEntry implements BaseColumns {
@@ -74,6 +77,34 @@ public class MovieContract {
         public static final int COL_MOVIE_POSTER_PATH = 4;
         public static final int COL_MOVIE_BACKDROP_PATH = 5;
         public static final int COL_MOVIE_RELEASE_DATE = 6;
+
+        }
+        public static final class PopularEntry implements BaseColumns {
+
+            public static final Uri CONTENT_URI =
+                    BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES_POPULAR).build();
+
+            public static final String CONTENT_DIR_TYPE =
+                    ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY +
+                                                            "/" + PATH_MOVIES_POPULAR;
+
+            public static final String CONTENT_ITEM_TYPE =
+                    ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY
+                                                            + "/" + PATH_MOVIES_POPULAR;
+
+            public static final String TABLE_NAME = "popularmovies";
+            public static final String SQL_CREATE_TABLE =
+                    "CREATE TABLE " + TABLE_NAME + " (" +
+                            _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            COLUMN_MOVIE_ID_KEY + " INTEGER NOT NULL, " +
+                            " FOREIGN KEY (" + COLUMN_MOVIE_ID_KEY + ") REFERENCES " +
+                            MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + ") " +
+                            " );";
+        }
+        public static final class HighestRatedEntry implements BaseColumns {
+
+        }
+        public static final class FavoriteEntry implements BaseColumns {
 
         }
 }
