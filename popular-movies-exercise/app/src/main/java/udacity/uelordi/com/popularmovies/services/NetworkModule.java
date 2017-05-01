@@ -84,6 +84,7 @@ public class NetworkModule {
                     @Override
                     public void onResponse(Call<MovieListResponse> call,
                                            Response<MovieListResponse> response) {
+
                         if(response.isSuccessful()) {
                             List<MovieContentDetails> list = response.body().getResults();
                             if(m_callback != null) {
