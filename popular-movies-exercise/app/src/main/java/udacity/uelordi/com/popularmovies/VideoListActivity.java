@@ -103,7 +103,7 @@ public class VideoListActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         // checkGooglePlayServices();
-        ContentResolver.requestSync(createDummyAccount(this), MovieContract.AUTHORITY, Bundle.EMPTY);
+       // ContentResolver.requestSync(createDummyAccount(this), MovieContract.AUTHORITY, Bundle.EMPTY);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
