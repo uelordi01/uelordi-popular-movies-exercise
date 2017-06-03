@@ -55,5 +55,10 @@
     <!-- google play services -->
     <string name="gcm_defaultSenderId" translatable="false"></string>
 
+    <!-- log messages -->
+    <string name ="log_movies_inserted">movies correctly inserted</string>
+    <string name ="log_extra_table_inserted">%s extra table correct inserted</string>
+
+
 
 </resources>

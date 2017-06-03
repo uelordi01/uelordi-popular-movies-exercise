@@ -46,13 +46,20 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
         mMoviesPopulateArray.clear();
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                long id = cursor.getLong(MovieContract.MovieEntry.COL_MOVIE_ID);
-                String title = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_TITLE);
-                String posterPath = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_POSTER_PATH);
-                String overview = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_OVERVIEW);
-                String rating = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_VOTE_AVERAGE);
-                String releaseDate = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_RELEASE_DATE);
-                String backdropPath = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_BACKDROP_PATH);
+                int idIndex = cursor.getColumnIndex(MovieContract.MovieEntry._ID);
+                long id = cursor.getLong(idIndex);
+                int titleId = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
+                String title = cursor.getString(titleId);
+                int posterIndex = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMAGE_URL);
+                String posterPath = cursor.getString(posterIndex);
+                int overviewId = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_SYNOPSYS);
+                String overview = cursor.getString(overviewId);
+                int ratingId = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_USER_RATING);
+                String rating = cursor.getString(ratingId);
+                int releaseID = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_USER_RATING);
+                String releaseDate = cursor.getString(releaseID);
+                int backdropPathID = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_USER_RATING);
+                String backdropPath = cursor.getString(backdropPathID);
                 MovieContentDetails movie = new MovieContentDetails(id ,
                                                                     title,
                                                                     overview,

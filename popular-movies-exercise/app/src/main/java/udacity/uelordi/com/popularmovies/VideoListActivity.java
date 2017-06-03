@@ -42,6 +42,7 @@ import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
 import udacity.uelordi.com.popularmovies.services.MovieListUtils;
 import udacity.uelordi.com.popularmovies.services.NetworkModule;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
+import udacity.uelordi.com.popularmovies.utils.PrefUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 // TODO implement a syncadapter.
 // TODO implements the notifications.
@@ -74,12 +75,14 @@ public class VideoListActivity extends AppCompatActivity implements
     private static Bundle mBundleRecyclerViewState;
     GridLayoutManager mGridManager;
     private Parcelable mListState;
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String filter =setupPreferences();
+        mContext = getApplicationContext();
         setContentView(R.layout.activity_video_list);
+        String filter = setupPreferences();
         ButterKnife.bind(this);
         if(savedInstanceState != null) {
                 filter = savedInstanceState.getString(SORTING_EXTRA_PREF);
@@ -89,6 +92,7 @@ public class VideoListActivity extends AppCompatActivity implements
         showLoadingBar();
         //TODO CREATE THE INTENT SERVICE PERFECTLY:
         MovieListUtils.initialize(this);
+        startLoader();
 // getMovieList(filter);
     }
     private Account createDummyAccount(Context context) {
@@ -205,10 +209,10 @@ public class VideoListActivity extends AppCompatActivity implements
     public String setupPreferences()
     {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String defaultValue=sharedPreferences.getString(getString(R.string.pref_sort_key),
-                                                    getString(R.string.pref_sort_popular_value));
+//        String defaultValue=sharedPreferences.getString(getString(R.string.pref_sort_key),
+//                                                    getString(R.string.pref_sort_popular_value));
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        return defaultValue;
+        return PrefUtils.getCurrentMovieTypeOption(mContext);
     }
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -247,7 +251,6 @@ public class VideoListActivity extends AppCompatActivity implements
         } else {
 
         }
-
     }
     public void getMoviesFromTheInternet(String key) throws IOException {
         NetworkModule.getInstance().configureCallback(this);
@@ -258,10 +261,11 @@ public class VideoListActivity extends AppCompatActivity implements
         }
     }
     public String checkSortingPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String defaultValue=sharedPreferences.getString(getString(R.string.pref_sort_key),
-                getString(R.string.pref_sort_popular_value));
-        return defaultValue;
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return PrefUtils.getCurrentMovieTypeOption(mContext);
+//        String defaultValue=sharedPreferences.getString(getString(R.string.pref_sort_key),
+//                getString(R.string.pref_sort_popular_value));
+//        return defaultValue;
     }
     private void getMovieList(String key) {
         if(key != null) {
