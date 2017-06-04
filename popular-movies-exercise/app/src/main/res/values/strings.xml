@@ -59,6 +59,16 @@
     <string name ="log_movies_inserted">movies correctly inserted</string>
     <string name ="log_extra_table_inserted">%s extra table correct inserted</string>
 
+    <!-- errors -->
+    <string name="error_no_network">No internet connection</string>
+    <string name="error_no_connectivity">The internet connection is lost</string>
+    <string name="error_favorites_empty">You have not selected any favorite movie. </string>
+    <string name="error_db_empty">You need internet connection to get the list of movies</string>
+    <string name="current_error_key" translatable="false">error_key</string>
+    <!--<string name="error_no_network_key">e_no_network</string>-->
+    <!--<string name="error_no_connectivity_key">e_no_connectivity</string>-->
+    <!--<string name="error_favorites_empty_key">e_emtpy_fav</string>-->
+
 
 
 </resources>

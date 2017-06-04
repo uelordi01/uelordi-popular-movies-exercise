@@ -39,6 +39,12 @@
         <service
             android:name=".services.MovieListIntentService"
             android:exported="false" />
+        <service android:name=".services.MovieJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
         <!--<service-->
             <!--android:name=".sync.SyncMoviesService"-->
             <!--android:enabled="true"-->

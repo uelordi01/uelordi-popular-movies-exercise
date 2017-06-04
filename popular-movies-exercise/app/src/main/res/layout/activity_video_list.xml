@@ -18,7 +18,7 @@
 
     </ScrollView>
     <TextView
-        android:id="@+id/connectivity_error"
+        android:id="@+id/error_textview"
         android:textColor="@color/error_color"
         tools:text="@string/empty_movie_list"
         android:layout_gravity="center"
