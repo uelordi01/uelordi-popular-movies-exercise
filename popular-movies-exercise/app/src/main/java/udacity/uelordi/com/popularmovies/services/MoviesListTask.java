@@ -2,6 +2,7 @@ package udacity.uelordi.com.popularmovies.services;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.IntDef;
@@ -31,6 +32,7 @@ public final class MoviesListTask {
     public static final int ERROR_NO_CONNECTIVITY = 2;
     public static final int ERROR_DB_EMPTY = 3;
     public static final int ERROR_FAVORITES_EMPTY = 4;
+    public static final String ACTION_DATA_UPDATED = "udacity.uelordi.com.ACTION_DATA_UPDATED";
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
@@ -56,6 +58,8 @@ public final class MoviesListTask {
                     .syncMoviesListByOption(context.getString(R.string.pref_sort_rated_value));
             fillMoviesTable(context, result);
             fillExtraTables(context, result, MovieContract.HighestRatedEntry.CONTENT_URI);
+            Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
+//            context.sendBroadcast(dataUpdatedIntent);
         } else {
             //todo check if the database is empty
             PrefUtils.setErrorStatus(context, ERROR_NO_NETWORK);
