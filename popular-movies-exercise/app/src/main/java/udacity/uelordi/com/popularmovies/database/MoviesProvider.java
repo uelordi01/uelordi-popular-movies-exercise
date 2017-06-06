@@ -25,6 +25,7 @@ public class MoviesProvider extends ContentProvider {
     public static final int MOVIE_POPULAR = 200;
     public static final int MOVIE_HIGHEST_RATED = 300;
     public static final int MOVIE_FAVORITE = 400;
+    public static final int MOVIE_FAVORITE_BY_ID = 102;
 
 
     // CDeclare a static variable for the Uri matcher that you construct
@@ -33,6 +34,8 @@ public class MoviesProvider extends ContentProvider {
     private static final String SQL_INSERT_ERROR = "Failed to insert the row";
 
     private static final String MOVIE_ID_SELECTION =
+            MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID + " = ? ";
+    private static final String FAVORITE_ID_SELECTION =
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID + " = ? ";
 
 
@@ -46,6 +49,7 @@ public class MoviesProvider extends ContentProvider {
        uriMatcher.addURI(authority, MovieContract.PATH_MOVIES_POPULAR, MOVIE_POPULAR);
        uriMatcher.addURI(authority, MovieContract.PATH_MOVIES_RATED, MOVIE_HIGHEST_RATED);
        uriMatcher.addURI(authority, MovieContract.PATH_MOVIES_FAVORITE, MOVIE_FAVORITE);
+       uriMatcher.addURI(authority, MovieContract.PATH_MOVIES_FAVORITE +"/#" , MOVIE_FAVORITE_BY_ID);
 
 
         return uriMatcher;
@@ -103,6 +107,15 @@ public class MoviesProvider extends ContentProvider {
                        sortOrder);
                break;
            }
+           case MOVIE_FAVORITE:
+           {
+               retCursor = getMoviesFromReferenceTable(MovieContract.FavoriteEntry.TABLE_NAME,
+                       projection,
+                       selection,
+                       selectionArgs,
+                       sortOrder);
+               break;
+           }
        }
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
 
@@ -132,13 +145,13 @@ public class MoviesProvider extends ContentProvider {
         Uri returnUri = null; // URI to be returned
         long id;
         switch (match) {
-            case MOVIES:
+            case MOVIE_FAVORITE:
             {
-                id = db.insertWithOnConflict(MovieContract.MovieEntry.TABLE_NAME,
+                id = db.insertWithOnConflict(MovieContract.FavoriteEntry.TABLE_NAME,
                                                                           null, values,
                                                         SQLiteDatabase.CONFLICT_REPLACE);
                 if(id > 0) {
-                    returnUri = MovieContract.MovieEntry.buildMovieUri(id);
+                    returnUri = MovieContract.FavoriteEntry.buildFavoriteUri(id);
                 }
                 break;
             }
@@ -168,6 +181,14 @@ public class MoviesProvider extends ContentProvider {
                 rowsDeleted = db.delete(MovieContract.MovieEntry.TABLE_NAME,
                                                             MOVIE_ID_SELECTION,
                                                             new String[]{Long.toString(id)});
+                break;
+            }
+            case MOVIE_FAVORITE:
+            {
+                //long id = MovieContract.FavoriteEntry.getFavoriteMovieFromId(uri);
+                rowsDeleted = db.delete(MovieContract.FavoriteEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
                 break;
             }
             default:

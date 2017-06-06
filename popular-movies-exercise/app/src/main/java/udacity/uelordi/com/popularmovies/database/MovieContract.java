@@ -124,7 +124,8 @@ public class MovieContract {
         public static final class FavoriteEntry implements BaseColumns {
             public static final Uri CONTENT_URI =
                     BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES_FAVORITE).build();
-
+            public static final Uri CONTENT_BY_ID_URI = CONTENT_URI.buildUpon()
+                    .appendPath("/#").build();
             public static final String CONTENT_DIR_TYPE =
                     ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY +
                             "/" + PATH_MOVIES_POPULAR;
@@ -140,5 +141,12 @@ public class MovieContract {
                             " FOREIGN KEY (" + COLUMN_MOVIE_ID_KEY + ") REFERENCES " +
                             MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + ") " +
                             " );";
+
+            public static Uri buildFavoriteUri(long id) {
+                return ContentUris.withAppendedId(CONTENT_URI, id);
+            }
+            public static long getFavoriteMovieFromId(Uri uri) {
+                return ContentUris.parseId(uri);
+            }
         }
 }

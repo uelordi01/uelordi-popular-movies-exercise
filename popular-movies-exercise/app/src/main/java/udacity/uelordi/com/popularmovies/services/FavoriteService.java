@@ -3,6 +3,7 @@ package udacity.uelordi.com.popularmovies.services;
 
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -89,19 +90,22 @@ public class FavoriteService {
     }
 
     public void addToFavorites(MovieContentDetails movieObject) {
-        mFavoriteTask.startInsert(1,null,MovieContract.MovieEntry.CONTENT_URI,movieObject.toContentValues());
+        ContentValues mCV = new ContentValues();
+        mCV.put(MovieContract.COLUMN_MOVIE_ID_KEY,movieObject.getId());
+
+        mFavoriteTask.startInsert(1,null,MovieContract.FavoriteEntry.CONTENT_URI,mCV);
     }
     public void removeFromFavorites(MovieContentDetails movieObject) {
-        mFavoriteTask.startDelete(2,null,MovieContract.MovieEntry.CONTENT_URI,
-                MovieContract.MovieEntry._ID + "=" + movieObject.getId(),
+        mFavoriteTask.startDelete(2,null,MovieContract.FavoriteEntry.CONTENT_URI,
+                MovieContract.COLUMN_MOVIE_ID_KEY + "=" + movieObject.getId(),
                 null);
     }
     public void checkFavorite(MovieContentDetails movieObject, boolean performAction) {
         mForceActionPerform = performAction;
         mFavoriteTask.startQuery(3, null,
-                MovieContract.MovieEntry.CONTENT_URI,
+                MovieContract.FavoriteEntry.CONTENT_URI,
                 null,
-                MovieContract.MovieEntry._ID + " = " + movieObject.getId(),
+                MovieContract.COLUMN_MOVIE_ID_KEY + " = " + movieObject.getId(),
                 null,
                 null);
     }

@@ -68,6 +68,7 @@
     <!--<string name="error_no_network_key">e_no_network</string>-->
     <!--<string name="error_no_connectivity_key">e_no_connectivity</string>-->
     <!--<string name="error_favorites_empty_key">e_emtpy_fav</string>-->
+    <string name="notification_text">New videos available</string>
 
 
 

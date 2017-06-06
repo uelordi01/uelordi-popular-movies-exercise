@@ -31,6 +31,9 @@ public class FavoriteTaskLoader {
         if(PrefUtils.getCurrentMovieTypeOption(context)
                 .equals(context.getString(R.string.pref_sort_popular_value))) {
             currentUri = MovieContract.PopularEntry.CONTENT_URI;
+        } else if(PrefUtils.getCurrentMovieTypeOption(context)
+                .equals(context.getString(R.string.pref_sort_favorites_value))){
+            currentUri = MovieContract.FavoriteEntry.CONTENT_URI;
         } else {
             currentUri = MovieContract.HighestRatedEntry.CONTENT_URI;
         }

@@ -5,6 +5,8 @@ import android.util.Log;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 
+import udacity.uelordi.com.popularmovies.utils.NotificationUtils;
+
 /**
  * Created by uelordi on 04/06/2017.
  */
@@ -15,6 +17,7 @@ public class MovieJobService extends JobService {
     public boolean onStartJob(JobParameters job) {
         Log.v(LOG_TAG, "onStartJob");
         MovieListUtils.initialize(getApplicationContext());
+        NotificationUtils.notifyToTheUsers(getApplicationContext());
         return true;
     }
     @Override

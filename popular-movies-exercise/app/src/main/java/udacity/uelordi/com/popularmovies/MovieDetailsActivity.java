@@ -124,10 +124,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         }
     }
     public void loadTrailersAndReviews() {
-//        Bundle queryBundle = new Bundle();
-//
-//        queryBundle.putLong(MOVIE_ID_KEY,mCurrentMovieObject.getId());
-//        getSupportLoaderManager().initLoader(MOVIE_DETAIL_TASK_ID, queryBundle, this);
         NetworkModule.getInstance().configureCallback((OnReviewListener)this);
         NetworkModule.getInstance().configureCallback((OnTrailerListener) this);
 
@@ -161,23 +157,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements
     public void submit()  {
         Log.v(TAG,"favorite button pressed:");
         FavoriteService.getInstance().checkFavorite(mCurrentMovieObject,true);
-        /*if(mCurrentMovieObject != null) {
-            if(FavoriteService.getInstance().
-                            isFavorite(mCurrentMovieObject)){
-                FavoriteService.getInstance().removeFromFavorites(mCurrentMovieObject);
-                btFavorite.setImageResource(R.drawable.no_favorite);
-            }
-            else {
-                FavoriteService.getInstance().addToFavorites(mCurrentMovieObject);
-                btFavorite.setImageResource(R.drawable.favorite_pressed_button);
-            }
-        }
-        else
-        {
-            Toast.makeText(this,getResources().
-                            getString(R.string.error_movie_class_null),
-                            Toast.LENGTH_SHORT).show();
-        }*/
     }
 
 

@@ -49,11 +49,8 @@ import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 import udacity.uelordi.com.popularmovies.utils.PrefUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
 // TODO implement a syncadapter.
-// TODO implements the notifications.
 // TODO IMPLEMENT THE ERROR HANDLING AS THE LATEST COURSERS. (SERVER DOWN, DESTINATION UNREACHABLE, DATABASE EMPTY)
-// TODO IMPLEMENT BROADCAST RECEIVER.
 // TODO IMPLEMENT THE STYLES.
-// TODO IMPLEMENT GCM (GOOGLE CLOUD MESSAGE) WITH GOOGLE PLAY DRIVER()
 
 public class VideoListActivity extends AppCompatActivity implements
                                             OnVideoItemClickListener,
@@ -87,18 +84,17 @@ public class VideoListActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         mContext = getApplicationContext();
         setContentView(R.layout.activity_video_list);
-        String filter = setupPreferences();
+        setupPreferences();
         ButterKnife.bind(this);
-        if(savedInstanceState != null) {
-                filter = savedInstanceState.getString(SORTING_EXTRA_PREF);
-        }
+//        if(savedInstanceState != null) {
+//                filter = savedInstanceState.getString(SORTING_EXTRA_PREF);
+//        }
         hideErrorMessage();
         initInterface();
         showLoadingBar();
         MovieListUtils.schedulePeriodic(this);
         MovieListUtils.initialize(this);
         startLoader();
-// getMovieList(filter);
     }
     private Account createDummyAccount(Context context) {
         Account dummyAccount = new Account("dummyaccount", "com.udacity.uelordi");
@@ -112,8 +108,6 @@ public class VideoListActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         registerReceiver(mNetBroadcastReceiver,mBroadIntentFilter);
-        // checkGooglePlayServices();
-       // ContentResolver.requestSync(createDummyAccount(this), MovieContract.AUTHORITY, Bundle.EMPTY);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -224,13 +218,10 @@ public class VideoListActivity extends AppCompatActivity implements
     /*
      setup the preferences and return the default value for the preferences
      */
-    public String setupPreferences()
+    public void setupPreferences()
     {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        String defaultValue=sharedPreferences.getString(getString(R.string.pref_sort_key),
-//                                                    getString(R.string.pref_sort_popular_value));
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        return PrefUtils.getCurrentMovieTypeOption(mContext);
     }
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -276,43 +267,8 @@ public class VideoListActivity extends AppCompatActivity implements
 
         }
     }
-    public void getMoviesFromTheInternet(String key) throws IOException {
-        NetworkModule.getInstance().configureCallback(this);
-        try {
-            NetworkModule.getInstance().getMovieList(key);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
     public String checkSortingPreferences() {
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         return PrefUtils.getCurrentMovieTypeOption(mContext);
-//        String defaultValue=sharedPreferences.getString(getString(R.string.pref_sort_key),
-//                getString(R.string.pref_sort_popular_value));
-//        return defaultValue;
-    }
-    private void getMovieList(String key) {
-        if(key != null) {
-            if (key.equals(getResources().getString(R.string.pref_sort_favorites_value))) {
-                startLoader();
-            } else {
-                    if(NetworkModule.getInstance()
-                            .isOnline(getApplicationContext())) {
-                        try {
-                            getMoviesFromTheInternet(key);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(),
-                                getResources().getString(R.string.connectivity_warning),
-                                Toast.LENGTH_SHORT).show();
-                        hideLoadingBar();
-                        showErrorMessage();
-                    }
-            }
-        }
     }
     private void updateView(){
         String message = "";
