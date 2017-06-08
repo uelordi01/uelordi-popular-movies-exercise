@@ -4,7 +4,7 @@ import android.content.Context;
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.List;
-import udacity.uelordi.com.popularmovies.utils.MovieDetailJSONUtils;
+
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
 
 /**
@@ -22,16 +22,12 @@ public class MovieDetailTaskLoader extends AbstractMovieTaskLoader {
     @Override
     public List buildList() {
         String result = null;
-        try {
-            result = NetworkUtils.getInstance().getMovieDetails(mVideoId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            return MovieDetailJSONUtils.getMovieDetail(result);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            //result = NetworkUtils.getInstance().getMovieDetails(mVideoId);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        // return MovieDetailJSONUtils.getMovieDetail(result);
         return null;
     }
 

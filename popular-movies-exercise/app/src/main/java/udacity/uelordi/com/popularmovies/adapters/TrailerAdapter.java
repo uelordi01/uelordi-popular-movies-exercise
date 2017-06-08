@@ -58,8 +58,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.movie_video_thumbnail)
-        ImageView movieVideoThumbnail;
+        // @BindView(R.id.movie_video_thumbnail)
+        // ImageView movieVideoThumbnail;
         @BindView(R.id.tv_trailer_title)
         TextView mTrailerTitle;
 
@@ -70,7 +70,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
             itemView.setOnClickListener(this);
         }
         void bind(int position) {
-            String title = mTrailerList.get(position).getVideoName();
+            String title = mTrailerList.get(position).getName();
             mTrailerTitle.setText(title);
         }
         @Override

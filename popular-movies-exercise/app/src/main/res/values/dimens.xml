@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="recycler_view_vertical_padding">12dp</dimen>
+    <dimen name="recycler_view_horizontal_padding">16dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="widget_min_height">50dp</dimen>
+    <dimen name="widget_min_width">50dp</dimen>
+</resources>

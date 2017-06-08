@@ -34,13 +34,19 @@ import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.content.ReviewContent;
 import udacity.uelordi.com.popularmovies.content.TrailerContent;
 import udacity.uelordi.com.popularmovies.services.FavoriteService;
+import udacity.uelordi.com.popularmovies.services.NetworkModule;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
+import udacity.uelordi.com.popularmovies.utils.OnReviewListener;
+import udacity.uelordi.com.popularmovies.utils.OnTrailerListener;
 
 
 public class MovieDetailsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List> ,
         OnTrailerItemListener,
-        OnReviewItemListener
+        OnReviewItemListener,
+        OnReviewListener,
+        OnTrailerListener,
+        FavoriteService.FavoriteListener
 
 {
 
@@ -91,7 +97,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements
             }
         }
         else {
-            if(NetworkUtils.isOnline(getApplicationContext())) {
+            if(NetworkModule.isOnline(getApplicationContext())) {
                 loadTrailersAndReviews();
             }
             else {
@@ -118,10 +124,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         }
     }
     public void loadTrailersAndReviews() {
-        Bundle queryBundle = new Bundle();
+        NetworkModule.getInstance().configureCallback((OnReviewListener)this);
+        NetworkModule.getInstance().configureCallback((OnTrailerListener) this);
 
-        queryBundle.putLong(MOVIE_ID_KEY,mCurrentMovieObject.getMovieID());
-        getSupportLoaderManager().initLoader(MOVIE_DETAIL_TASK_ID, queryBundle, this);
+        NetworkModule.getInstance().getReviewList(mCurrentMovieObject.getId());
+        NetworkModule.getInstance().getTrailerList(mCurrentMovieObject.getId());
     }
     @Override
     public Loader<List> onCreateLoader(int id, Bundle args) {
@@ -136,8 +143,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements
 
         if(result != null) {
             mCurrentMovieObject=result.get(0);
-            mReviewtAdapter.setReviewList(mCurrentMovieObject.getReviewContent());
-            mTrailerAdatper.setTrailerList(mCurrentMovieObject.getTrailerContent());
+//            mReviewtAdapter.setReviewList(mCurrentMovieObject.getReviewContent());
+//            mTrailerAdatper.setTrailerList(mCurrentMovieObject.getTrailerContent());
         }
 
     }
@@ -149,23 +156,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements
     @OnClick(R.id.bt_favorite_button)
     public void submit()  {
         Log.v(TAG,"favorite button pressed:");
-        if(mCurrentMovieObject != null) {
-            if(FavoriteService.getInstance().
-                            isFavorite(mCurrentMovieObject)){
-                FavoriteService.getInstance().removeFromFavorites(mCurrentMovieObject);
-                btFavorite.setImageResource(R.drawable.no_favorite);
-            }
-            else {
-                FavoriteService.getInstance().addToFavorites(mCurrentMovieObject);
-                btFavorite.setImageResource(R.drawable.favorite_pressed_button);
-            }
-        }
-        else
-        {
-            Toast.makeText(this,getResources().
-                            getString(R.string.error_movie_class_null),
-                            Toast.LENGTH_SHORT).show();
-        }
+        FavoriteService.getInstance().checkFavorite(mCurrentMovieObject,true);
     }
 
 
@@ -184,17 +175,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         rvTrailers.setAdapter(mTrailerAdatper);
 
 
-        FavoriteService.getInstance().setContext(this);
-        if(FavoriteService.getInstance().isFavorite(mCurrentMovieObject)) {
-            btFavorite.setImageResource(R.drawable.favorite_pressed_button);
-        }
+        //FavoriteService.getInstance().setContext(this);
+        FavoriteService.getInstance().registerContentResolver(getContentResolver(),this);
+        FavoriteService.getInstance().checkFavorite(mCurrentMovieObject, false);
         if(mCurrentMovieObject != null) {
-            mTvTitle.setText(mCurrentMovieObject.getTitle());
-            mTvSynopsys.setText(mCurrentMovieObject.getSynopsis());
-            mTvUserRating.setText(mCurrentMovieObject.getUser_rating());
-            mTvReleaseDate.setText(mCurrentMovieObject.getRelease_date());
-            String movie_path =mCurrentMovieObject.getBaseIMAGE_URL_PATH()
-                                + mCurrentMovieObject.getPoster_path();
+            mTvTitle.setText(mCurrentMovieObject.getOriginalTitle());
+            mTvSynopsys.setText(mCurrentMovieObject.getOverview());
+            mTvUserRating.setText(String.valueOf(mCurrentMovieObject.getVoteAverage()));
+            mTvReleaseDate.setText(mCurrentMovieObject.getReleaseDate());
+            String movie_path = NetworkModule.getInstance().getImageUrlPah()
+                                + mCurrentMovieObject.getPosterPath();
             Log.v(TAG,"image_path: "+movie_path);
             Glide.with(getApplicationContext()).load(
                     movie_path)
@@ -223,5 +213,57 @@ public class MovieDetailsActivity extends AppCompatActivity implements
         Toast.makeText(getApplicationContext(),
                         getString(R.string.connectivity_warning_reviews_trailers).toString(),
                                                                     Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void OnReviewListAvailable(List<ReviewContent> result) {
+        mReviewtAdapter.setReviewList(result);
+    }
+
+    @Override
+    public void OnTrailerListAvailable(List<TrailerContent> result) {
+       mTrailerAdatper.setTrailerList(result);
+    }
+    @Override
+    public void onIsFavorite(boolean isFavorite, boolean performAction) {
+        if(performAction) {
+            if(mCurrentMovieObject != null) {
+                if (isFavorite) {
+                    FavoriteService.getInstance().removeFromFavorites(mCurrentMovieObject);
+                } else {
+                    FavoriteService.getInstance().addToFavorites(mCurrentMovieObject);
+                }
+            }
+            else {
+                Toast.makeText(this,getResources().
+                                getString(R.string.error_movie_class_null),
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            if(isFavorite) {
+                btFavorite.setImageResource(R.drawable.favorite_pressed_button);
+            }
+            else {
+                btFavorite.setImageResource(R.drawable.no_favorite);
+            }
+        }
+    }
+    @Override
+    public void onAddFavoriteCompleted(boolean result) {
+        if(result) {
+            btFavorite.setImageResource(R.drawable.favorite_pressed_button);
+        }
+    }
+
+    @Override
+    public void onRemoveFavoriteCompleted(boolean result) {
+        if(result) {
+            btFavorite.setImageResource(R.drawable.no_favorite);
+        }
+    }
+
+    @Override
+    public void onFavoriteError(String error) {
+
     }
 }

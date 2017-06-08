@@ -26,7 +26,8 @@
             <TextView
                 android:id="@+id/tv_trailer_title"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:layout_weight="67"
                 android:text="@string/default_title" />
             <ImageView

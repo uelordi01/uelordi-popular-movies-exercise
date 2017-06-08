@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import udacity.uelordi.com.popularmovies.R;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
 import udacity.uelordi.com.popularmovies.database.MovieContract;
+import udacity.uelordi.com.popularmovies.services.NetworkModule;
 
 /**
  * Created by uelordi on 28/02/2017.
@@ -45,17 +46,24 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
         mMoviesPopulateArray.clear();
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                long id = cursor.getLong(MovieContract.MovieEntry.COL_MOVIE_ID);
-                String title = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_TITLE);
-                String posterPath = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_POSTER_PATH);
-                String overview = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_OVERVIEW);
-                String rating = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_VOTE_AVERAGE);
-                String releaseDate = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_RELEASE_DATE);
-                String backdropPath = cursor.getString(MovieContract.MovieEntry.COL_MOVIE_BACKDROP_PATH);
+                int idIndex = cursor.getColumnIndex(MovieContract.MovieEntry._ID);
+                long id = cursor.getLong(idIndex);
+                int titleId = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
+                String title = cursor.getString(titleId);
+                int posterIndex = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMAGE_URL);
+                String posterPath = cursor.getString(posterIndex);
+                int overviewId = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_SYNOPSYS);
+                String overview = cursor.getString(overviewId);
+                int ratingId = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_USER_RATING);
+                String rating = cursor.getString(ratingId);
+                int releaseID = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_USER_RATING);
+                String releaseDate = cursor.getString(releaseID);
+                int backdropPathID = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_USER_RATING);
+                String backdropPath = cursor.getString(backdropPathID);
                 MovieContentDetails movie = new MovieContentDetails(id ,
                                                                     title,
                                                                     overview,
-                                                                    rating,
+                                                                    Double.parseDouble(rating),
                                                                     posterPath,
                                                                     releaseDate,
                                                                     backdropPath);
@@ -102,10 +110,9 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Movi
         void bind(int listIndex)
         {
             Log.d(TAG,"Position #"+listIndex);
-            String movie_path=mMoviesPopulateArray.
-                                get(listIndex).getBaseIMAGE_URL_PATH() +
+            String movie_path= NetworkModule.getInstance().getImageUrlPah() +
                                 mMoviesPopulateArray
-                                        .get(listIndex).getPoster_path();
+                                        .get(listIndex).getPosterPath();
 
                     Log.v(TAG,"image_path: "+movie_path);
                     Glide.with(itemView.getContext()).load(

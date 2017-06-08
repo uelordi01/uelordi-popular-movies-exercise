@@ -2,8 +2,14 @@ package udacity.uelordi.com.popularmovies;
 
 
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -15,12 +21,15 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,9 +39,18 @@ import udacity.uelordi.com.popularmovies.adapters.OnVideoItemClickListener;
 import udacity.uelordi.com.popularmovies.adapters.VideoListAdapter;
 import udacity.uelordi.com.popularmovies.background.FavoriteTaskLoader;
 import udacity.uelordi.com.popularmovies.content.MovieContentDetails;
+import udacity.uelordi.com.popularmovies.database.MovieContract;
+import udacity.uelordi.com.popularmovies.database.MoviesProvider;
 import udacity.uelordi.com.popularmovies.preferences.SettingsActivity;
+import udacity.uelordi.com.popularmovies.services.MovieListUtils;
+import udacity.uelordi.com.popularmovies.services.MoviesListTask;
+import udacity.uelordi.com.popularmovies.services.NetworkModule;
 import udacity.uelordi.com.popularmovies.utils.NetworkUtils;
+import udacity.uelordi.com.popularmovies.utils.PrefUtils;
 import udacity.uelordi.com.popularmovies.utils.onFetchResults;
+// TODO implement a syncadapter.
+// TODO IMPLEMENT THE ERROR HANDLING AS THE LATEST COURSERS. (SERVER DOWN, DESTINATION UNREACHABLE, DATABASE EMPTY)
+// TODO IMPLEMENT THE STYLES.
 
 public class VideoListActivity extends AppCompatActivity implements
                                             OnVideoItemClickListener,
@@ -42,8 +60,7 @@ public class VideoListActivity extends AppCompatActivity implements
 
     private static final String TAG = VideoListActivity.class.getSimpleName();
 
-
-    @BindView (R.id.connectivity_error) TextView mErrorView;
+    @BindView (R.id.error_textview) TextView mErrorView;
     @BindView (R.id.pg_movie_list)  ProgressBar mVideoListProgressBar;
     @BindView (R.id.rv_movie_list) RecyclerView mMovieList;
     private int mPosition = RecyclerView.NO_POSITION;
@@ -58,22 +75,40 @@ public class VideoListActivity extends AppCompatActivity implements
     private static Bundle mBundleRecyclerViewState;
     GridLayoutManager mGridManager;
     private Parcelable mListState;
+    Context mContext;
+    NetworkBroadcastReceiver mNetBroadcastReceiver;
+    IntentFilter mBroadIntentFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String filter =setupPreferences();
+        mContext = getApplicationContext();
         setContentView(R.layout.activity_video_list);
+        setupPreferences();
         ButterKnife.bind(this);
-        if(savedInstanceState != null) {
-                filter = savedInstanceState.getString(SORTING_EXTRA_PREF);
-        }
+//        if(savedInstanceState != null) {
+//                filter = savedInstanceState.getString(SORTING_EXTRA_PREF);
+//        }
         hideErrorMessage();
-        setAdapters();
+        initInterface();
         showLoadingBar();
-        getMovieList(filter);
+        MovieListUtils.schedulePeriodic(this);
+        MovieListUtils.initialize(this);
+        startLoader();
+    }
+    private Account createDummyAccount(Context context) {
+        Account dummyAccount = new Account("dummyaccount", "com.udacity.uelordi");
+        AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
+        accountManager.addAccountExplicitly(dummyAccount, null, null);
+        ContentResolver.setSyncAutomatically(dummyAccount, MovieContract.AUTHORITY, true);
+        return dummyAccount;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mNetBroadcastReceiver,mBroadIntentFilter);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.filter_menu, menu);
@@ -113,12 +148,10 @@ public class VideoListActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
+        unregisterReceiver(mNetBroadcastReceiver);
+
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -151,9 +184,19 @@ public class VideoListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mMovieListAdapter.addData(data);
-        mMovieList.getLayoutManager().onRestoreInstanceState(mListState);
+        if ( data.getCount()>0 ) {
+            mMovieListAdapter.addData(data);
+            mMovieList.getLayoutManager().onRestoreInstanceState(mListState);
+        } else {
+            if(PrefUtils.getCurrentMovieTypeOption(mContext)
+                    .equals(mContext.getString(R.string.pref_sort_favorites_value))) {
+                PrefUtils.setErrorStatus(mContext, MoviesListTask.ERROR_FAVORITES_EMPTY);
+            } else {
+                PrefUtils.setErrorStatus(mContext, MoviesListTask.ERROR_DB_EMPTY);
+            }
+        }
         hideLoadingBar();
+        updateView();
 
     }
 
@@ -175,19 +218,19 @@ public class VideoListActivity extends AppCompatActivity implements
     /*
      setup the preferences and return the default value for the preferences
      */
-    public String setupPreferences()
+    public void setupPreferences()
     {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String defaultValue=sharedPreferences.getString(getString(R.string.pref_sort_key),
-                                                    getString(R.string.pref_sort_popular_value));
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        return defaultValue;
     }
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        String defaultValue=sharedPreferences.getString(key,
-                getString(R.string.pref_sort_popular_value));
-        getMovieList(defaultValue);
+        if(key.equals(getString(R.string.pref_sort_key))) {
+            String defaultValue=sharedPreferences.getString(key,
+                    getString(R.string.pref_sort_popular_value));
+            startLoader();
+        }
+
     }
 
     @Override
@@ -197,7 +240,7 @@ public class VideoListActivity extends AppCompatActivity implements
         startActivity(detail_activity);
     }
 
-    public void setAdapters(){
+    public void initInterface(){
         int numViewsForRow = 0;
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
         {
@@ -209,41 +252,67 @@ public class VideoListActivity extends AppCompatActivity implements
         mMovieListAdapter = new VideoListAdapter(VideoListActivity.this);
         mMovieList.setLayoutManager(mGridManager);
         mMovieList.setAdapter(mMovieListAdapter);
+        mNetBroadcastReceiver = new NetworkBroadcastReceiver();
+        mBroadIntentFilter = new IntentFilter();
+        mBroadIntentFilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
     }
     @Override
     public void OnListAvailable(List<MovieContentDetails> result) {
-        mMovieListAdapter.addData(result);
-        mMovieList.getLayoutManager().onRestoreInstanceState(mListState);
         hideLoadingBar();
-    }
-    public void getMoviesFromTheInternet(String key) {
-        FetchVideoList mVideoListTask;
-        mVideoListTask = new FetchVideoList();
-        mVideoListTask.setListener(this);
-        mVideoListTask.execute(key);
+        if(result.size() > 0) {
+            mMovieListAdapter.addData(result);
+            mMovieList.getLayoutManager().onRestoreInstanceState(mListState);
+
+        } else {
+
+        }
     }
     public String checkSortingPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String defaultValue=sharedPreferences.getString(getString(R.string.pref_sort_key),
-                getString(R.string.pref_sort_popular_value));
-        return defaultValue;
+        return PrefUtils.getCurrentMovieTypeOption(mContext);
     }
-    private void getMovieList(String key) {
-        if(key != null) {
-            if (key.equals(getResources().getString(R.string.pref_sort_favorites_value))) {
-                startLoader();
-            } else {
-                    if(NetworkUtils.isOnline(getApplicationContext())) {
-                        getMoviesFromTheInternet(key);
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(),
-                                getResources().getString(R.string.connectivity_warning),
-                                Toast.LENGTH_SHORT).show();
-                        hideLoadingBar();
-                        showErrorMessage();
-                    }
+    private void updateView(){
+        String message = "";
+        @MoviesListTask.ErrorStatus int errorType = PrefUtils.getErrorStatus(mContext);
+        switch (errorType) {
+            case MoviesListTask.ERROR_OK: {
+                message = "";
+                hideErrorMessage();
+                break;
             }
+            case MoviesListTask.ERROR_NO_CONNECTIVITY: {
+                message = mContext.getString(R.string.error_no_connectivity);
+                showErrorMessage();
+                break;
+            }
+            case MoviesListTask.ERROR_DB_EMPTY: {
+                message = mContext.getString(R.string.error_db_empty);
+                showErrorMessage();
+                break;
+            }
+            case MoviesListTask.ERROR_FAVORITES_EMPTY: {
+                message = mContext.getString(R.string.error_favorites_empty);
+                showErrorMessage();
+                break;
+            }
+            default:
+                break;
+
+
+        }
+        mErrorView.setText(message);
+
+    }
+    private class NetworkBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(Intent.ACTION_AIRPLANE_MODE_CHANGED)){
+                if(PrefUtils.isOnline(context)){
+                    MovieListUtils.initialize(context);
+                    startLoader();
+                }
+            }
+            Log.d(TAG,"received the wifi change state mode");
         }
     }
 }

@@ -2,9 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="udacity.uelordi.com.popularmovies">
 
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"
+        android:maxSdkVersion="22" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+
 
     <application
         android:allowBackup="true"
@@ -32,6 +36,71 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".VideoListActivity" />
         </activity>
+        <service
+            android:name=".services.MovieListIntentService"
+            android:exported="false" />
+        <service android:name=".services.MovieJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+        <receiver
+            android:name=".widgets.TodayWidgetProvider"
+            android:label="@string/widget_mini_popular_title"
+            android:enabled="@bool/widget_today_enabled">
+            <intent-filter>
+                <action android:name="udacity.uelordi.com.ACTION_DATA_UPDATED" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_mini" />
+        </receiver>
+        <receiver
+            android:name=".widgets.WidgetPopularListProvider"
+            android:label="@string/default_title"
+            android:enabled="@bool/widget_list_enabled" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.android.sunshine.app.ACTION_DATA_UPDATED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_movie_list_info" />
+        </receiver>
+        <!--<service-->
+            <!--android:name=".sync.SyncMoviesService"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="true"-->
+            <!--android:process=":sync" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="@string/content_authority" />-->
+            <!--</intent-filter>-->
+            <!--<meta-data-->
+                <!--android:name="android.content.SyncAdapter"-->
+                <!--android:resource="@xml/syncadapter" />-->
+        <!--</service>-->
+        <!--<service-->
+            <!--android:name=".sync.MovieAuthenticatorService"-->
+            <!--android:enabled="true" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.accounts.AccountAuthenticator" />-->
+            <!--</intent-filter>-->
+
+            <!--<meta-data-->
+                <!--android:name="android.accounts.AccountAuthenticator"-->
+                <!--android:resource="@xml/authenticator" />-->
+        <!--</service>-->
+        <!--&lt;!&ndash; The Google Cloud Messaging receiver and services &ndash;&gt;-->
+        <!--<receiver-->
+            <!--android:name="com.google.android.gms.gcm.GcmReceiver"-->
+            <!--android:exported="true"-->
+            <!--android:permission="com.google.android.c2dm.permission.SEND" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
+                <!--<action android:name="com.google.android.c2dm.intent.REGISTRATION" />-->
+                <!--<category android:name="udacity.uelordi.com.popularmovies." />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
         <provider android:name="udacity.uelordi.com.popularmovies.database.MoviesProvider"
             android:authorities="udacity.uelordi.com.popularmovies"
             android:exported="false"/>

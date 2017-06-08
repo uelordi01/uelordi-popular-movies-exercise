@@ -3,27 +3,39 @@ package udacity.uelordi.com.popularmovies.content;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by uelordi on 28/02/2017.
  */
 
 public class ReviewContent implements Parcelable
 {
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("author")
+    @Expose
     private String author;
+    @SerializedName("content")
+    @Expose
     private String content;
-    private String reviewUrl;
+    @SerializedName("url")
+    @Expose
+    private String url;
 
     public ReviewContent(String author, String content, String reviewUrl)
     {
         this.author = author;
         this.content = content;
-        this.reviewUrl = reviewUrl;
+        this.url = reviewUrl;
     }
 
     protected ReviewContent(Parcel in) {
         author = in.readString();
         content = in.readString();
-        reviewUrl = in.readString();
+        url = in.readString();
     }
 
     public static final Creator<ReviewContent> CREATOR = new Creator<ReviewContent>() {
@@ -60,18 +72,18 @@ public class ReviewContent implements Parcelable
     }
 
     public String getReviewUrl() {
-        return reviewUrl;
+        return url;
     }
 
     public void setReviewUrl(String reviewUrl) {
-        this.reviewUrl = reviewUrl;
+        this.url = reviewUrl;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(author);
         dest.writeString(content);
-        dest.writeString(reviewUrl);
+        dest.writeString(url);
 
     }
 }

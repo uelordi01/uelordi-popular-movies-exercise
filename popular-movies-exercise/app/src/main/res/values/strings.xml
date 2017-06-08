@@ -2,7 +2,7 @@
     <string name="app_name">PopularMovies</string>
     <string name="filter_popular_menu">Popular</string>
     <string name="filter_rated_menu">Rated</string>
-    <string name="connectivity_error">Connection error: please check if your device is connected to the internet</string>
+
     <string name="connectivity_warning">warning, no internet connection, the movies will no longer updated</string>
     <string name="connectivity_warning_reviews_trailers">warning, no internet connection, the trailers and reviews are not available</string>
     <string name="image_content_description">The selected movie poster</string>
@@ -38,8 +38,40 @@
     <string name="pref_sort_popular_value" translatable="false">popular</string>
     <string name="pref_sort_rated_value" translatable="false">top_rated</string>
     <string name="pref_sort_favorites_value" translatable="false">favorite</string>
-
+    <!-- SyncAdapter related strings-->
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">popularmovies.uelordi.com</string>
+    <string name="content_authority">udacity.uelordi.com.popularmovies</string>
 
     <!-- ERRORS-->
     <string name="error_movie_class_null">Error: The movie class is null</string>
+    <string name="connectivity_error">Connection error: please check if your device is connected to the internet</string>
+    <string name="callback_nodefined_error">No callback defined</string>
+    <!-- ERRORS FROM MOVIE_LIST_EMPTY -->
+    <string name="empty_movie_list">No movie information</string>
+    <string name="empty_movie_list_no_internet">No movie information, no internet connection</string>
+    <string name="empty_movie_list_server_down">No movie information, server is down</string>
+    <string name="empty_movie_list_server_error">No movie information, the server is not returning valid data </string>
+    <!-- google play services -->
+    <string name="gcm_defaultSenderId" translatable="false"></string>
+
+    <!-- log messages -->
+    <string name ="log_movies_inserted">movies correctly inserted</string>
+    <string name ="log_extra_table_inserted">%s extra table correct inserted</string>
+
+    <!-- errors -->
+    <string name="error_no_network">No internet connection</string>
+    <string name="error_no_connectivity">The internet connection is lost</string>
+    <string name="error_favorites_empty">You have not selected any favorite movie. </string>
+    <string name="error_db_empty">You need internet connection to get the list of movies</string>
+    <string name="current_error_key" translatable="false">error_key</string>
+    <!--<string name="error_no_network_key">e_no_network</string>-->
+    <!--<string name="error_no_connectivity_key">e_no_connectivity</string>-->
+    <!--<string name="error_favorites_empty_key">e_emtpy_fav</string>-->
+    <string name="notification_text">New videos available</string>
+    <!--widgets-->
+    <string name="widget_mini_popular_title">Best Movie</string>
+
+
+
 </resources>

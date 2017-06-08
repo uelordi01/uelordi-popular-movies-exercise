@@ -4,7 +4,10 @@ package udacity.uelordi.com.popularmovies.background;
 import android.content.Context;
 import android.support.v4.content.CursorLoader;
 import android.net.Uri;
+
+import udacity.uelordi.com.popularmovies.R;
 import udacity.uelordi.com.popularmovies.database.MovieContract;
+import udacity.uelordi.com.popularmovies.utils.PrefUtils;
 
 /**
  * Created by uelordi on 20/03/17.
@@ -23,8 +26,17 @@ public class FavoriteTaskLoader {
 
     public FavoriteTaskLoader(Context context)
     {
+
         mContext = context;
-        currentUri = MovieContract.MovieEntry.CONTENT_URI;
+        if(PrefUtils.getCurrentMovieTypeOption(context)
+                .equals(context.getString(R.string.pref_sort_popular_value))) {
+            currentUri = MovieContract.PopularEntry.CONTENT_URI;
+        } else if(PrefUtils.getCurrentMovieTypeOption(context)
+                .equals(context.getString(R.string.pref_sort_favorites_value))){
+            currentUri = MovieContract.FavoriteEntry.CONTENT_URI;
+        } else {
+            currentUri = MovieContract.HighestRatedEntry.CONTENT_URI;
+        }
     }
 
 
