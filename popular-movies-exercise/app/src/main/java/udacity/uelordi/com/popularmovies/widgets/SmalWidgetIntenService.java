@@ -31,19 +31,6 @@ import udacity.uelordi.com.popularmovies.services.NetworkModule;
 public class SmalWidgetIntenService extends IntentService {
 
     public SmalWidgetIntenService() {
-
-       /* int myIcon = android.support.design.R.drawable.abc_ic_star_black_36dp;
-        String description = "best movie";
-        for(int appWidgetId: appWidgetIds) {
-            int layout_id = R.layout.widget_mini_layout;
-            RemoteViews RV= new RemoteViews(context.getPackageName(),layout_id);
-            RV.setImageViewResource(R.id.movie_best_image, myIcon);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                setRemoteContentDescription(RV, description);
-            }
-            appWidgetManager.updateAppWidget(appWidgetId, RV);*/
-//        }
-
         super(SmalWidgetIntenService.class.getSimpleName());
     }
 
@@ -67,10 +54,13 @@ public class SmalWidgetIntenService extends IntentService {
             return;
         }
         int posterColumn = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMAGE_URL);
+        int titleColumn =  data.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
         String posterPath = data.getString(posterColumn);
         String movie_path = NetworkModule.getInstance().getImageUrlPah()
                 + posterPath;
 
+        String title = data.getString(titleColumn);
+        data.close();
         for(int appWidgetID: appWidgetIds) {
             int layout_id = R.layout.widget_mini_layout;
             RemoteViews RV= new RemoteViews(getPackageName(),layout_id);
@@ -82,7 +72,8 @@ public class SmalWidgetIntenService extends IntentService {
                             .load( movie_path)
                             .asBitmap()
                             .into(50,50).get();
-                RV.setBitmap(R.id.movie_best_image,"", resultingView);
+                RV.setImageViewBitmap(R.id.movie_best_image, resultingView);
+//                RV.setTextViewText(R.id.widget_mini_film_title,title);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -95,7 +86,6 @@ public class SmalWidgetIntenService extends IntentService {
             Intent launchIntent = new Intent(this, VideoListActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
             RV.setOnClickPendingIntent(R.id.movie_best_image, pendingIntent);
-
             appWidgetManager.updateAppWidget(appWidgetID, RV);
             }
     }

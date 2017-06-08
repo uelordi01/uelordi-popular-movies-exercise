@@ -58,7 +58,7 @@
         </receiver>
         <receiver
             android:name=".widgets.WidgetPopularListProvider"
-            android:label="@string/default_title"
+            android:label="@string/widget_movie_list_title"
             android:enabled="@bool/widget_list_enabled" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -67,40 +67,12 @@
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_movie_list_info" />
         </receiver>
-        <!--<service-->
-            <!--android:name=".sync.SyncMoviesService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true"-->
-            <!--android:process=":sync" >-->
-            <!--<intent-filter>-->
-                <!--<action android:name="@string/content_authority" />-->
-            <!--</intent-filter>-->
-            <!--<meta-data-->
-                <!--android:name="android.content.SyncAdapter"-->
-                <!--android:resource="@xml/syncadapter" />-->
-        <!--</service>-->
-        <!--<service-->
-            <!--android:name=".sync.MovieAuthenticatorService"-->
-            <!--android:enabled="true" >-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.accounts.AccountAuthenticator" />-->
-            <!--</intent-filter>-->
-
-            <!--<meta-data-->
-                <!--android:name="android.accounts.AccountAuthenticator"-->
-                <!--android:resource="@xml/authenticator" />-->
-        <!--</service>-->
-        <!--&lt;!&ndash; The Google Cloud Messaging receiver and services &ndash;&gt;-->
-        <!--<receiver-->
-            <!--android:name="com.google.android.gms.gcm.GcmReceiver"-->
-            <!--android:exported="true"-->
-            <!--android:permission="com.google.android.c2dm.permission.SEND" >-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
-                <!--<action android:name="com.google.android.c2dm.intent.REGISTRATION" />-->
-                <!--<category android:name="udacity.uelordi.com.popularmovies." />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <service android:name=".widgets.SmalWidgetIntenService" />
+        <service android:name=".widgets.StockWidgetService"
+            android:label ="my default label"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:enabled="@bool/widget_list_enabled"
+            android:exported="true" />
         <provider android:name="udacity.uelordi.com.popularmovies.database.MoviesProvider"
             android:authorities="udacity.uelordi.com.popularmovies"
             android:exported="false"/>

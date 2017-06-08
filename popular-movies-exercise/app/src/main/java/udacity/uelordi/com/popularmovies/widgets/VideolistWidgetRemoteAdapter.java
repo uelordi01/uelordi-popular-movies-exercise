@@ -18,6 +18,10 @@ import udacity.uelordi.com.popularmovies.database.MovieContract;
 
 public class VideolistWidgetRemoteAdapter implements
     RemoteViewsService.RemoteViewsFactory {
+    public static final String[] WIDGET_COLUMNS = {
+            MovieContract.MovieEntry.COLUMN_TITLE,
+            MovieContract.MovieEntry.COLUMN_IMAGE_URL
+    };
     private Cursor data;
     private final int mWidgetId;
     private final Context mContext;
@@ -42,7 +46,7 @@ public class VideolistWidgetRemoteAdapter implements
         }
         final long identityToken = Binder.clearCallingIdentity();
         data = mContext.getContentResolver().query(MovieContract.PopularEntry.CONTENT_URI,
-                MovieContract.MovieEntry.MOVIE_COLUMNS,
+                WIDGET_COLUMNS,
                 null,
                 null,
                 null);
@@ -73,25 +77,6 @@ public class VideolistWidgetRemoteAdapter implements
         if (data.moveToPosition(position)) {
             int movieTitleindex = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);//Contract.Quote.COLUMN_SYMBOL);
             String movieTitle = data.getString(movieTitleindex);
-            /*int priceColumn = data.getColumnIndex(Contract.Quote.COLUMN_PRICE);
-            int percentageColumn = data.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE);
-            int absChangeColumn = data.getColumnIndex(Contract.Quote.COLUMN_ABSOLUTE_CHANGE);
-
-            float priceRaw = data.getFloat(priceColumn);
-            float percentageRaw = data.getFloat(percentageColumn);
-            float absChangeRaw = data.getFloat(absChangeColumn);
-            String symbol = data.getString(symbolColumn);
-            String priceValue = dollarFormat.format(priceRaw);
-            String percentageValue =percentageFormat.format(percentageRaw);
-            if(absChangeRaw > 0 ) {
-                views.setInt(R.id.tv_widget_stock_change_percentage,
-                        "setBackgroundResource",
-                        R.drawable.percent_change_pill_green);
-            } else {
-                views.setInt(R.id.tv_widget_stock_change_percentage,
-                        "setBackgroundResource",
-                        R.drawable.percent_change_pill_red);
-            }*/
             views.setTextViewText(R.id.widget_id_title, movieTitle);
 //            views.setTextViewText(R.id.tv_widget_stock_price, priceValue);
 //            views.setTextViewText(R.id.tv_widget_stock_change_percentage, percentageValue);

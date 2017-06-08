@@ -35,7 +35,7 @@ public class MovieContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES;
 
-        public static final String TABLE_NAME = "favorite_movies";
+        public static final String TABLE_NAME = "movies";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_USER_RATING = "user_rating";
         public static final String COLUMN_SYNOPSYS = "synopsys";

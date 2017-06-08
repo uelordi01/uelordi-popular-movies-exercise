@@ -38,9 +38,9 @@ public class WidgetPopularListProvider extends AppWidgetProvider {
 
             // Set up the collection
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                setRemoteAdapter(context, views);
+                setRemoteAdapter(context, views, appWidgetId);
             } else {
-                setRemoteAdapterV11(context, views);
+                setRemoteAdapterV11(context, views, appWidgetId);
             }
             boolean useListWidget = context.getResources()
                     .getBoolean(R.bool.widget_list_enabled);
@@ -58,9 +58,10 @@ public class WidgetPopularListProvider extends AppWidgetProvider {
         }
     }
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private void setRemoteAdapter(Context context, @NonNull final RemoteViews views) {
-        views.setRemoteAdapter(R.id.widget_popular_grv_view,
-                new Intent(context, VideolistWidgetRemoteAdapter.class));
+    private void setRemoteAdapter(Context context, @NonNull final RemoteViews views, int appWidgetId) {
+        Intent adapterIntent = new Intent(context,StockWidgetService.class);
+        adapterIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        views.setRemoteAdapter(R.id.widget_popular_grv_view, adapterIntent);
     }
 
     /**
@@ -69,8 +70,10 @@ public class WidgetPopularListProvider extends AppWidgetProvider {
      * @param views RemoteViews to set the RemoteAdapter
      */
     @SuppressWarnings("deprecation")
-    private void setRemoteAdapterV11(Context context, @NonNull final RemoteViews views) {
+    private void setRemoteAdapterV11(Context context, @NonNull final RemoteViews views, int appWidgetId) {
+        Intent adapterIntent = new Intent(context,StockWidgetService.class);
+        adapterIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         views.setRemoteAdapter(0, R.id.widget_popular_grv_view,
-                new Intent(context, VideolistWidgetRemoteAdapter.class));
+                adapterIntent);
     }
 }
